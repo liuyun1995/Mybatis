@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.StudentDao">
+
+    <resultMap id="result" type="entity.Student">
+      <id column="sId" javaType="String" jdbcType="VARCHAR" property="sId"/>
+      <result column="name" javaType="String" jdbcType="VARCHAR" property="name"/>
+      <result column="age" javaType="int" jdbcType="INTEGER" property="age"/>
+      <result column="sex" javaType="String" jdbcType="VARCHAR" property="sex"/>
+      <result column="score" javaType="int" jdbcType="INTEGER" property="score"/>
+    </resultMap>
+
+    <select id="selectById" resultMap="result">
+        select * from student s where s.sId = #{sId}
+    </select>
+    
+</mapper>
