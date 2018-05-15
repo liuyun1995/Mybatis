@@ -13,7 +13,7 @@ import org.apache.ibatis.session.Configuration;
  */
 public class BoundSql {
 
-	private String sql; // SQL语句
+	private String sql; //SQL语句
 	private List<ParameterMapping> parameterMappings;
 	private Object parameterObject;
 	private Map<String, Object> additionalParameters;

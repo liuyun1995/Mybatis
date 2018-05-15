@@ -8,9 +8,7 @@ import java.util.Map;
 
 import org.apache.ibatis.builder.BuilderException;
 
-/**
- * 表达式求值器, 可参考ExpressionEvaluatorTest
- */
+//表达式求值器
 public class ExpressionEvaluator {
 
 	// 表达式求布尔值，比如username == 'cbegin'
@@ -57,8 +55,7 @@ public class ExpressionEvaluator {
 		if (value instanceof Map) {
 			return ((Map) value).entrySet();
 		}
-		throw new BuilderException(
-				"Error evaluating expression '" + expression + "'.  Return value (" + value + ") was not iterable.");
+		throw new BuilderException("Error evaluating expression '" + expression + "'.  Return value (" + value + ") was not iterable.");
 	}
 
 }

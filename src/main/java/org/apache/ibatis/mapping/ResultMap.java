@@ -9,9 +9,7 @@ import java.util.Set;
 
 import org.apache.ibatis.session.Configuration;
 
-/**
- * 结果映射 MyBatis 中最重要最强大的元素
- */
+//结果映射
 public class ResultMap {
 	private String id;
 	private Class<?> type;

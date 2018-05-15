@@ -6,9 +6,7 @@ import org.apache.ibatis.parsing.GenericTokenParser;
 import org.apache.ibatis.parsing.TokenHandler;
 import org.apache.ibatis.session.Configuration;
 
-/**
- * foreach SQL节点
- */
+//foreach节点
 public class ForEachSqlNode implements SqlNode {
 	public static final String ITEM_PREFIX = "__frch_";
 

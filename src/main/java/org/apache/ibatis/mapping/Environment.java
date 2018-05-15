@@ -4,9 +4,7 @@ import javax.sql.DataSource;
 
 import org.apache.ibatis.transaction.TransactionFactory;
 
-/**
- * 环境 决定加载哪种环境(开发环境/生产环境)
- */
+//运行环境
 public final class Environment {
 	// 环境id
 	private final String id;

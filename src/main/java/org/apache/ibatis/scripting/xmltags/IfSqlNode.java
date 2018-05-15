@@ -1,8 +1,6 @@
 package org.apache.ibatis.scripting.xmltags;
 
-/**
- * if SQL节点
- */
+//if节点
 public class IfSqlNode implements SqlNode {
 	private ExpressionEvaluator evaluator;
 	private String test;

@@ -7,9 +7,7 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
-/**
- * 参数映射
- */
+//参数映射
 public class ParameterMapping {
 
 	private Configuration configuration;

@@ -3,9 +3,7 @@ package org.apache.ibatis.datasource.pooled;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 池状态
- */
+//连接池状态
 public class PoolState {
 
 	protected PooledDataSource dataSource;

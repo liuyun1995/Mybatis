@@ -11,9 +11,8 @@ import javax.sql.DataSource;
 import org.apache.ibatis.datasource.DataSourceException;
 import org.apache.ibatis.datasource.DataSourceFactory;
 
-/**
- * JNDI数据源工, 这个数据源的实现是为了使用如 Spring或应用服务器这类的容器, 容器可以集中或在外部配置数据源,然后放置一个JNDI上下文的引用。
- */
+//JNDI数据源工厂
+//这个数据源的实现是为了使用如 Spring或应用服务器这类的容器, 容器可以集中或在外部配置数据源,然后放置一个JNDI上下文的引用
 public class JndiDataSourceFactory implements DataSourceFactory {
 
 	public static final String INITIAL_CONTEXT = "initial_context";
@@ -33,24 +32,23 @@ public class JndiDataSourceFactory implements DataSourceFactory {
 			} else {
 				initCtx = new InitialContext(env);
 			}
-
 			if (properties.containsKey(INITIAL_CONTEXT) && properties.containsKey(DATA_SOURCE)) {
 				Context ctx = (Context) initCtx.lookup(properties.getProperty(INITIAL_CONTEXT));
 				dataSource = (DataSource) ctx.lookup(properties.getProperty(DATA_SOURCE));
 			} else if (properties.containsKey(DATA_SOURCE)) {
 				dataSource = (DataSource) initCtx.lookup(properties.getProperty(DATA_SOURCE));
 			}
-
 		} catch (NamingException e) {
-			throw new DataSourceException("There was an error configuring JndiDataSourceTransactionPool. Cause: " + e,
-					e);
+			throw new DataSourceException("There was an error configuring JndiDataSourceTransactionPool. Cause: " + e, e);
 		}
 	}
 
+	//获取数据源
 	public DataSource getDataSource() {
 		return dataSource;
 	}
 
+	//获取环境配置
 	private static Properties getEnvProperties(Properties allProps) {
 		final String PREFIX = ENV_PREFIX;
 		Properties contextProperties = null;

@@ -46,128 +46,72 @@ class PooledConnection implements InvocationHandler {
 		return valid && realConnection != null && dataSource.pingConnection(this);
 	}
 
-	/*
-	 * Getter for the *real* connection that this wraps
-	 *
-	 * @return The connection
-	 */
+	//获取真实连接
 	public Connection getRealConnection() {
 		return realConnection;
 	}
 
-	/*
-	 * Getter for the proxy for the connection
-	 *
-	 * @return The proxy
-	 */
+	//获取代理连接
 	public Connection getProxyConnection() {
 		return proxyConnection;
 	}
 
-	/*
-	 * Gets the hashcode of the real connection (or 0 if it is null)
-	 *
-	 * @return The hashcode of the real connection (or 0 if it is null)
-	 */
+	//获取真实哈希码
 	public int getRealHashCode() {
 		return realConnection == null ? 0 : realConnection.hashCode();
 	}
 
-	/*
-	 * Getter for the connection type (based on url + user + password)
-	 *
-	 * @return The connection type
-	 */
+	//获取连接类型
 	public int getConnectionTypeCode() {
 		return connectionTypeCode;
 	}
 
-	/*
-	 * Setter for the connection type
-	 *
-	 * @param connectionTypeCode - the connection type
-	 */
+	//设置连接类型
 	public void setConnectionTypeCode(int connectionTypeCode) {
 		this.connectionTypeCode = connectionTypeCode;
 	}
 
-	/*
-	 * Getter for the time that the connection was created
-	 *
-	 * @return The creation timestamp
-	 */
+	//获取连接建立的时间
 	public long getCreatedTimestamp() {
 		return createdTimestamp;
 	}
 
-	/*
-	 * Setter for the time that the connection was created
-	 *
-	 * @param createdTimestamp - the timestamp
-	 */
+	//设置连接建立的时间
 	public void setCreatedTimestamp(long createdTimestamp) {
 		this.createdTimestamp = createdTimestamp;
 	}
 
-	/*
-	 * Getter for the time that the connection was last used
-	 *
-	 * @return - the timestamp
-	 */
+	//获取最后使用的时间
 	public long getLastUsedTimestamp() {
 		return lastUsedTimestamp;
 	}
 
-	/*
-	 * Setter for the time that the connection was last used
-	 *
-	 * @param lastUsedTimestamp - the timestamp
-	 */
+	//设置最后使用的时间
 	public void setLastUsedTimestamp(long lastUsedTimestamp) {
 		this.lastUsedTimestamp = lastUsedTimestamp;
 	}
 
-	/*
-	 * Getter for the time since this connection was last used
-	 *
-	 * @return - the time since the last use
-	 */
+	//获取当前时间到最后使用的时间间隔
 	public long getTimeElapsedSinceLastUse() {
 		return System.currentTimeMillis() - lastUsedTimestamp;
 	}
 
-	/*
-	 * Getter for the age of the connection
-	 *
-	 * @return the age
-	 */
+	//获取连接持续的时间
 	public long getAge() {
 		return System.currentTimeMillis() - createdTimestamp;
 	}
 
-	/*
-	 * Getter for the timestamp that this connection was checked out
-	 *
-	 * @return the timestamp
-	 */
+	//获取检出的时间
 	public long getCheckoutTimestamp() {
 		return checkoutTimestamp;
 	}
 
-	/*
-	 * Setter for the timestamp that this connection was checked out
-	 *
-	 * @param timestamp the timestamp
-	 */
+	//设置检出的时间
 	public void setCheckoutTimestamp(long timestamp) {
 		this.checkoutTimestamp = timestamp;
 	}
 
-	/*
-	 * Getter for the time that this connection has been checked out
-	 *
-	 * @return the time
-	 */
+	//获取检出持续的时间
 	public long getCheckoutTime() {
 		return System.currentTimeMillis() - checkoutTimestamp;
 	}
@@ -176,14 +120,8 @@ class PooledConnection implements InvocationHandler {
 	public int hashCode() {
 		return hashCode;
 	}
-
-	/*
-	 * Allows comparing this connection to another
-	 *
-	 * @param obj - the other connection to test for equality
-	 * 
-	 * @see Object#equals(Object)
-	 */
+	
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof PooledConnection) {
@@ -194,19 +132,8 @@ class PooledConnection implements InvocationHandler {
 			return false;
 		}
 	}
-
-	/*
-	 * Required for InvocationHandler implementation.
-	 *
-	 * @param proxy - not used
-	 * 
-	 * @param method - the method to be executed
-	 * 
-	 * @param args - the parameters to be passed to the method
-	 * 
-	 * @see java.lang.reflect.InvocationHandler#invoke(Object,
-	 * java.lang.reflect.Method, Object[])
-	 */
+	
+	
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		String methodName = method.getName();
 		// 如果调用close的话，忽略它，反而将这个connection加入到池中
@@ -216,8 +143,6 @@ class PooledConnection implements InvocationHandler {
 		} else {
 			try {
 				if (!Object.class.equals(method.getDeclaringClass())) {
-					// issue #579 toString() should never fail
-					// throw an SQLException instead of a Runtime
 					// 除了toString()方法，其他方法调用之前要检查connection是否还是合法的,不合法要抛出SQLException
 					checkConnection();
 				}

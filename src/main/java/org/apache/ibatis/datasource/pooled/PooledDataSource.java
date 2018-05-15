@@ -17,11 +17,7 @@ import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 
-/**
- * 有连接池的数据源,这个是mybatis自己实行了一个连接池
- * 其他还有诸如C3P0的com.mchange.v2.c3p0.ComboPooledDataSource DBCP 等等 还有一些人喜欢自己用apache
- * commons pool写一个连接池
- */
+//数据源连接池
 public class PooledDataSource implements DataSource {
 
 	private static final Log log = LogFactory.getLog(PooledDataSource.class);
@@ -29,13 +25,11 @@ public class PooledDataSource implements DataSource {
 	// 有一个池状态
 	private final PoolState state = new PoolState(this);
 
-	// 里面有一个UnpooledDataSource
+	//里面有一个UnpooledDataSource
 	private final UnpooledDataSource dataSource;
-
-	// OPTIONAL CONFIGURATION FIELDS
-	// 正在使用连接的数量
+	//活动连接的最大数量
 	protected int poolMaximumActiveConnections = 10;
-	// 空闲连接数
+	//空闲连接的最大数量
 	protected int poolMaximumIdleConnections = 5;
 	// 在被强制返回之前,池中连接被检查的时间
 	protected int poolMaximumCheckoutTime = 20000;
@@ -80,19 +74,22 @@ public class PooledDataSource implements DataSource {
 				dataSource.getPassword());
 	}
 
+	//获取一个连接
 	public Connection getConnection() throws SQLException {
-		// 覆盖了DataSource.getConnection方法，每次都是pop一个Connection，即从池中取出一个来
 		return popConnection(dataSource.getUsername(), dataSource.getPassword()).getProxyConnection();
 	}
 
+	//获取一个连接
 	public Connection getConnection(String username, String password) throws SQLException {
 		return popConnection(username, password).getProxyConnection();
 	}
 
+	//设置登录超时时间
 	public void setLoginTimeout(int loginTimeout) throws SQLException {
 		DriverManager.setLoginTimeout(loginTimeout);
 	}
 
+	//获取登录超时时间
 	public int getLoginTimeout() throws SQLException {
 		return DriverManager.getLoginTimeout();
 	}
@@ -140,21 +137,13 @@ public class PooledDataSource implements DataSource {
 		forceCloseAll();
 	}
 
-	/*
-	 * The maximum number of active connections
-	 *
-	 * @param poolMaximumActiveConnections The maximum number of active connections
-	 */
+	//设置最大活跃连接数
 	public void setPoolMaximumActiveConnections(int poolMaximumActiveConnections) {
 		this.poolMaximumActiveConnections = poolMaximumActiveConnections;
 		forceCloseAll();
 	}
 
-	/*
-	 * The maximum number of idle connections
-	 *
-	 * @param poolMaximumIdleConnections The maximum number of idle connections
-	 */
+	//设置最大空闲连接数
 	public void setPoolMaximumIdleConnections(int poolMaximumIdleConnections) {
 		this.poolMaximumIdleConnections = poolMaximumIdleConnections;
 		forceCloseAll();
@@ -269,9 +258,7 @@ public class PooledDataSource implements DataSource {
 		return poolPingConnectionsNotUsedFor;
 	}
 
-	/*
-	 * Closes all active and idle connections in the pool
-	 */
+	//关闭所有连接
 	public void forceCloseAll() {
 		synchronized (state) {
 			expectedConnectionTypeCode = assembleConnectionTypeCode(dataSource.getUrl(), dataSource.getUsername(),
@@ -319,8 +306,8 @@ public class PooledDataSource implements DataSource {
 		return ("" + url + username + password).hashCode();
 	}
 
+	//放入一个连接
 	protected void pushConnection(PooledConnection conn) throws SQLException {
-
 		synchronized (state) {
 			// 先从activeConnections中删除此connection
 			state.activeConnections.remove(conn);
@@ -366,6 +353,7 @@ public class PooledDataSource implements DataSource {
 		}
 	}
 
+	//弹出一个连接
 	private PooledConnection popConnection(String username, String password) throws SQLException {
 		boolean countedWait = false;
 		PooledConnection conn = null;
@@ -485,16 +473,9 @@ public class PooledDataSource implements DataSource {
 		return conn;
 	}
 
-	/*
-	 * Method to check to see if a connection is still usable
-	 *
-	 * @param conn - the connection to check
-	 * 
-	 * @return True if the connection is still usable
-	 */
+	//检查连接是否有效
 	protected boolean pingConnection(PooledConnection conn) {
 		boolean result = true;
-
 		try {
 			result = !conn.getRealConnection().isClosed();
 		} catch (SQLException e) {
@@ -503,7 +484,6 @@ public class PooledDataSource implements DataSource {
 			}
 			result = false;
 		}
-
 		if (result) {
 			if (poolPingEnabled) {
 				if (poolPingConnectionsNotUsedFor >= 0
@@ -542,13 +522,7 @@ public class PooledDataSource implements DataSource {
 		return result;
 	}
 
-	/*
-	 * Unwraps a pooled connection to get to the 'real' connection
-	 *
-	 * @param conn - the pooled connection to unwrap
-	 * 
-	 * @return The 'real' connection
-	 */
+	//拆包池化连接
 	public static Connection unwrapConnection(Connection conn) {
 		if (Proxy.isProxyClass(conn.getClass())) {
 			InvocationHandler handler = Proxy.getInvocationHandler(conn);
@@ -573,7 +547,7 @@ public class PooledDataSource implements DataSource {
 	}
 
 	public Logger getParentLogger() {
-		return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME); // requires JDK version 1.6
+		return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	}
 
 }

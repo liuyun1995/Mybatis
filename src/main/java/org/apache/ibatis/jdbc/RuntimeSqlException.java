@@ -1,5 +1,6 @@
 package org.apache.ibatis.jdbc;
 
+//运行时sql异常
 public class RuntimeSqlException extends RuntimeException {
 
 	private static final long serialVersionUID = 5224696788505678598L;

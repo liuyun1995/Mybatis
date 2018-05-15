@@ -10,9 +10,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/**
- * 脚本运行器,可以运行SQL脚本，如建表，插入数据，作为单元测试的前期准备 这个类其实可以被所有项目的单元测试作为工具所利用
- */
+//SQL脚本执行器
 public class ScriptRunner {
 
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
@@ -52,10 +50,7 @@ public class ScriptRunner {
 	public void setRemoveCRs(boolean removeCRs) {
 		this.removeCRs = removeCRs;
 	}
-
-	/**
-	 * @since 3.1.1
-	 */
+	
 	public void setEscapeProcessing(boolean escapeProcessing) {
 		this.escapeProcessing = escapeProcessing;
 	}
@@ -78,7 +73,6 @@ public class ScriptRunner {
 
 	public void runScript(Reader reader) {
 		setAutoCommit();
-
 		try {
 			if (sendFullScript) {
 				executeFullScript(reader);
@@ -195,7 +189,6 @@ public class ScriptRunner {
 	}
 
 	private boolean commandReadyToExecute(String trimmedLine) {
-		// issue #561 remove anything after the delimiter
 		return !fullLineDelimiter && trimmedLine.contains(delimiter)
 				|| fullLineDelimiter && trimmedLine.equals(delimiter);
 	}
@@ -223,7 +216,7 @@ public class ScriptRunner {
 		try {
 			statement.close();
 		} catch (Exception e) {
-			// Ignore to workaround a bug in some connection pools
+			// Ignore
 		}
 	}
 
@@ -273,5 +266,5 @@ public class ScriptRunner {
 			errorLogWriter.flush();
 		}
 	}
-
+	
 }

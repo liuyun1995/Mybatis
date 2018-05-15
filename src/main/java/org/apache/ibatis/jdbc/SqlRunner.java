@@ -17,9 +17,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
-/**
- * SQL运行器,可以运行SQL，如select，作为单元测试的正式测试 这个类其实可以被所有项目的单元测试作为工具所利用
- */
+//SQL运行器
 public class SqlRunner {
 
 	public static final int NO_GENERATED_KEY = Integer.MIN_VALUE + 1001;
@@ -36,18 +34,8 @@ public class SqlRunner {
 	public void setUseGeneratedKeySupport(boolean useGeneratedKeySupport) {
 		this.useGeneratedKeySupport = useGeneratedKeySupport;
 	}
-
-	/*
-	 * Executes a SELECT statement that returns one row.
-	 *
-	 * @param sql The SQL
-	 * 
-	 * @param args The arguments to be set on the statement.
-	 * 
-	 * @return The row expected.
-	 * 
-	 * @throws SQLException If less or more than one row is returned
-	 */
+	
+	
 	public Map<String, Object> selectOne(String sql, Object... args) throws SQLException {
 		List<Map<String, Object>> results = selectAll(sql, args);
 		if (results.size() != 1) {
@@ -56,18 +44,8 @@ public class SqlRunner {
 		}
 		return results.get(0);
 	}
-
-	/*
-	 * Executes a SELECT statement that returns multiple rows.
-	 *
-	 * @param sql The SQL
-	 * 
-	 * @param args The arguments to be set on the statement.
-	 * 
-	 * @return The list of rows expected.
-	 * 
-	 * @throws SQLException If statement preparation or execution fails
-	 */
+	
+	
 	public List<Map<String, Object>> selectAll(String sql, Object... args) throws SQLException {
 		PreparedStatement ps = connection.prepareStatement(sql);
 		try {
@@ -82,19 +60,8 @@ public class SqlRunner {
 			}
 		}
 	}
-
-	/*
-	 * Executes an INSERT statement.
-	 *
-	 * @param sql The SQL
-	 * 
-	 * @param args The arguments to be set on the statement.
-	 * 
-	 * @return The number of rows impacted or BATCHED_RESULTS if the statements are
-	 * being batched.
-	 * 
-	 * @throws SQLException If statement preparation or execution fails
-	 */
+	
+	
 	public int insert(String sql, Object... args) throws SQLException {
 		PreparedStatement ps;
 		if (useGeneratedKeySupport) {
@@ -102,7 +69,6 @@ public class SqlRunner {
 		} else {
 			ps = connection.prepareStatement(sql);
 		}
-
 		try {
 			setParameters(ps, args);
 			ps.executeUpdate();
@@ -117,7 +83,7 @@ public class SqlRunner {
 							try {
 								return Integer.parseInt(genkey.toString());
 							} catch (NumberFormatException e) {
-								// ignore, no numeric key suppot
+								// ignore
 							}
 						}
 					}
@@ -132,19 +98,8 @@ public class SqlRunner {
 			}
 		}
 	}
-
-	/*
-	 * Executes an UPDATE statement.
-	 *
-	 * @param sql The SQL
-	 * 
-	 * @param args The arguments to be set on the statement.
-	 * 
-	 * @return The number of rows impacted or BATCHED_RESULTS if the statements are
-	 * being batched.
-	 * 
-	 * @throws SQLException If statement preparation or execution fails
-	 */
+	
+	
 	public int update(String sql, Object... args) throws SQLException {
 		PreparedStatement ps = connection.prepareStatement(sql);
 		try {
@@ -158,30 +113,13 @@ public class SqlRunner {
 			}
 		}
 	}
-
-	/*
-	 * Executes a DELETE statement.
-	 *
-	 * @param sql The SQL
-	 * 
-	 * @param args The arguments to be set on the statement.
-	 * 
-	 * @return The number of rows impacted or BATCHED_RESULTS if the statements are
-	 * being batched.
-	 * 
-	 * @throws SQLException If statement preparation or execution fails
-	 */
+	
+	
 	public int delete(String sql, Object... args) throws SQLException {
 		return update(sql, args);
 	}
-
-	/*
-	 * Executes any string as a JDBC Statement. Good for DDL
-	 *
-	 * @param sql The SQL
-	 * 
-	 * @throws SQLException If statement preparation or execution fails
-	 */
+	
+	
 	public void run(String sql) throws SQLException {
 		Statement stmt = connection.createStatement();
 		try {

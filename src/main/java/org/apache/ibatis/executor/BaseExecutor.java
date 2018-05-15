@@ -27,7 +27,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
-//执行器基类
+//基础执行器
 public abstract class BaseExecutor implements Executor {
 
 	private static final Log log = LogFactory.getLog(BaseExecutor.class);
@@ -157,11 +157,9 @@ public abstract class BaseExecutor implements Executor {
 			for (DeferredLoad deferredLoad : deferredLoads) {
 				deferredLoad.load();
 			}
-			// issue #601
 			// 清空延迟加载队列
 			deferredLoads.clear();
 			if (configuration.getLocalCacheScope() == LocalCacheScope.STATEMENT) {
-				// issue #482
 				// 如果是STATEMENT，清本地缓存
 				clearLocalCache();
 			}

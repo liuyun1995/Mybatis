@@ -18,9 +18,7 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 
-/**
- * 缓存构建器,建造者模式
- */
+//缓存构建器
 public class CacheBuilder {
 	private String id;
 	private Class<? extends Cache> implementation;

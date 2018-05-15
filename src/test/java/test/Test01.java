@@ -8,9 +8,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-import dao.StudentDao;
-import entity.Student;
-
 public class Test01 {
 
 	public static void main(String[] args) throws IOException {
@@ -20,12 +17,6 @@ public class Test01 {
 		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 
 		SqlSession session = sqlSessionFactory.openSession();
-		
-		StudentDao dao = session.getMapper(StudentDao.class);
-		
-		Student student = dao.selectById("1");
-		
-		System.out.println(student.getName());
 		
 	}
 
