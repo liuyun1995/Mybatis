@@ -8,9 +8,7 @@ import org.apache.ibatis.session.Configuration;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-/**
- * XML include转换器
- */
+//XML include转换器
 public class XMLIncludeTransformer {
 
 	private final Configuration configuration;

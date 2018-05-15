@@ -1,8 +1,6 @@
 package org.apache.ibatis.session;
 
-/**
- * 执行器的类型
- */
+//执行器的类型
 public enum ExecutorType {
 	// ExecutorType.SIMPLE
 	// 这个执行器类型不做特殊的事情。它为每个语句的执行创建一个新的预处理语句。

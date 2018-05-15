@@ -24,9 +24,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-/**
- * XPath解析器，用的都是JDK的类包,封装了一下，使得使用起来更方便
- */
+//XPath解析器
 public class XPathParser {
 
 	private Document document;
@@ -34,9 +32,7 @@ public class XPathParser {
 	private EntityResolver entityResolver;
 	private Properties variables;
 	private XPath xpath;
-
-	// 一些构造函数,全部调用commonConstructor以及createDocument
-	// 1~4,默认不需要验证
+	
 	public XPathParser(String xml) {
 		commonConstructor(false, null, null);
 		this.document = createDocument(new InputSource(new StringReader(xml)));
@@ -57,7 +53,7 @@ public class XPathParser {
 		this.document = document;
 	}
 
-	// 5~8,传入是否需要验证参数
+	
 	public XPathParser(String xml, boolean validation) {
 		commonConstructor(validation, null, null);
 		this.document = createDocument(new InputSource(new StringReader(xml)));
@@ -77,8 +73,7 @@ public class XPathParser {
 		commonConstructor(validation, null, null);
 		this.document = document;
 	}
-
-	// 9~12,传入是否需要验证参数,Properties
+	
 	public XPathParser(String xml, boolean validation, Properties variables) {
 		commonConstructor(validation, variables, null);
 		this.document = createDocument(new InputSource(new StringReader(xml)));
@@ -98,8 +93,7 @@ public class XPathParser {
 		commonConstructor(validation, variables, null);
 		this.document = document;
 	}
-
-	// 13~16,传入是否需要验证参数,Properties,EntityResolver
+	
 	public XPathParser(String xml, boolean validation, Properties variables, EntityResolver entityResolver) {
 		commonConstructor(validation, variables, entityResolver);
 		this.document = createDocument(new InputSource(new StringReader(xml)));
@@ -120,8 +114,7 @@ public class XPathParser {
 		commonConstructor(validation, variables, entityResolver);
 		this.document = document;
 	}
-
-	// 17.设置Properties
+	
 	public void setVariables(Properties variables) {
 		this.variables = variables;
 	}
@@ -224,12 +217,10 @@ public class XPathParser {
 	}
 
 	private Document createDocument(InputSource inputSource) {
-		// important: this must only be called AFTER common constructor
 		try {
 			// 这个是DOM解析方式
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			factory.setValidating(validation);
-
 			// 名称空间
 			factory.setNamespaceAware(false);
 			// 忽略注释

@@ -48,25 +48,13 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
 			throw ExceptionUtil.unwrapThrowable(t);
 		}
 	}
-
-	/*
-	 * Creates a logging version of a Statement
-	 *
-	 * @param stmt - the statement
-	 * 
-	 * @return - the proxy
-	 */
+	
 	public static Statement newInstance(Statement stmt, Log statementLog, int queryStack) {
 		InvocationHandler handler = new StatementLogger(stmt, statementLog, queryStack);
 		ClassLoader cl = Statement.class.getClassLoader();
 		return (Statement) Proxy.newProxyInstance(cl, new Class[] { Statement.class }, handler);
 	}
-
-	/*
-	 * return the wrapped statement
-	 *
-	 * @return the statement
-	 */
+	
 	public Statement getStatement() {
 		return statement;
 	}

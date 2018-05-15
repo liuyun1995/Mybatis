@@ -32,9 +32,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
-/**
- * XML映射构建器，建造者模式,继承BaseBuilder
- */
+//XML映射构建器
 public class XMLMapperBuilder extends BaseBuilder {
 
 	private XPathParser parser;

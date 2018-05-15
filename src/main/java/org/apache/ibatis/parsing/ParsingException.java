@@ -2,10 +2,9 @@ package org.apache.ibatis.parsing;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 
-/**
- * 解析异常
- */
+//解析异常
 public class ParsingException extends PersistenceException {
+	
 	private static final long serialVersionUID = -176685891441325943L;
 
 	public ParsingException() {
@@ -23,4 +22,5 @@ public class ParsingException extends PersistenceException {
 	public ParsingException(Throwable cause) {
 		super(cause);
 	}
+	
 }

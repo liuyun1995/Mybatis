@@ -47,8 +47,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 	public SqlSession openSession(ExecutorType execType, boolean autoCommit) {
 		return openSessionFromDataSource(execType, null, autoCommit);
 	}
-
-	// 以下2个方法都会调用openSessionFromConnection
+	
 	public SqlSession openSession(Connection connection) {
 		return openSessionFromConnection(configuration.getDefaultExecutorType(), connection);
 	}
@@ -66,22 +65,20 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 			boolean autoCommit) {
 		Transaction tx = null;
 		try {
-			// 获取配置的环境信息
+			//获取运行环境
 			final Environment environment = configuration.getEnvironment();
-			// 获取事务工厂
+			//获取事务工厂
 			final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
-			// 通过工厂生成事务
+			//通过工厂生成事务
 			tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);
-			// 生成一个执行器
+			//生成一个执行器
 			final Executor executor = configuration.newExecutor(tx, execType);
-			// 生成DefaultSqlSession
+			//返回DefaultSqlSession
 			return new DefaultSqlSession(configuration, executor, autoCommit);
 		} catch (Exception e) {
-			// 如果打开事务出错，则关闭它
 			closeTransaction(tx);
 			throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
 		} finally {
-			// 最后清空错误上下文
 			ErrorContext.instance().reset();
 		}
 	}

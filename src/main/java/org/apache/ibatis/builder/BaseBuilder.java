@@ -16,9 +16,9 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 //抽象基础构建器
 public abstract class BaseBuilder {
 
-	protected final Configuration configuration; // 配置
-	protected final TypeAliasRegistry typeAliasRegistry; // 类型别名注册器
-	protected final TypeHandlerRegistry typeHandlerRegistry; // 类型处理器注册器
+	protected final Configuration configuration;             //配置代表类
+	protected final TypeAliasRegistry typeAliasRegistry;     //类型别名注册器
+	protected final TypeHandlerRegistry typeHandlerRegistry; //类型处理器注册器
 
 	public BaseBuilder(Configuration configuration) {
 		this.configuration = configuration;

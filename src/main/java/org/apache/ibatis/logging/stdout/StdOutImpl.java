@@ -2,9 +2,6 @@ package org.apache.ibatis.logging.stdout;
 
 import org.apache.ibatis.logging.Log;
 
-/**
- * 打印到控制台的Log
- */
 public class StdOutImpl implements Log {
 
 	public StdOutImpl(String clazz) {

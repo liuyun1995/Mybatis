@@ -19,7 +19,7 @@ import java.util.jar.JarInputStream;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 
-//默认的VFS，提供了读取jar包的方法
+//默认的VFS, 提供了读取jar包的方法
 public class DefaultVFS extends VFS {
 	
 	private static final Log log = LogFactory.getLog(ResolverUtil.class);
@@ -36,10 +36,6 @@ public class DefaultVFS extends VFS {
 		InputStream is = null;
 		try {
 			List<String> resources = new ArrayList<String>();
-
-			// First, try to find the URL of a JAR file containing the requested resource.
-			// If a JAR
-			// file is found, then we'll list child resources by reading the JAR.
 			URL jarUrl = findJarForResource(url);
 			if (jarUrl != null) {
 				is = jarUrl.openStream();
@@ -50,8 +46,6 @@ public class DefaultVFS extends VFS {
 				List<String> children = new ArrayList<String>();
 				try {
 					if (isJar(url)) {
-						// Some versions of JBoss VFS might give a JAR stream even if the resource
-						// referenced by the URL isn't actually a JAR
 						is = url.openStream();
 						JarInputStream jarInput = new JarInputStream(is);
 						log.debug("Listing " + url);
@@ -61,14 +55,6 @@ public class DefaultVFS extends VFS {
 						}
 						jarInput.close();
 					} else {
-						/*
-						 * Some servlet containers allow reading from directory resources like a text
-						 * file, listing the child resources one per line. However, there is no way to
-						 * differentiate between directory and file resources just by reading them. To
-						 * work around that, as each line is read, try to look it up via the class
-						 * loader as a child of the current resource. If any line fails then we assume
-						 * the current resource is not a directory.
-						 */
 						is = url.openStream();
 						BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 						List<String> lines = new ArrayList<String>();
@@ -80,7 +66,6 @@ public class DefaultVFS extends VFS {
 								break;
 							}
 						}
-
 						if (!lines.isEmpty()) {
 							log.debug("Listing " + url);
 							children.addAll(lines);

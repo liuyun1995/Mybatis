@@ -9,9 +9,7 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.Properties;
 
-/**
- * 类似于commons-io里的一些util方法,不过实际上没有任何地方用到了这个类
- */
+//额外的资源
 public class ExternalResources {
 
 	private ExternalResources() {}
@@ -58,7 +56,6 @@ public class ExternalResources {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return templateName;
 	}
 

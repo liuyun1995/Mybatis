@@ -11,22 +11,15 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-/**
- * 对org.w3c.dom.Node的包装
- */
 public class XNode {
-
-	// org.w3c.dom.Node
+	
 	private Node node;
-	// 以下都是预先把信息都解析好，放到map等数据结构中（内存中）
 	private String name;
 	private String body;
 	private Properties attributes;
 	private Properties variables;
-	// XPathParser方便xpath解析
 	private XPathParser xpathParser;
-
-	// 在构造时就把一些信息（属性，body）全部解析好，以便我们直接通过getter函数取得
+	
 	public XNode(XPathParser xpathParser, Node node, Properties variables) {
 		this.xpathParser = xpathParser;
 		this.node = node;
@@ -41,7 +34,6 @@ public class XNode {
 	}
 
 	public XNode getParent() {
-		// 调用Node.getParentNode,如果取到，包装一下，返回XNode
 		Node parent = node.getParentNode();
 		if (parent == null || !(parent instanceof Element)) {
 			return null;
@@ -50,9 +42,7 @@ public class XNode {
 		}
 	}
 
-	// 取得完全的path (a/b/c)
 	public String getPath() {
-		// 循环依次取得节点的父节点，然后倒序打印,也可以用一个堆栈实现
 		StringBuilder builder = new StringBuilder();
 		Node current = node;
 		while (current != null && current instanceof Element) {

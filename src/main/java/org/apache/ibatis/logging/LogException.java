@@ -2,9 +2,6 @@ package org.apache.ibatis.logging;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 
-/**
- * 日志异常,继承PersistenceException，没啥好说的，就是语义分类
- */
 public class LogException extends PersistenceException {
 
 	private static final long serialVersionUID = 1022924004852350942L;

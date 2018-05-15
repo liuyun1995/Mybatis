@@ -49,25 +49,13 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
 			throw ExceptionUtil.unwrapThrowable(t);
 		}
 	}
-
-	/*
-	 * Creates a logging version of a connection
-	 *
-	 * @param conn - the original connection
-	 * 
-	 * @return - the connection with logging
-	 */
+	
 	public static Connection newInstance(Connection conn, Log statementLog, int queryStack) {
 		InvocationHandler handler = new ConnectionLogger(conn, statementLog, queryStack);
 		ClassLoader cl = Connection.class.getClassLoader();
 		return (Connection) Proxy.newProxyInstance(cl, new Class[] { Connection.class }, handler);
 	}
-
-	/*
-	 * return the wrapped connection
-	 *
-	 * @return the connection
-	 */
+	
 	public Connection getConnection() {
 		return connection;
 	}

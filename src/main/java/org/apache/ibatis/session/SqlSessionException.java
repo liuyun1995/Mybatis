@@ -2,9 +2,7 @@ package org.apache.ibatis.session;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 
-/**
- * SqlSession异常
- */
+//SqlSession异常
 public class SqlSessionException extends PersistenceException {
 
 	private static final long serialVersionUID = 3833184690240265047L;
@@ -24,4 +22,5 @@ public class SqlSessionException extends PersistenceException {
 	public SqlSessionException(Throwable cause) {
 		super(cause);
 	}
+	
 }

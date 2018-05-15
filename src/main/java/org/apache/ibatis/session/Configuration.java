@@ -72,12 +72,10 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
-/**
- * 配置，里面好多配置项
- */
+//配置代表类
 public class Configuration {
 
-	// 环境
+	//运行环境
 	protected Environment environment;
 
 	// ---------以下都是<settings>节点-------
@@ -116,13 +114,7 @@ public class Configuration {
 	protected ProxyFactory proxyFactory = new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL
 
 	protected String databaseId;
-	/**
-	 * Configuration factory class. Used to create Configuration for loading
-	 * deserialized unread properties.
-	 *
-	 * @see <a href='https://code.google.com/p/mybatis/issues/detail?id=300'>Issue
-	 *      300</a> (google code)
-	 */
+	//配置工厂
 	protected Class<?> configurationFactory;
 
 	protected final InterceptorChain interceptorChain = new InterceptorChain();
@@ -152,11 +144,7 @@ public class Configuration {
 	protected final Collection<ResultMapResolver> incompleteResultMaps = new LinkedList<ResultMapResolver>();
 	protected final Collection<MethodResolver> incompleteMethods = new LinkedList<MethodResolver>();
 
-	/*
-	 * A map holds cache-ref relationship. The key is the namespace that references
-	 * a cache bound to another namespace and the value is the namespace which the
-	 * actual cache is bound to.
-	 */
+	//缓存关系映射
 	protected final Map<String, String> cacheRefMap = new HashMap<String, String>();
 
 	public Configuration(Environment environment) {
@@ -408,10 +396,7 @@ public class Configuration {
 	public TypeAliasRegistry getTypeAliasRegistry() {
 		return typeAliasRegistry;
 	}
-
-	/**
-	 * @since 3.2.2
-	 */
+	
 	public MapperRegistry getMapperRegistry() {
 		return mapperRegistry;
 	}
@@ -431,10 +416,7 @@ public class Configuration {
 	public void setObjectWrapperFactory(ObjectWrapperFactory objectWrapperFactory) {
 		this.objectWrapperFactory = objectWrapperFactory;
 	}
-
-	/**
-	 * @since 3.2.2
-	 */
+	
 	public List<Interceptor> getInterceptors() {
 		return interceptorChain.getInterceptors();
 	}
@@ -454,12 +436,12 @@ public class Configuration {
 		return languageRegistry.getDefaultDriver();
 	}
 
-	// 创建元对象
+	//创建元对象
 	public MetaObject newMetaObject(Object object) {
 		return MetaObject.forObject(object, objectFactory, objectWrapperFactory);
 	}
 
-	// 创建参数处理器
+	//创建参数处理器
 	public ParameterHandler newParameterHandler(MappedStatement mappedStatement, Object parameterObject,
 			BoundSql boundSql) {
 		// 创建ParameterHandler
@@ -470,7 +452,7 @@ public class Configuration {
 		return parameterHandler;
 	}
 
-	// 创建结果集处理器
+	//创建结果集处理器
 	public ResultSetHandler newResultSetHandler(Executor executor, MappedStatement mappedStatement, RowBounds rowBounds,
 			ParameterHandler parameterHandler, ResultHandler resultHandler, BoundSql boundSql) {
 		// 创建DefaultResultSetHandler(稍老一点的版本3.1是创建NestedResultSetHandler或者FastResultSetHandler)
@@ -481,7 +463,7 @@ public class Configuration {
 		return resultSetHandler;
 	}
 
-	// 创建语句处理器
+	//创建语句处理器
 	public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement,
 			Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
 		// 创建路由选择语句处理器
@@ -496,7 +478,7 @@ public class Configuration {
 		return newExecutor(transaction, defaultExecutorType);
 	}
 
-	// 产生执行器
+	//产生执行器
 	public Executor newExecutor(Transaction transaction, ExecutorType executorType) {
 		executorType = executorType == null ? defaultExecutorType : executorType;
 		// 这句再做一下保护,囧,防止粗心大意的人将defaultExecutorType设成null?
@@ -704,51 +686,37 @@ public class Configuration {
 		cacheRefMap.put(namespace, referencedNamespace);
 	}
 
-	/*
-	 * Parses all the unprocessed statement nodes in the cache. It is recommended to
-	 * call this method once all the mappers are added as it provides fail-fast
-	 * statement validation.
-	 */
+	
 	protected void buildAllStatements() {
 		if (!incompleteResultMaps.isEmpty()) {
 			synchronized (incompleteResultMaps) {
-				// This always throws a BuilderException.
 				incompleteResultMaps.iterator().next().resolve();
 			}
 		}
 		if (!incompleteCacheRefs.isEmpty()) {
 			synchronized (incompleteCacheRefs) {
-				// This always throws a BuilderException.
 				incompleteCacheRefs.iterator().next().resolveCacheRef();
 			}
 		}
 		if (!incompleteStatements.isEmpty()) {
 			synchronized (incompleteStatements) {
-				// This always throws a BuilderException.
 				incompleteStatements.iterator().next().parseStatementNode();
 			}
 		}
 		if (!incompleteMethods.isEmpty()) {
 			synchronized (incompleteMethods) {
-				// This always throws a BuilderException.
 				incompleteMethods.iterator().next().resolve();
 			}
 		}
 	}
-
-	/*
-	 * Extracts namespace from fully qualified statement id.
-	 *
-	 * @param statementId
-	 * 
-	 * @return namespace or null when id does not contain period.
-	 */
+	
+	
 	protected String extractNamespace(String statementId) {
 		int lastPeriod = statementId.lastIndexOf('.');
 		return lastPeriod > 0 ? statementId.substring(0, lastPeriod) : null;
 	}
-
-	// Slow but a one time cost. A better solution is welcome.
+	
+	
 	protected void checkGloballyForDiscriminatedNestedResultMaps(ResultMap rm) {
 		if (rm.hasNestedResultMaps()) {
 			for (Map.Entry<String, ResultMap> entry : resultMaps.entrySet()) {
@@ -766,8 +734,8 @@ public class Configuration {
 			}
 		}
 	}
-
-	// Slow but a one time cost. A better solution is welcome.
+	
+	
 	protected void checkLocallyForDiscriminatedNestedResultMaps(ResultMap rm) {
 		if (!rm.hasNestedResultMaps() && rm.getDiscriminator() != null) {
 			for (Map.Entry<String, String> entry : rm.getDiscriminator().getDiscriminatorMap().entrySet()) {
@@ -783,7 +751,7 @@ public class Configuration {
 		}
 	}
 
-	// 静态内部类,严格的Map，不允许多次覆盖key所对应的value
+	// 静态内部类,严格的Map, 不允许多次覆盖key所对应的value
 	protected static class StrictMap<V> extends HashMap<String, V> {
 
 		private static final long serialVersionUID = -4950446264854982944L;
@@ -833,12 +801,9 @@ public class Configuration {
 
 		public V get(Object key) {
 			V value = super.get(key);
-			// 如果找不到相应的key，直接报错
 			if (value == null) {
 				throw new IllegalArgumentException(name + " does not contain value for " + key);
 			}
-			// 如果是模糊型的，也报错，提示用户
-			// 原来这个模糊型就是为了提示用户啊
 			if (value instanceof Ambiguity) {
 				throw new IllegalArgumentException(((Ambiguity) value).getSubject() + " is ambiguous in " + name
 						+ " (try using the full name including the namespace, or rename one of the entries)");

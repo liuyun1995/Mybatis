@@ -3,9 +3,6 @@ package org.apache.ibatis.logging.slf4j;
 import org.apache.ibatis.logging.Log;
 import org.slf4j.Logger;
 
-/**
- * 用的slf4j里的Logger和LoggerFactory
- */
 class Slf4jLoggerImpl implements Log {
 
 	private Logger log;
