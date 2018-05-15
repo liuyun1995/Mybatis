@@ -1,18 +1,3 @@
-/*
- *    Copyright 2009-2014 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package org.apache.ibatis.cache.impl;
 
 import java.util.HashMap;
@@ -23,72 +8,71 @@ import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
 
 /**
- * @author Clinton Begin
  * 永久缓存, 一旦存入就一直保持
  */
 public class PerpetualCache implements Cache {
 
-  //每个永久缓存有一个ID来识别
-  private String id;
+	// 每个永久缓存有一个ID来识别
+	private String id;
 
-  //内部就是一个HashMap,所有方法基本就是直接调用HashMap的方法,不支持多线程？
-  private Map<Object, Object> cache = new HashMap<Object, Object>();
+	// 内部就是一个HashMap,所有方法基本就是直接调用HashMap的方法,不支持多线程？
+	private Map<Object, Object> cache = new HashMap<Object, Object>();
 
-  public PerpetualCache(String id) {
-    this.id = id;
-  }
+	public PerpetualCache(String id) {
+		this.id = id;
+	}
 
-  public String getId() {
-    return id;
-  }
+	public String getId() {
+		return id;
+	}
 
-  public int getSize() {
-    return cache.size();
-  }
+	public int getSize() {
+		return cache.size();
+	}
 
-  public void putObject(Object key, Object value) {
-    cache.put(key, value);
-  }
+	public void putObject(Object key, Object value) {
+		cache.put(key, value);
+	}
 
-  public Object getObject(Object key) {
-    return cache.get(key);
-  }
+	public Object getObject(Object key) {
+		return cache.get(key);
+	}
 
-  public Object removeObject(Object key) {
-    return cache.remove(key);
-  }
+	public Object removeObject(Object key) {
+		return cache.remove(key);
+	}
 
-  public void clear() {
-    cache.clear();
-  }
+	public void clear() {
+		cache.clear();
+	}
 
-  public ReadWriteLock getReadWriteLock() {
-    return null;
-  }
+	public ReadWriteLock getReadWriteLock() {
+		return null;
+	}
 
-  @Override
-  public boolean equals(Object o) {
-    //只要id相等就认为两个cache相同
-    if (getId() == null) {
-      throw new CacheException("Cache instances require an ID.");
-    }
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof Cache)) {
-      return false;
-    }
+	@Override
+	public boolean equals(Object o) {
+		// 只要id相等就认为两个cache相同
+		if (getId() == null) {
+			throw new CacheException("Cache instances require an ID.");
+		}
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof Cache)) {
+			return false;
+		}
 
-    Cache otherCache = (Cache) o;
-    return getId().equals(otherCache.getId());
-  }
+		Cache otherCache = (Cache) o;
+		return getId().equals(otherCache.getId());
+	}
 
-  @Override
-  public int hashCode() {
-    if (getId() == null) {
-      throw new CacheException("Cache instances require an ID.");
-    }
-    return getId().hashCode();
-  }
+	@Override
+	public int hashCode() {
+		if (getId() == null) {
+			throw new CacheException("Cache instances require an ID.");
+		}
+		return getId().hashCode();
+	}
 
 }

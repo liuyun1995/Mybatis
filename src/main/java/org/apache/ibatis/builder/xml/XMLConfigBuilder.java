@@ -294,7 +294,8 @@ public class XMLConfigBuilder extends BaseBuilder {
 
 			// 下面非常简单，一个个设置属性
 			// 如何自动映射列到字段/ 属性
-			configuration.setAutoMappingBehavior(AutoMappingBehavior.valueOf(props.getProperty("autoMappingBehavior", "PARTIAL")));
+			configuration.setAutoMappingBehavior(
+					AutoMappingBehavior.valueOf(props.getProperty("autoMappingBehavior", "PARTIAL")));
 			// 缓存
 			configuration.setCacheEnabled(booleanValueOf(props.getProperty("cacheEnabled"), true));
 			// proxyFactory (CGLIB | JAVASSIST)
@@ -305,17 +306,21 @@ public class XMLConfigBuilder extends BaseBuilder {
 			// 延迟加载时，每种属性是否还要按需加载
 			configuration.setAggressiveLazyLoading(booleanValueOf(props.getProperty("aggressiveLazyLoading"), true));
 			// 允不允许多种结果集从一个单独 的语句中返回
-			configuration.setMultipleResultSetsEnabled(booleanValueOf(props.getProperty("multipleResultSetsEnabled"), true));
+			configuration
+					.setMultipleResultSetsEnabled(booleanValueOf(props.getProperty("multipleResultSetsEnabled"), true));
 			// 使用列标签代替列名
 			configuration.setUseColumnLabel(booleanValueOf(props.getProperty("useColumnLabel"), true));
 			// 允许 JDBC 支持生成的键
 			configuration.setUseGeneratedKeys(booleanValueOf(props.getProperty("useGeneratedKeys"), false));
 			// 配置默认的执行器
-			configuration.setDefaultExecutorType(ExecutorType.valueOf(props.getProperty("defaultExecutorType", "SIMPLE")));
+			configuration
+					.setDefaultExecutorType(ExecutorType.valueOf(props.getProperty("defaultExecutorType", "SIMPLE")));
 			// 超时时间
-			configuration.setDefaultStatementTimeout(integerValueOf(props.getProperty("defaultStatementTimeout"), null));
+			configuration
+					.setDefaultStatementTimeout(integerValueOf(props.getProperty("defaultStatementTimeout"), null));
 			// 是否将DB字段自动映射到驼峰式Java属性（A_COLUMN-->aColumn）
-			configuration.setMapUnderscoreToCamelCase(booleanValueOf(props.getProperty("mapUnderscoreToCamelCase"), false));
+			configuration
+					.setMapUnderscoreToCamelCase(booleanValueOf(props.getProperty("mapUnderscoreToCamelCase"), false));
 			// 嵌套语句上使用RowBounds
 			configuration.setSafeRowBoundsEnabled(booleanValueOf(props.getProperty("safeRowBoundsEnabled"), false));
 			// 默认用session级别的缓存
@@ -323,9 +328,11 @@ public class XMLConfigBuilder extends BaseBuilder {
 			// 为null值设置jdbctype
 			configuration.setJdbcTypeForNull(JdbcType.valueOf(props.getProperty("jdbcTypeForNull", "OTHER")));
 			// Object的哪些方法将触发延迟加载
-			configuration.setLazyLoadTriggerMethods(stringSetValueOf(props.getProperty("lazyLoadTriggerMethods"), "equals,clone,hashCode,toString"));
+			configuration.setLazyLoadTriggerMethods(
+					stringSetValueOf(props.getProperty("lazyLoadTriggerMethods"), "equals,clone,hashCode,toString"));
 			// 使用安全的ResultHandler
-			configuration.setSafeResultHandlerEnabled(booleanValueOf(props.getProperty("safeResultHandlerEnabled"), true));
+			configuration
+					.setSafeResultHandlerEnabled(booleanValueOf(props.getProperty("safeResultHandlerEnabled"), true));
 			// 动态SQL生成语言所使用的脚本语言
 			configuration.setDefaultScriptingLanguage(resolveClass(props.getProperty("defaultScriptingLanguage")));
 			// 当结果集中含有Null值时是否执行映射对象的setter或者Map对象的put方法。此设置对于原始类型如int,boolean等无效。
@@ -367,7 +374,8 @@ public class XMLConfigBuilder extends BaseBuilder {
 					// 7.2数据源
 					DataSourceFactory dsFactory = dataSourceElement(child.evalNode("dataSource"));
 					DataSource dataSource = dsFactory.getDataSource();
-					Environment.Builder environmentBuilder = new Environment.Builder(id).transactionFactory(txFactory).dataSource(dataSource);
+					Environment.Builder environmentBuilder = new Environment.Builder(id).transactionFactory(txFactory)
+							.dataSource(dataSource);
 					configuration.setEnvironment(environmentBuilder.build());
 				}
 			}

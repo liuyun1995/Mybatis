@@ -25,10 +25,10 @@ import org.apache.ibatis.session.SqlSession;
 public class DefaultSqlSession implements SqlSession {
 
 	private Configuration configuration; // 配置信息
-	private Executor executor;           // 执行器
+	private Executor executor; // 执行器
 
-	private boolean autoCommit;         // 是否自动提交
-	private boolean dirty;              // 是否是脏数据
+	private boolean autoCommit; // 是否自动提交
+	private boolean dirty; // 是否是脏数据
 
 	public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {
 		this.configuration = configuration;
@@ -54,7 +54,8 @@ public class DefaultSqlSession implements SqlSession {
 		if (list.size() == 1) {
 			return list.get(0);
 		} else if (list.size() > 1) {
-			throw new TooManyResultsException("Expected one result (or null) to be returned by selectOne(), but found: " + list.size());
+			throw new TooManyResultsException(
+					"Expected one result (or null) to be returned by selectOne(), but found: " + list.size());
 		} else {
 			return null;
 		}
