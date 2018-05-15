@@ -11,9 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * 映射器注册机
- */
+//映射器注册机
 public class MapperRegistry {
 
 	private Configuration config;

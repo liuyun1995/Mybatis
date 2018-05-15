@@ -2,9 +2,7 @@ package org.apache.ibatis.builder;
 
 import java.util.HashMap;
 
-/**
- * 参数表达式,继承自HashMap，可以参考ParameterExpressionTest
- */
+//参数表达式
 public class ParameterExpression extends HashMap<String, String> {
 
 	private static final long serialVersionUID = -2417552199605158680L;

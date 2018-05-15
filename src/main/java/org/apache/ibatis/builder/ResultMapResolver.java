@@ -6,9 +6,7 @@ import org.apache.ibatis.mapping.Discriminator;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
 
-/**
- * 结果映射解析器
- */
+//结果映射解析器
 public class ResultMapResolver {
 	private final MapperBuilderAssistant assistant;
 	private String id;

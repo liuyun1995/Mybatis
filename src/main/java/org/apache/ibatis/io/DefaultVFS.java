@@ -19,15 +19,13 @@ import java.util.jar.JarInputStream;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 
-/**
- * 默认的VFS，提供了读取jar包的方法
- */
+//默认的VFS，提供了读取jar包的方法
 public class DefaultVFS extends VFS {
+	
 	private static final Log log = LogFactory.getLog(ResolverUtil.class);
-
-	/** The magic header that indicates a JAR (ZIP) file. */
+	
 	private static final byte[] JAR_MAGIC = { 'P', 'K', 3, 4 };
-
+	
 	@Override
 	public boolean isValid() {
 		return true;
@@ -134,19 +132,7 @@ public class DefaultVFS extends VFS {
 		}
 	}
 
-	/**
-	 * List the names of the entries in the given {@link JarInputStream} that begin
-	 * with the specified {@code path}. Entries will match with or without a leading
-	 * slash.
-	 * 
-	 * @param jar
-	 *            The JAR input stream
-	 * @param path
-	 *            The leading path to match
-	 * @return The names of all the matching entries
-	 * @throws IOException
-	 *             If I/O errors occur
-	 */
+	//获取资源列表
 	protected List<String> listResources(JarInputStream jar, String path) throws IOException {
 		// Include the leading and trailing slash when matching names
 		if (!path.startsWith("/")) {
@@ -177,17 +163,7 @@ public class DefaultVFS extends VFS {
 		return resources;
 	}
 
-	/**
-	 * Attempts to deconstruct the given URL to find a JAR file containing the
-	 * resource referenced by the URL. That is, assuming the URL references a JAR
-	 * entry, this method will return a URL that references the JAR file containing
-	 * the entry. If the JAR cannot be located, then this method returns null.
-	 * 
-	 * @param url
-	 *            The URL of the JAR entry.
-	 * @return The URL of the JAR file, if one is found. Null if not.
-	 * @throws MalformedURLException
-	 */
+	//获取指定资源
 	protected URL findJarForResource(URL url) throws MalformedURLException {
 		log.debug("Find JAR URL: " + url);
 
@@ -244,42 +220,18 @@ public class DefaultVFS extends VFS {
 		} catch (MalformedURLException e) {
 			log.warn("Invalid JAR URL: " + jarUrl);
 		}
-
 		log.debug("Not a JAR: " + jarUrl);
 		return null;
 	}
-
-	/**
-	 * Converts a Java package name to a path that can be looked up with a call to
-	 * {@link ClassLoader#getResources(String)}.
-	 * 
-	 * @param packageName
-	 *            The Java package name to convert to a path
-	 */
+	
 	protected String getPackagePath(String packageName) {
 		return packageName == null ? null : packageName.replace('.', '/');
 	}
-
-	/**
-	 * Returns true if the resource located at the given URL is a JAR file.
-	 * 
-	 * @param url
-	 *            The URL of the resource to test.
-	 */
+	
 	protected boolean isJar(URL url) {
 		return isJar(url, new byte[JAR_MAGIC.length]);
 	}
-
-	/**
-	 * Returns true if the resource located at the given URL is a JAR file.
-	 * 
-	 * @param url
-	 *            The URL of the resource to test.
-	 * @param buffer
-	 *            A buffer into which the first few bytes of the resource are read.
-	 *            The buffer must be at least the size of {@link #JAR_MAGIC}. (The
-	 *            same buffer may be reused for multiple calls as an optimization.)
-	 */
+	
 	protected boolean isJar(URL url, byte[] buffer) {
 		InputStream is = null;
 		try {
@@ -300,7 +252,6 @@ public class DefaultVFS extends VFS {
 				}
 			}
 		}
-
 		return false;
 	}
 }

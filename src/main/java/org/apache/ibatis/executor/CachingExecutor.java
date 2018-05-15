@@ -16,9 +16,7 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
-/**
- * 二级缓存执行器
- */
+//二级缓存执行器
 public class CachingExecutor implements Executor {
 
 	private Executor delegate;
@@ -35,7 +33,6 @@ public class CachingExecutor implements Executor {
 
 	public void close(boolean forceRollback) {
 		try {
-			// issues #499, #524 and #573
 			if (forceRollback) {
 				tcm.rollback();
 			} else {
@@ -78,7 +75,7 @@ public class CachingExecutor implements Executor {
 				List<E> list = (List<E>) tcm.getObject(cache, key);
 				if (list == null) {
 					list = delegate.<E>query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
-					tcm.putObject(cache, key, list); // issue #578 and #116
+					tcm.putObject(cache, key, list);
 				}
 				return list;
 			}

@@ -2,9 +2,7 @@ package org.apache.ibatis.executor;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 
-/**
- * 执行异常
- */
+//执行异常
 public class ExecutorException extends PersistenceException {
 
 	private static final long serialVersionUID = 4060977051977364820L;

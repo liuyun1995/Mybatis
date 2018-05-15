@@ -13,20 +13,10 @@ import org.apache.ibatis.logging.LogFactory;
  * 找一个package下满足条件的所有类
  */
 public class ResolverUtil<T> {
-	/*
-	 * An instance of Log to use for logging in this class.
-	 */
+	
 	private static final Log log = LogFactory.getLog(ResolverUtil.class);
-
-	/**
-	 * A simple interface that specifies how to test classes to determine if they
-	 * are to be included in the results produced by the ResolverUtil.
-	 */
+	
 	public static interface Test {
-		/**
-		 * Will be called repeatedly with candidate classes. Must return True if a class
-		 * is to be included in the results, false otherwise.
-		 */
 		boolean matches(Class<?> type);
 	}
 

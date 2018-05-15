@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 缓存key 一般缓存框架的数据结构基本上都是 Key-Value方式存储， MyBatis对于其 Key的生成采取规则为：[mappedStementId
- * + offset + limit + SQL + queryParams + environment]生成一个哈希码
+ * 缓存key 一般缓存框架的数据结构基本上都是 Key-Value方式存储，
+ * MyBatis对于其 Key的生成采取规则为：
+ * [mappedStementId + offset + limit + SQL + queryParams + environment]生成一个哈希码
  */
 public class CacheKey implements Cloneable, Serializable {
 

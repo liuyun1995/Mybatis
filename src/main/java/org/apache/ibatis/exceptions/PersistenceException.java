@@ -1,8 +1,6 @@
 package org.apache.ibatis.exceptions;
 
-/**
- * 持久化异常 可以看到这个类只是继承了一个废弃的IbatisException，其他都一样
- */
+//持久化异常
 @SuppressWarnings("deprecation")
 public class PersistenceException extends IbatisException {
 
@@ -23,4 +21,5 @@ public class PersistenceException extends IbatisException {
 	public PersistenceException(Throwable cause) {
 		super(cause);
 	}
+	
 }

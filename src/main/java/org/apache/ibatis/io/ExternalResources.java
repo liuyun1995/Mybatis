@@ -14,16 +14,13 @@ import java.util.Properties;
  */
 public class ExternalResources {
 
-	private ExternalResources() {
-		// do nothing
-	}
+	private ExternalResources() {}
 
 	// 复制文件
 	public static void copyExternalResource(File sourceFile, File destFile) throws IOException {
 		if (!destFile.exists()) {
 			destFile.createNewFile();
 		}
-
 		FileChannel source = null;
 		FileChannel destination = null;
 		try {
@@ -53,7 +50,6 @@ public class ExternalResources {
 			throws FileNotFoundException {
 		String templateName = "";
 		Properties migrationProperties = new Properties();
-
 		try {
 			migrationProperties.load(new FileInputStream(templatePath));
 			templateName = migrationProperties.getProperty(templateProperty);

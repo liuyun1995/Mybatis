@@ -3,9 +3,7 @@ package org.apache.ibatis.executor;
 import java.sql.BatchUpdateException;
 import java.util.List;
 
-/**
- * 批处理执行异常
- */
+//批处理执行异常
 public class BatchExecutorException extends ExecutorException {
 
 	private static final long serialVersionUID = 154049229650533990L;
@@ -20,14 +18,8 @@ public class BatchExecutorException extends ExecutorException {
 		this.successfulBatchResults = successfulBatchResults;
 		this.batchResult = batchResult;
 	}
-
-	/*
-	 * Returns the BatchUpdateException that caused the nested executor to fail.
-	 * That exception contains an array of row counts that can be used to determine
-	 * exactly which statemtn of the executor caused the failure (or failures).
-	 *
-	 * @return the root BatchUpdateException
-	 */
+	
+	//获取批次更新异常
 	public BatchUpdateException getBatchUpdateException() {
 		return batchUpdateException;
 	}

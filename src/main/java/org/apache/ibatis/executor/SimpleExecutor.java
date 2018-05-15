@@ -15,16 +15,13 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
-/**
- * 简单执行器
- */
+//简单执行器
 public class SimpleExecutor extends BaseExecutor {
 
 	public SimpleExecutor(Configuration configuration, Transaction transaction) {
 		super(configuration, transaction);
 	}
-
-	// update
+	
 	@Override
 	public int doUpdate(MappedStatement ms, Object parameter) throws SQLException {
 		Statement stmt = null;
@@ -42,8 +39,7 @@ public class SimpleExecutor extends BaseExecutor {
 			closeStatement(stmt);
 		}
 	}
-
-	// select
+	
 	@Override
 	public <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler,
 			BoundSql boundSql) throws SQLException {

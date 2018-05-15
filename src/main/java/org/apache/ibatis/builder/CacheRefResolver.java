@@ -2,9 +2,7 @@ package org.apache.ibatis.builder;
 
 import org.apache.ibatis.cache.Cache;
 
-/**
- * 缓存引用解析器
- */
+//缓存引用解析器
 public class CacheRefResolver {
 	private final MapperBuilderAssistant assistant;
 	private final String cacheRefNamespace;

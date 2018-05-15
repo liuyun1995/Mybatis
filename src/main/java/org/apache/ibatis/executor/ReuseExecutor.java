@@ -17,9 +17,7 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
-/**
- * 可重用的执行器
- */
+//可重用的执行器
 public class ReuseExecutor extends BaseExecutor {
 
 	// 可重用的执行器内部用了一个map，用来缓存SQL语句对应的Statement

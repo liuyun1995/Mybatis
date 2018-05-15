@@ -2,9 +2,7 @@ package org.apache.ibatis.datasource;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 
-/**
- * 数据源异常,继承PersistenceException
- */
+//数据源异常
 public class DataSourceException extends PersistenceException {
 
 	private static final long serialVersionUID = -5251396250407091334L;

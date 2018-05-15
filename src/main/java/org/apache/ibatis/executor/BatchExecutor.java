@@ -19,6 +19,7 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
+//批次执行器
 public class BatchExecutor extends BaseExecutor {
 
 	public static final int BATCH_UPDATE_RETURN_VALUE = Integer.MIN_VALUE + 1002;
@@ -105,7 +106,7 @@ public class BatchExecutor extends BaseExecutor {
 							.append(")").append(" failed.");
 					if (i > 0) {
 						message.append(" ").append(i)
-								.append(" prior sub executor(s) completed successfully, but will be rolled back.");
+							   .append(" prior sub executor(s) completed successfully, but will be rolled back.");
 					}
 					throw new BatchExecutorException(message.toString(), e, results, batchResult);
 				}

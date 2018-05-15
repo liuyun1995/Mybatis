@@ -7,9 +7,7 @@ import org.apache.ibatis.session.Configuration;
 import java.lang.reflect.Array;
 import java.util.List;
 
-/**
- * 结果抽取器
- */
+//结果抽取器
 public class ResultExtractor {
 	private final Configuration configuration;
 	private final ObjectFactory objectFactory;

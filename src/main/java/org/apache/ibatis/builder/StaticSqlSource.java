@@ -7,9 +7,7 @@ import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.session.Configuration;
 
-/**
- * 静态SQL源码
- */
+//静态SQL源码
 public class StaticSqlSource implements SqlSource {
 
 	private String sql;

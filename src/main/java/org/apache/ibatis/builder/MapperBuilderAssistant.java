@@ -34,9 +34,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
-/**
- * 映射构建器助手，建造者模式,继承BaseBuilder
- */
+//映射构建器助手
 public class MapperBuilderAssistant extends BaseBuilder {
 
 	// 每个助手都有1个namespace,resource,cache
