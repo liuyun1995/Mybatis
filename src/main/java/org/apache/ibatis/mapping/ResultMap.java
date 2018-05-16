@@ -9,22 +9,22 @@ import java.util.Set;
 
 import org.apache.ibatis.session.Configuration;
 
-//结果映射
+//结果映射集<resultMap>
 public class ResultMap {
-	private String id;
-	private Class<?> type;
-	private List<ResultMapping> resultMappings;
-	private List<ResultMapping> idResultMappings;
-	private List<ResultMapping> constructorResultMappings;
-	private List<ResultMapping> propertyResultMappings;
+	
+	private String id;                                      //id属性
+	private Class<?> type;                                  //type属性
+	private List<ResultMapping> resultMappings;             //result标签集合
+	private List<ResultMapping> idResultMappings;           //id标签集合
+	private List<ResultMapping> constructorResultMappings;  //constructor标签集合
+	private List<ResultMapping> propertyResultMappings;     //property标签集合
 	private Set<String> mappedColumns;
 	private Discriminator discriminator;
 	private boolean hasNestedResultMaps;
 	private boolean hasNestedQueries;
 	private Boolean autoMapping;
 
-	private ResultMap() {
-	}
+	private ResultMap() {}
 
 	// 静态内部类，建造者模式
 	public static class Builder {
@@ -86,7 +86,6 @@ public class ResultMap {
 			if (resultMap.idResultMappings.isEmpty()) {
 				resultMap.idResultMappings.addAll(resultMap.resultMappings);
 			}
-			// lock down collections
 			resultMap.resultMappings = Collections.unmodifiableList(resultMap.resultMappings);
 			resultMap.idResultMappings = Collections.unmodifiableList(resultMap.idResultMappings);
 			resultMap.constructorResultMappings = Collections.unmodifiableList(resultMap.constructorResultMappings);

@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 
 //结果集类型
 public enum ResultSetType {
+	
 	FORWARD_ONLY(ResultSet.TYPE_FORWARD_ONLY), 
 	SCROLL_INSENSITIVE(ResultSet.TYPE_SCROLL_INSENSITIVE), 
 	SCROLL_SENSITIVE(ResultSet.TYPE_SCROLL_SENSITIVE);
@@ -17,4 +18,5 @@ public enum ResultSetType {
 	public int getValue() {
 		return value;
 	}
+	
 }

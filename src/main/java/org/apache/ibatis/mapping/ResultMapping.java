@@ -10,19 +10,19 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
-//结果映射
+//结果映射行
 public class ResultMapping {
 
-	private Configuration configuration;
-	private String property;
-	private String column;
-	private Class<?> javaType;
-	private JdbcType jdbcType;
-	private TypeHandler<?> typeHandler;
-	private String nestedResultMapId;
-	private String nestedQueryId;
-	private Set<String> notNullColumns;
-	private String columnPrefix;
+	private Configuration configuration;       //配置信息
+	private String property;                   //属性
+	private String column;                     //列名
+	private Class<?> javaType;                 //java字段类型
+	private JdbcType jdbcType;                 //jdbc类型
+	private TypeHandler<?> typeHandler;        //类型处理器
+	private String nestedResultMapId;          //嵌套ResultMapId
+	private String nestedQueryId;              //嵌套QueryId
+	private Set<String> notNullColumns;        //非空列集合
+	private String columnPrefix;               //列前缀
 	private List<ResultFlag> flags;
 	private List<ResultMapping> composites;
 	private String resultSet;
@@ -31,7 +31,7 @@ public class ResultMapping {
 
 	ResultMapping() {}
 
-	// 静态内部类，建造者模式
+	//静态内部类, 建造者模式
 	public static class Builder {
 		private ResultMapping resultMapping = new ResultMapping();
 
@@ -116,7 +116,6 @@ public class ResultMapping {
 		}
 
 		public ResultMapping build() {
-			// lock down collections
 			resultMapping.flags = Collections.unmodifiableList(resultMapping.flags);
 			resultMapping.composites = Collections.unmodifiableList(resultMapping.composites);
 			resolveTypeHandler();
@@ -126,18 +125,14 @@ public class ResultMapping {
 
 		// 一些验证逻辑,验证result map有没有写错
 		private void validate() {
-			// Issue #697: cannot define both nestedQueryId and nestedResultMapId
 			if (resultMapping.nestedQueryId != null && resultMapping.nestedResultMapId != null) {
 				throw new IllegalStateException(
 						"Cannot define both nestedQueryId and nestedResultMapId in property " + resultMapping.property);
 			}
-			// Issue #5: there should be no mappings without typehandler
 			if (resultMapping.nestedQueryId == null && resultMapping.nestedResultMapId == null
 					&& resultMapping.typeHandler == null) {
 				throw new IllegalStateException("No typehandler found for property " + resultMapping.property);
 			}
-			// Issue #4 and GH #39: column is optional only in nested resultmaps but not in
-			// the rest
 			if (resultMapping.nestedResultMapId == null && resultMapping.column == null
 					&& resultMapping.composites.isEmpty()) {
 				throw new IllegalStateException(
@@ -251,13 +246,10 @@ public class ResultMapping {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-
 		ResultMapping that = (ResultMapping) o;
-
 		if (property == null || !property.equals(that.property)) {
 			return false;
 		}
-
 		return true;
 	}
 
