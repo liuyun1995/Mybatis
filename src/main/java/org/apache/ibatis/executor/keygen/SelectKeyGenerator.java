@@ -41,8 +41,6 @@ public class SelectKeyGenerator implements KeyGenerator {
 				final Configuration configuration = ms.getConfiguration();
 				final MetaObject metaParam = configuration.newMetaObject(parameter);
 				if (keyProperties != null) {
-					// Do not close keyExecutor.
-					// The transaction will be closed by parent executor.
 					Executor keyExecutor = configuration.newExecutor(executor.getTransaction(), ExecutorType.SIMPLE);
 					List<Object> values = keyExecutor.query(keyStatement, parameter, RowBounds.DEFAULT,
 							Executor.NO_RESULT_HANDLER);
@@ -56,8 +54,6 @@ public class SelectKeyGenerator implements KeyGenerator {
 							if (metaResult.hasGetter(keyProperties[0])) {
 								setValue(metaParam, keyProperties[0], metaResult.getValue(keyProperties[0]));
 							} else {
-								// no getter for the property - maybe just a single value object
-								// so try that
 								setValue(metaParam, keyProperties[0], values.get(0));
 							}
 						} else {
@@ -75,9 +71,7 @@ public class SelectKeyGenerator implements KeyGenerator {
 
 	private void handleMultipleProperties(String[] keyProperties, MetaObject metaParam, MetaObject metaResult) {
 		String[] keyColumns = keyStatement.getKeyColumns();
-
 		if (keyColumns == null || keyColumns.length == 0) {
-			// no key columns specified, just use the property names
 			for (int i = 0; i < keyProperties.length; i++) {
 				setValue(metaParam, keyProperties[i], metaResult.getValue(keyProperties[i]));
 			}

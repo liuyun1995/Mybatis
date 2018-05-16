@@ -18,9 +18,7 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.JdbcType;
 
-/**
- * 存储过程语句处理器(CALLABLE)
- */
+//存储过程语句处理器
 public class CallableStatementHandler extends BaseStatementHandler {
 
 	public CallableStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter,

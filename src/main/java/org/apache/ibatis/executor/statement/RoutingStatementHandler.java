@@ -13,9 +13,7 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
-/**
- * 路由选择语句处理器,有点像代理模式
- */
+//路由选择语句处理器
 public class RoutingStatementHandler implements StatementHandler {
 
 	private final StatementHandler delegate;

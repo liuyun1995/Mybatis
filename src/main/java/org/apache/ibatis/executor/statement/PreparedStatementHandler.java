@@ -15,9 +15,7 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
-/**
- * 预处理语句处理器(PREPARED)
- */
+//预处理语句处理器
 public class PreparedStatementHandler extends BaseStatementHandler {
 
 	public PreparedStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter,

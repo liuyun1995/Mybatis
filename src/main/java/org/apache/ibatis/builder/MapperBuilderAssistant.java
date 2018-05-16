@@ -37,7 +37,7 @@ import org.apache.ibatis.type.TypeHandler;
 //映射构建器助手
 public class MapperBuilderAssistant extends BaseBuilder {
 
-	// 每个助手都有1个namespace,resource,cache
+	//每个助手都有1个namespace,resource,cache
 	private String currentNamespace;
 	private String resource;
 	private Cache currentCache;
@@ -70,12 +70,10 @@ public class MapperBuilderAssistant extends BaseBuilder {
 			return null;
 		}
 		if (isReference) {
-			// is it qualified with any namespace yet?
 			if (base.contains(".")) {
 				return base;
 			}
 		} else {
-			// is it qualified with this namespace yet?
 			if (base.startsWith(currentNamespace + ".")) {
 				return base;
 			}
@@ -153,7 +151,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		id = applyCurrentNamespace(id, false);
 		extend = applyCurrentNamespace(extend, true);
 
-		// 建造者模式
+		//建造者模式
 		ResultMap.Builder resultMapBuilder = new ResultMap.Builder(configuration, id, type, resultMappings,
 				autoMapping);
 		if (extend != null) {
@@ -276,7 +274,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		}
 	}
 
-	// 2.result map
+	//2.result map
 	private void setStatementResultMap(String resultMap, Class<?> resultType, ResultSetType resultSetType,
 			MappedStatement.Builder statementBuilder) {
 		resultMap = applyCurrentNamespace(resultMap, true);
@@ -408,8 +406,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		}
 		return javaType;
 	}
-
-	/** Backward compatibility signature */
+	
 	// 向后兼容方法
 	public ResultMapping buildResultMapping(Class<?> resultType, String property, String column, Class<?> javaType,
 			JdbcType jdbcType, String nestedSelect, String nestedResultMap, String notNullColumn, String columnPrefix,
@@ -418,20 +415,19 @@ public class MapperBuilderAssistant extends BaseBuilder {
 				notNullColumn, columnPrefix, typeHandler, flags, null, null, configuration.isLazyLoadingEnabled());
 	}
 
-	// 取得语言驱动
+	//取得语言驱动
 	public LanguageDriver getLanguageDriver(Class<?> langClass) {
 		if (langClass != null) {
-			// 注册语言驱动
+			//注册语言驱动
 			configuration.getLanguageRegistry().register(langClass);
 		} else {
-			// 如果为null，则取得默认驱动（mybatis3.2以前大家一直用的方法）
+			//如果为null，则取得默认驱动（mybatis3.2以前大家一直用的方法）
 			langClass = configuration.getLanguageRegistry().getDefaultDriverClass();
 		}
-		// 再去调configuration
+		//再去调configuration
 		return configuration.getLanguageRegistry().getDriver(langClass);
 	}
-
-	/** Backward compatibility signature */
+	
 	// 向后兼容方法
 	public MappedStatement addMappedStatement(String id, SqlSource sqlSource, StatementType statementType,
 			SqlCommandType sqlCommandType, Integer fetchSize, Integer timeout, String parameterMap,

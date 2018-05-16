@@ -1,7 +1,6 @@
 package org.apache.ibatis.builder.xml;
 
 import java.io.InputStream;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -10,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.CacheRefResolver;
@@ -36,25 +34,11 @@ import org.apache.ibatis.type.TypeHandler;
 public class XMLMapperBuilder extends BaseBuilder {
 
 	private XPathParser parser;
-	// 映射器构建助手
+	//映射器构建助手
 	private MapperBuilderAssistant builderAssistant;
-	// 用来存放sql片段的哈希表
+	//sql片段映射表
 	private Map<String, XNode> sqlFragments;
 	private String resource;
-
-	@Deprecated
-	public XMLMapperBuilder(Reader reader, Configuration configuration, String resource,
-			Map<String, XNode> sqlFragments, String namespace) {
-		this(reader, configuration, resource, sqlFragments);
-		this.builderAssistant.setCurrentNamespace(namespace);
-	}
-
-	@Deprecated
-	public XMLMapperBuilder(Reader reader, Configuration configuration, String resource,
-			Map<String, XNode> sqlFragments) {
-		this(new XPathParser(reader, true, configuration.getVariables(), new XMLMapperEntityResolver()), configuration,
-				resource, sqlFragments);
-	}
 
 	public XMLMapperBuilder(InputStream inputStream, Configuration configuration, String resource,
 			Map<String, XNode> sqlFragments, String namespace) {
@@ -77,7 +61,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 		this.resource = resource;
 	}
 
-	// 解析
+	//解析方法
 	public void parse() {
 		// 如果没有加载过再加载，防止重复加载
 		if (!configuration.isResourceLoaded(resource)) {
@@ -130,7 +114,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 		}
 	}
 
-	// 7.配置select|insert|update|delete
+	//7.配置select|insert|update|delete
 	private void buildStatementFromContext(List<XNode> list) {
 		// 调用7.1构建语句
 		if (configuration.getDatabaseId() != null) {
@@ -139,7 +123,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 		buildStatementFromContext(list, null);
 	}
 
-	// 7.1构建语句
+	//7.1构建语句
 	private void buildStatementFromContext(List<XNode> list, String requiredDatabaseId) {
 		for (XNode context : list) {
 			// 构建所有语句,一个mapper下可以有很多select
@@ -287,12 +271,12 @@ public class XMLMapperBuilder extends BaseBuilder {
 		}
 	}
 
-	// 5.1 配置resultMap
+	//5.1 配置resultMap
 	private ResultMap resultMapElement(XNode resultMapNode) throws Exception {
 		return resultMapElement(resultMapNode, Collections.<ResultMapping>emptyList());
 	}
 
-	// 5.1 配置resultMap
+	//5.1 配置resultMap
 	private ResultMap resultMapElement(XNode resultMapNode, List<ResultMapping> additionalResultMappings)
 			throws Exception {
 		// 错误上下文
@@ -381,15 +365,14 @@ public class XMLMapperBuilder extends BaseBuilder {
 		Map<String, String> discriminatorMap = new HashMap<String, String>();
 		for (XNode caseChild : context.getChildren()) {
 			String value = caseChild.getStringAttribute("value");
-			String resultMap = caseChild.getStringAttribute("resultMap",
-					processNestedResultMappings(caseChild, resultMappings));
+			String resultMap = caseChild.getStringAttribute("resultMap", processNestedResultMappings(caseChild, resultMappings));
 			discriminatorMap.put(value, resultMap);
 		}
 		return builderAssistant.buildDiscriminator(resultType, column, javaTypeClass, jdbcTypeEnum, typeHandlerClass,
 				discriminatorMap);
 	}
 
-	// 6 配置sql(定义可重用的 SQL 代码段)
+	//6 配置sql(定义可重用的 SQL 代码段)
 	private void sqlElement(List<XNode> list) throws Exception {
 		if (configuration.getDatabaseId() != null) {
 			sqlElement(list, configuration.getDatabaseId());
@@ -397,8 +380,8 @@ public class XMLMapperBuilder extends BaseBuilder {
 		sqlElement(list, null);
 	}
 
-	// 6.1 配置sql
-	// <sql id="userColumns"> id,username,password </sql>
+	//6.1 配置sql
+	//<sql id="userColumns"> id,username,password </sql>
 	private void sqlElement(List<XNode> list, String requiredDatabaseId) throws Exception {
 		for (XNode context : list) {
 			String databaseId = context.getStringAttribute("databaseId");
@@ -445,15 +428,13 @@ public class XMLMapperBuilder extends BaseBuilder {
 		String jdbcType = context.getStringAttribute("jdbcType");
 		String nestedSelect = context.getStringAttribute("select");
 		// 处理嵌套的result map
-		String nestedResultMap = context.getStringAttribute("resultMap",
-				processNestedResultMappings(context, Collections.<ResultMapping>emptyList()));
+		String nestedResultMap = context.getStringAttribute("resultMap", processNestedResultMappings(context, Collections.<ResultMapping>emptyList()));
 		String notNullColumn = context.getStringAttribute("notNullColumn");
 		String columnPrefix = context.getStringAttribute("columnPrefix");
 		String typeHandler = context.getStringAttribute("typeHandler");
 		String resulSet = context.getStringAttribute("resultSet");
 		String foreignColumn = context.getStringAttribute("foreignColumn");
-		boolean lazy = "lazy".equals(
-				context.getStringAttribute("fetchType", configuration.isLazyLoadingEnabled() ? "lazy" : "eager"));
+		boolean lazy = "lazy".equals(context.getStringAttribute("fetchType", configuration.isLazyLoadingEnabled() ? "lazy" : "eager"));
 		Class<?> javaTypeClass = resolveClass(javaType);
 		@SuppressWarnings("unchecked")
 		Class<? extends TypeHandler<?>> typeHandlerClass = (Class<? extends TypeHandler<?>>) resolveClass(typeHandler);

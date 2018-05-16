@@ -68,9 +68,7 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.UnknownTypeHandler;
 
-/**
- * 注解方式构建mapper，一般不用，可以暂时忽略
- */
+//mapper注解构建器
 public class MapperAnnotationBuilder {
 
 	private final Set<Class<? extends Annotation>> sqlAnnotationTypes = new HashSet<Class<? extends Annotation>>();

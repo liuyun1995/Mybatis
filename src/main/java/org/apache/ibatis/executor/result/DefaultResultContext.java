@@ -2,9 +2,7 @@ package org.apache.ibatis.executor.result;
 
 import org.apache.ibatis.session.ResultContext;
 
-/**
- * 默认结果上下文
- */
+//默认结果上下文
 public class DefaultResultContext implements ResultContext {
 
 	private Object resultObject;

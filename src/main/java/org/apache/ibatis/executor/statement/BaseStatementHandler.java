@@ -18,9 +18,7 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
-/**
- * 语句处理器的基类
- */
+//基础语句处理器
 public abstract class BaseStatementHandler implements StatementHandler {
 
 	protected final Configuration configuration;

@@ -7,12 +7,9 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
 
-/**
- * 默认结果处理器
- */
+//默认结果处理器
 public class DefaultResultHandler implements ResultHandler {
-
-	// 内部实现是存了一个List
+	
 	private final List<Object> list;
 
 	public DefaultResultHandler() {

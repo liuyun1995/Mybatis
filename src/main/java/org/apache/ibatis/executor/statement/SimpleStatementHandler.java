@@ -15,9 +15,7 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
-/**
- * 简单语句处理器(STATEMENT)
- */
+//简单语句处理器
 public class SimpleStatementHandler extends BaseStatementHandler {
 
 	public SimpleStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter,

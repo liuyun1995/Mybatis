@@ -40,9 +40,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
-/**
- * 默认Map结果处理器
- */
+//默认ResultSet处理器
 public class DefaultResultSetHandler implements ResultSetHandler {
 
 	private static final Object NO_VALUE = new Object();

@@ -11,6 +11,7 @@ public class ParameterExpression extends HashMap<String, String> {
 		parse(expression);
 	}
 
+	//解析表达式方法
 	private void parse(String expression) {
 		// 例子：#{property,javaType=int,jdbcType=NUMERIC}
 		// 首先去除空白,返回的p是第一个不是空白的字符位置

@@ -9,30 +9,28 @@ import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.session.ResultHandler;
 
-/**
- * 语句处理器
- */
+//语句处理器接口
 public interface StatementHandler {
 
-	// 准备语句
+	//准备语句
 	Statement prepare(Connection connection) throws SQLException;
 
-	// 参数化
+	//参数化
 	void parameterize(Statement statement) throws SQLException;
 
-	// 批处理
+	//批处理
 	void batch(Statement statement) throws SQLException;
 
-	// update
+	//update
 	int update(Statement statement) throws SQLException;
 
-	// select-->结果给ResultHandler
+	//select
 	<E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException;
 
-	// 得到绑定sql
+	//获取绑定SQL
 	BoundSql getBoundSql();
 
-	// 得到参数处理器
+	//获取参数处理器
 	ParameterHandler getParameterHandler();
 
 }

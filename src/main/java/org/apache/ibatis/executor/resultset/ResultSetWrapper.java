@@ -20,6 +20,7 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.apache.ibatis.type.UnknownTypeHandler;
 
+//ResultSet包装类
 class ResultSetWrapper {
 
 	private final ResultSet resultSet;
@@ -55,16 +56,7 @@ class ResultSetWrapper {
 	public List<String> getClassNames() {
 		return Collections.unmodifiableList(classNames);
 	}
-
-	/**
-	 * Gets the type handler to use when reading the result set. Tries to get from
-	 * the TypeHandlerRegistry by searching for the property type. If not found it
-	 * gets the column JDBC type and tries to get a handler for it.
-	 * 
-	 * @param propertyType
-	 * @param columnName
-	 * @return
-	 */
+	
 	public TypeHandler<?> getTypeHandler(Class<?> propertyType, String columnName) {
 		TypeHandler<?> handler = null;
 		Map<Class<?>, TypeHandler<?>> columnHandlers = typeHandlerMap.get(columnName);
@@ -76,8 +68,6 @@ class ResultSetWrapper {
 		}
 		if (handler == null) {
 			handler = typeHandlerRegistry.getTypeHandler(propertyType);
-			// Replicate logic of UnknownTypeHandler#resolveTypeHandler
-			// See issue #59 comment 10
 			if (handler == null || handler instanceof UnknownTypeHandler) {
 				final int index = columnNames.indexOf(columnName);
 				final JdbcType jdbcType = jdbcTypes.get(index);

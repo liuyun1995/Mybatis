@@ -642,6 +642,7 @@ public class Configuration {
 		return mappedStatements.get(id);
 	}
 
+	//获取sql片段映射
 	public Map<String, XNode> getSqlFragments() {
 		return sqlFragments;
 	}
@@ -650,7 +651,7 @@ public class Configuration {
 		interceptorChain.addInterceptor(interceptor);
 	}
 
-	// 将包下所有类加入到mapper
+	//将包下所有类加入到mapper
 	public void addMappers(String packageName, Class<?> superType) {
 		mapperRegistry.addMappers(packageName, superType);
 	}

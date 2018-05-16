@@ -8,9 +8,7 @@ import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
 
-/**
- * 默认Map结果处理器
- */
+//默认Map结果处理器
 public class DefaultMapResultHandler<K, V> implements ResultHandler {
 
 	// 内部实现是存了一个Map
