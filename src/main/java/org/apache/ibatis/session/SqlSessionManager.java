@@ -13,13 +13,11 @@ import java.util.Properties;
 import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
-/**
- * SqlSession管理员,可参考SqlSessionManagerTest
- */
+//SqlSession管理器
 public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
-	private final SqlSessionFactory sqlSessionFactory;
-	private final SqlSession sqlSessionProxy;
+	private final SqlSessionFactory sqlSessionFactory;   //sqlSession工厂
+	private final SqlSession sqlSessionProxy;            //sqlSession代理
 
 	private ThreadLocal<SqlSession> localSqlSession = new ThreadLocal<SqlSession>();
 
@@ -269,23 +267,22 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 		}
 	}
 
-	// 代理模式
+	//sqlSession代理
 	private class SqlSessionInterceptor implements InvocationHandler {
-		public SqlSessionInterceptor() {
-			// Prevent Synthetic Access
-		}
+		
+		public SqlSessionInterceptor() {}
 
 		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 			final SqlSession sqlSession = SqlSessionManager.this.localSqlSession.get();
 			if (sqlSession != null) {
-				// 如果当前线程已经有SqlSession了，则直接调用
+				//若当前线程存在SqlSession则直接调用
 				try {
 					return method.invoke(sqlSession, args);
 				} catch (Throwable t) {
 					throw ExceptionUtil.unwrapThrowable(t);
 				}
 			} else {
-				// 如果当前线程没有SqlSession，先打开session，再调用,最后提交
+				//否则调用openSession方法获取sqlSession再调用
 				final SqlSession autoSqlSession = openSession();
 				try {
 					final Object result = method.invoke(autoSqlSession, args);

@@ -21,14 +21,13 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 
-//默认SqlSession的实现
+//默认SqlSession实现类
 public class DefaultSqlSession implements SqlSession {
 
-	private Configuration configuration; // 配置信息
-	private Executor executor; // 执行器
-
-	private boolean autoCommit; // 是否自动提交
-	private boolean dirty; // 是否是脏数据
+	private Configuration configuration; //配置信息
+	private Executor executor;           //执行器
+	private boolean autoCommit;         //是否自动提交
+	private boolean dirty;              //是否是脏数据
 
 	public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {
 		this.configuration = configuration;
@@ -45,7 +44,7 @@ public class DefaultSqlSession implements SqlSession {
 		return this.<T>selectOne(statement, null);
 	}
 
-	// 核心selectOne
+	//核心selectOne
 	public <T> T selectOne(String statement, Object parameter) {
 		// 转而去调用selectList,很简单的，如果得到0条则返回null，得到1条则返回1条，得到多条报TooManyResultsException错误
 		// 特别需要注意的是当没有查询到结果的时候就会返回null。因此一般建议在mapper中编写resultType的时候使用包装类型
@@ -69,7 +68,7 @@ public class DefaultSqlSession implements SqlSession {
 		return this.selectMap(statement, parameter, mapKey, RowBounds.DEFAULT);
 	}
 
-	// 核心selectMap
+	//核心selectMap
 	public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
 		// 转而去调用selectList
 		final List<?> list = selectList(statement, parameter, rowBounds);
@@ -93,12 +92,12 @@ public class DefaultSqlSession implements SqlSession {
 		return this.selectList(statement, parameter, RowBounds.DEFAULT);
 	}
 
-	// 核心selectList
+	//核心selectList
 	public <E> List<E> selectList(String statement, Object parameter, RowBounds rowBounds) {
 		try {
-			// 根据statementID找到对应的MappedStatement
+			//根据statement找到对应的MappedStatement
 			MappedStatement ms = configuration.getMappedStatement(statement);
-			// 转而用执行器来查询结果,注意这里传入的ResultHandler是null
+			//转而用执行器来查询结果,注意这里传入的ResultHandler是null
 			return executor.query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);
 		} catch (Exception e) {
 			throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
@@ -132,7 +131,6 @@ public class DefaultSqlSession implements SqlSession {
 	}
 
 	public int insert(String statement, Object parameter) {
-		// insert也是调用update
 		return update(statement, parameter);
 	}
 

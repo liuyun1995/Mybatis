@@ -54,7 +54,7 @@ public interface SqlSession extends Closeable {
 	
 	List<BatchResult> flushStatements();
 
-	//关闭session
+	//关闭会话
 	void close();
 
 	//清空缓存

@@ -296,7 +296,7 @@ public abstract class BaseExecutor implements Executor {
 		}
 	}
 
-	// 从数据库查
+	//从数据库中查询
 	private <E> List<E> queryFromDatabase(MappedStatement ms, Object parameter, RowBounds rowBounds,
 			ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
 		List<E> list;

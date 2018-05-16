@@ -45,11 +45,12 @@ public class SimpleExecutor extends BaseExecutor {
 			BoundSql boundSql) throws SQLException {
 		Statement stmt = null;
 		try {
+			//获取配置信息
 			Configuration configuration = ms.getConfiguration();
 			// 新建一个StatementHandler
 			// 这里看到ResultHandler传入了
-			StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds,
-					resultHandler, boundSql);
+			StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, 
+					rowBounds, resultHandler, boundSql);
 			// 准备语句
 			stmt = prepareStatement(handler, ms.getStatementLog());
 			// StatementHandler.query
@@ -65,12 +66,14 @@ public class SimpleExecutor extends BaseExecutor {
 		return Collections.emptyList();
 	}
 
+	//预处理语句
 	private Statement prepareStatement(StatementHandler handler, Log statementLog) throws SQLException {
 		Statement stmt;
+		//获取连接
 		Connection connection = getConnection(statementLog);
-		// 调用StatementHandler.prepare
+		//调用StatementHandler.prepare
 		stmt = handler.prepare(connection);
-		// 调用StatementHandler.parameterize
+		//调用StatementHandler.parameterize
 		handler.parameterize(stmt);
 		return stmt;
 	}
