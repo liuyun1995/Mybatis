@@ -2,9 +2,7 @@ package org.apache.ibatis.reflection;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 
-/**
- * 反射异常
- */
+//反射异常
 public class ReflectionException extends PersistenceException {
 
 	private static final long serialVersionUID = 7642570221267566591L;

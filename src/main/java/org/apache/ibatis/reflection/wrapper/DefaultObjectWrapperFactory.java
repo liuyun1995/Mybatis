@@ -3,9 +3,7 @@ package org.apache.ibatis.reflection.wrapper;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.ReflectionException;
 
-/**
- * 默认对象包装器工厂
- */
+//默认对象包装器工厂
 public class DefaultObjectWrapperFactory implements ObjectWrapperFactory {
 
 	// 默认没有包装器

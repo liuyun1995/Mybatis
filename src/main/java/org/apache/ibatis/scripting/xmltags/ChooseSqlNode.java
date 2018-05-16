@@ -2,9 +2,7 @@ package org.apache.ibatis.scripting.xmltags;
 
 import java.util.List;
 
-/**
- * choose SQL节点
- */
+//choose SQL节点
 public class ChooseSqlNode implements SqlNode {
 	private SqlNode defaultSqlNode;
 	private List<SqlNode> ifSqlNodes;

@@ -88,40 +88,47 @@ public class XNode {
 		return builder.toString();
 	}
 
-	// 以下方法都是把XPathParser的方法再重复一遍
+	//根据表达式获取String值
 	public String evalString(String expression) {
 		return xpathParser.evalString(node, expression);
 	}
 
+	//根据表达式获取Boolean值
 	public Boolean evalBoolean(String expression) {
 		return xpathParser.evalBoolean(node, expression);
 	}
 
+	//根据表达式获取Double值
 	public Double evalDouble(String expression) {
 		return xpathParser.evalDouble(node, expression);
 	}
 
+	//根据表达式获取XNode列表
 	public List<XNode> evalNodes(String expression) {
 		return xpathParser.evalNodes(node, expression);
 	}
 
+	//根据表达式获取XNode
 	public XNode evalNode(String expression) {
 		return xpathParser.evalNode(node, expression);
 	}
 
+	//获取原生Node
 	public Node getNode() {
 		return node;
 	}
 
+	//获取名字
 	public String getName() {
 		return name;
 	}
 
-	// 以下是一些getBody的方法
+	//获取String类型的内容
 	public String getStringBody() {
 		return getStringBody(null);
 	}
 
+	//获取String类型的内容
 	public String getStringBody(String def) {
 		if (body == null) {
 			return def;
@@ -130,10 +137,12 @@ public class XNode {
 		}
 	}
 
+	//获取Boolean类型的内容
 	public Boolean getBooleanBody() {
 		return getBooleanBody(null);
 	}
 
+	//获取Boolean类型的内容
 	public Boolean getBooleanBody(Boolean def) {
 		if (body == null) {
 			return def;
@@ -142,10 +151,12 @@ public class XNode {
 		}
 	}
 
+	//获取Integer类型的内容
 	public Integer getIntBody() {
 		return getIntBody(null);
 	}
 
+	//获取Integer类型的内容
 	public Integer getIntBody(Integer def) {
 		if (body == null) {
 			return def;
@@ -154,10 +165,12 @@ public class XNode {
 		}
 	}
 
+	//获取Long类型的内容
 	public Long getLongBody() {
 		return getLongBody(null);
 	}
 
+	//获取Long类型的内容
 	public Long getLongBody(Long def) {
 		if (body == null) {
 			return def;
@@ -166,10 +179,12 @@ public class XNode {
 		}
 	}
 
+	//获取Double类型的内容
 	public Double getDoubleBody() {
 		return getDoubleBody(null);
 	}
 
+	//获取Double类型的内容
 	public Double getDoubleBody(Double def) {
 		if (body == null) {
 			return def;
@@ -178,10 +193,12 @@ public class XNode {
 		}
 	}
 
+	//获取Float类型的内容
 	public Float getFloatBody() {
 		return getFloatBody(null);
 	}
 
+	//获取Float类型的内容
 	public Float getFloatBody(Float def) {
 		if (body == null) {
 			return def;
@@ -235,12 +252,12 @@ public class XNode {
 		}
 	}
 
-	//获取int属性值
+	//获取Integer属性值
 	public Integer getIntAttribute(String name) {
 		return getIntAttribute(name, null);
 	}
 
-	//获取int属性值(带缺省值)
+	//获取Integer属性值(带缺省值)
 	public Integer getIntAttribute(String name, Integer def) {
 		String value = attributes.getProperty(name);
 		if (value == null) {
@@ -250,12 +267,12 @@ public class XNode {
 		}
 	}
 
-	//获取long属性值
+	//获取Long属性值
 	public Long getLongAttribute(String name) {
 		return getLongAttribute(name, null);
 	}
 
-	//获取long属性值(带缺省值)
+	//获取Long属性值(带缺省值)
 	public Long getLongAttribute(String name, Long def) {
 		String value = attributes.getProperty(name);
 		if (value == null) {
@@ -265,12 +282,12 @@ public class XNode {
 		}
 	}
 
-	//获取double属性值
+	//获取Double属性值
 	public Double getDoubleAttribute(String name) {
 		return getDoubleAttribute(name, null);
 	}
 
-	//获取double属性值(带缺省值)
+	//获取Double属性值(带缺省值)
 	public Double getDoubleAttribute(String name, Double def) {
 		String value = attributes.getProperty(name);
 		if (value == null) {
@@ -280,12 +297,12 @@ public class XNode {
 		}
 	}
 
-	//获取float属性值
+	//获取Float属性值
 	public Float getFloatAttribute(String name) {
 		return getFloatAttribute(name, null);
 	}
 
-	//获取float属性值(带缺省值)
+	//获取Float属性值(带缺省值)
 	public Float getFloatAttribute(String name, Float def) {
 		String value = attributes.getProperty(name);
 		if (value == null) {

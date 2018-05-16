@@ -2,9 +2,7 @@ package org.apache.ibatis.scripting;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 
-/**
- * 脚本异常
- */
+//脚本异常
 public class ScriptingException extends PersistenceException {
 
 	private static final long serialVersionUID = 7642570221267566591L;

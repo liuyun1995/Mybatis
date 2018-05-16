@@ -20,9 +20,7 @@ import org.apache.ibatis.reflection.invoker.MethodInvoker;
 import org.apache.ibatis.reflection.invoker.SetFieldInvoker;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 
-/**
- * 反射器, 属性->getter/setter的映射器，而且加了缓存 可参考ReflectorTest来理解这个类的用处
- */
+//反射器, 属性->getter/setter的映射器，而且加了缓存 可参考ReflectorTest来理解这个类的用处
 public class Reflector {
 
 	private static boolean classCacheEnabled = true;

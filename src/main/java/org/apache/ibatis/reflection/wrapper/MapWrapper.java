@@ -9,9 +9,7 @@ import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
-/**
- * Map包装器
- */
+//Map包装器
 public class MapWrapper extends BaseWrapper {
 
   //原来的对象

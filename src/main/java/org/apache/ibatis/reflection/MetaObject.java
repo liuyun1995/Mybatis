@@ -12,15 +12,13 @@ import org.apache.ibatis.reflection.wrapper.MapWrapper;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 
-/**
- * 元对象,各种get，set方法有点ognl表达式的味道, 可以参考MetaObjectTest来跟踪调试，基本上用到了reflection包下所有的类
- */
+//元对象
 public class MetaObject {
 
-	private Object originalObject; // 原来的对象
-	private ObjectWrapper objectWrapper; // 对象包装器
-	private ObjectFactory objectFactory; // 对象工厂
-	private ObjectWrapperFactory objectWrapperFactory; // 对象包装器工厂
+	private Object originalObject;                     //原来的对象
+	private ObjectWrapper objectWrapper;               //对象包装器
+	private ObjectFactory objectFactory;               //对象工厂
+	private ObjectWrapperFactory objectWrapperFactory; //对象包装器工厂
 
 	private MetaObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory) {
 		this.originalObject = object;

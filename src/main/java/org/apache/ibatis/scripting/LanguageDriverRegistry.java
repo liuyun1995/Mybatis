@@ -3,9 +3,7 @@ package org.apache.ibatis.scripting;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * 脚本语言注册器
- */
+//脚本语言注册器
 public class LanguageDriverRegistry {
 
 	// map

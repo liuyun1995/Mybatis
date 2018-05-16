@@ -11,9 +11,7 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.invoker.Invoker;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
-/**
- * Bean包装器
- */
+//Bean包装器
 public class BeanWrapper extends BaseWrapper {
 
 	// 原来的对象

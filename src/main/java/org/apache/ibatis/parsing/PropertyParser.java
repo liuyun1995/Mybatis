@@ -8,9 +8,9 @@ public class PropertyParser {
 	private PropertyParser() {}
 
 	public static String parse(String string, Properties variables) {
-		//新建变量记号处理器
+		//生成变量记号处理器
 		VariableTokenHandler handler = new VariableTokenHandler(variables);
-		//新建通用记号解析器
+		//生成通用记号解析器
 		GenericTokenParser parser = new GenericTokenParser("${", "}", handler);
 		return parser.parse(string);
 	}

@@ -7,12 +7,10 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
-/**
- * Collection包装器
- */
+//Collection包装器
 public class CollectionWrapper implements ObjectWrapper {
 
-	// 原来的对象
+	//原来的对象
 	private Collection<Object> object;
 
 	public CollectionWrapper(MetaObject metaObject, Collection<Object> object) {

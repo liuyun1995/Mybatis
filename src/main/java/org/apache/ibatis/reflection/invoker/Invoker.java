@@ -2,13 +2,13 @@ package org.apache.ibatis.reflection.invoker;
 
 import java.lang.reflect.InvocationTargetException;
 
-/**
- * 调用者
- */
+//方法调用接口
 public interface Invoker {
-	// 调用
+	
+	//调用方法
 	Object invoke(Object target, Object[] args) throws IllegalAccessException, InvocationTargetException;
 
-	// 取得类型
+	//获取类型
 	Class<?> getType();
+	
 }

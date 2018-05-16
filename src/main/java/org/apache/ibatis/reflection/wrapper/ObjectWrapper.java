@@ -6,9 +6,7 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
-/**
- * 对象包装器
- */
+//对象包装器
 public interface ObjectWrapper {
 
 	// get

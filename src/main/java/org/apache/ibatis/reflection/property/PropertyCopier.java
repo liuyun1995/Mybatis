@@ -2,22 +2,16 @@ package org.apache.ibatis.reflection.property;
 
 import java.lang.reflect.Field;
 
-/**
- * 属性复制器
- */
+//Bean属性复制器
 public final class PropertyCopier {
 
-	private PropertyCopier() {
-		// Prevent Instantiation of Static Class
-	}
+	private PropertyCopier() {}
 
-	// 复制属性,类似功能的还有别的类，
-	// 如apache commons beanutil 的BeanUtils.copyProperties
-	// Spring 的BeanUtils.copyProperties
+	//复制Bean之间的属性
 	public static void copyBeanProperties(Class<?> type, Object sourceBean, Object destinationBean) {
 		Class<?> parent = type;
 		while (parent != null) {
-			// 循环将父类的属性都要复制过来
+			//循环将父类的属性都要复制过来
 			final Field[] fields = parent.getDeclaredFields();
 			for (Field field : fields) {
 				try {

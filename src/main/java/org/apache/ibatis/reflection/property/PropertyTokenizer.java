@@ -2,15 +2,13 @@ package org.apache.ibatis.reflection.property;
 
 import java.util.Iterator;
 
-/**
- * 属性分词器，迭代子模式， 如person[0].birthdate.year，将依次取得person[0], birthdate, year
- */
+//属性分词器，迭代子模式， 如person[0].birthdate.year，将依次取得person[0], birthdate, year
 public class PropertyTokenizer implements Iterable<PropertyTokenizer>, Iterator<PropertyTokenizer> {
-	// 例子： person[0].birthdate.year
-	private String name; // person
-	private String indexedName; // person[0]
-	private String index; // 0
-	private String children; // birthdate.year
+	//例子:person[0].birthdate.year
+	private String name;        //person
+	private String indexedName; //person[0]
+	private String index;       //0
+	private String children;    //birthdate.year
 
 	public PropertyTokenizer(String fullname) {
 		// person[0].birthdate.year

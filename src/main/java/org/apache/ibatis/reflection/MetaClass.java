@@ -11,9 +11,7 @@ import org.apache.ibatis.reflection.invoker.Invoker;
 import org.apache.ibatis.reflection.invoker.MethodInvoker;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
-/**
- * 原类
- */
+//原类型
 public class MetaClass {
 
 	// 有一个反射器
@@ -77,7 +75,6 @@ public class MetaClass {
 			MetaClass metaProp = metaClassForProperty(prop);
 			return metaProp.getGetterType(prop.getChildren());
 		}
-		// issue #506. Resolve the type inside a Collection Object
 		return getGetterType(prop);
 	}
 
