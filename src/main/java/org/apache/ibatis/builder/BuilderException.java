@@ -22,4 +22,5 @@ public class BuilderException extends PersistenceException {
 	public BuilderException(Throwable cause) {
 		super(cause);
 	}
+	
 }

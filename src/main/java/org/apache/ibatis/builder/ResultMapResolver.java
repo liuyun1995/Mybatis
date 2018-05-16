@@ -8,6 +8,7 @@ import org.apache.ibatis.mapping.ResultMapping;
 
 //结果映射解析器
 public class ResultMapResolver {
+	
 	private final MapperBuilderAssistant assistant;
 	private String id;
 	private Class<?> type;
@@ -28,9 +29,7 @@ public class ResultMapResolver {
 	}
 
 	public ResultMap resolve() {
-		// 解析又去调用MapperBuilderAssistant.addResultMap
-		return assistant.addResultMap(this.id, this.type, this.extend, this.discriminator, this.resultMappings,
-				this.autoMapping);
+		return assistant.addResultMap(this.id, this.type, this.extend, this.discriminator, this.resultMappings, this.autoMapping);
 	}
 
 }

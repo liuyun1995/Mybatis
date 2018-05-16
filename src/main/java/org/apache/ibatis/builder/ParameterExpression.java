@@ -13,14 +13,14 @@ public class ParameterExpression extends HashMap<String, String> {
 
 	//解析表达式方法
 	private void parse(String expression) {
-		// 例子：#{property,javaType=int,jdbcType=NUMERIC}
-		// 首先去除空白,返回的p是第一个不是空白的字符位置
+		//例子：#{property,javaType=int,jdbcType=NUMERIC}
+		//去除空白并返回首个非空白字符的位置
 		int p = skipWS(expression, 0);
 		if (expression.charAt(p) == '(') {
-			// 处理表达式
+			//处理表达式
 			expression(expression, p + 1);
 		} else {
-			// 处理属性
+			//处理属性
 			property(expression, p);
 		}
 	}
@@ -54,9 +54,10 @@ public class ParameterExpression extends HashMap<String, String> {
 		}
 	}
 
+	//去除空格
 	private int skipWS(String expression, int p) {
 		for (int i = p; i < expression.length(); i++) {
-			// 0x20表示空格
+			//0x20表示空格
 			if (expression.charAt(i) > 0x20) {
 				return i;
 			}

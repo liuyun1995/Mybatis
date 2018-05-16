@@ -13,7 +13,6 @@ public class CacheRefResolver {
 	}
 
 	public Cache resolveCacheRef() {
-		// 反调MapperBuilderAssistant解析
 		return assistant.useCacheRef(cacheRefNamespace);
 	}
 }

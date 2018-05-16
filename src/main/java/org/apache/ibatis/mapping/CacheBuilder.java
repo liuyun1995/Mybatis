@@ -73,29 +73,28 @@ public class CacheBuilder {
 
 	public Cache build() {
 		setDefaultImplementations();
-		// 先new一个base的cache(PerpetualCache)
+		//先new一个base的cache(PerpetualCache)
 		Cache cache = newBaseCacheInstance(implementation, id);
-		// 设额外属性
+		//设额外属性
 		setCacheProperties(cache);
-		// issue #352, do not apply decorators to custom caches
 		if (PerpetualCache.class.equals(cache.getClass())) {
 			for (Class<? extends Cache> decorator : decorators) {
-				// 装饰者模式一个个包装cache
+				//装饰者模式一个个包装cache
 				cache = newCacheDecoratorInstance(decorator, cache);
-				// 又要来一遍设额外属性
+				//又要来一遍设额外属性
 				setCacheProperties(cache);
 			}
-			// 最后附加上标准的装饰者
+			//最后附加上标准的装饰者
 			cache = setStandardDecorators(cache);
 		} else if (!LoggingCache.class.isAssignableFrom(cache.getClass())) {
-			// 如果是custom缓存，且不是日志，要加日志
+			//如果是custom缓存，且不是日志，要加日志
 			cache = new LoggingCache(cache);
 		}
 		return cache;
 	}
 
 	private void setDefaultImplementations() {
-		// 又是一重保险，如果为null则设默认值,和XMLMapperBuilder.cacheElement以及MapperBuilderAssistant.useNewCache逻辑重复了
+		//又是一重保险，如果为null则设默认值,和XMLMapperBuilder.cacheElement以及MapperBuilderAssistant.useNewCache逻辑重复了
 		if (implementation == null) {
 			implementation = PerpetualCache.class;
 			if (decorators.isEmpty()) {

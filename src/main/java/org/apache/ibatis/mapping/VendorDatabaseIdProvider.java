@@ -12,9 +12,7 @@ import org.apache.ibatis.executor.BaseExecutor;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 
-/**
- * 厂商数据库Id提供者
- */
+//厂商数据库Id提供者
 public class VendorDatabaseIdProvider implements DatabaseIdProvider {
 
 	private static final Log log = LogFactory.getLog(BaseExecutor.class);
@@ -48,7 +46,6 @@ public class VendorDatabaseIdProvider implements DatabaseIdProvider {
 					return (String) property.getValue();
 				}
 			}
-			// no match, return null
 			return null;
 		}
 		return productName;

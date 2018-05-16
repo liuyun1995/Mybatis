@@ -36,8 +36,7 @@ import org.apache.ibatis.type.TypeHandler;
 
 //映射构建器助手
 public class MapperBuilderAssistant extends BaseBuilder {
-
-	//每个助手都有1个namespace,resource,cache
+	
 	private String currentNamespace;
 	private String resource;
 	private Cache currentCache;
@@ -217,8 +216,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
 
 		// 又是建造者模式
-		MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource,
-				sqlCommandType);
+		MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType);
 		statementBuilder.resource(resource);
 		statementBuilder.fetchSize(fetchSize);
 		statementBuilder.statementType(statementType);
@@ -260,7 +258,6 @@ public class MapperBuilderAssistant extends BaseBuilder {
 	private void setStatementParameterMap(String parameterMap, Class<?> parameterTypeClass,
 			MappedStatement.Builder statementBuilder) {
 		parameterMap = applyCurrentNamespace(parameterMap, true);
-
 		if (parameterMap != null) {
 			try {
 				statementBuilder.parameterMap(configuration.getParameterMap(parameterMap));
@@ -279,7 +276,6 @@ public class MapperBuilderAssistant extends BaseBuilder {
 	private void setStatementResultMap(String resultMap, Class<?> resultType, ResultSetType resultSetType,
 			MappedStatement.Builder statementBuilder) {
 		resultMap = applyCurrentNamespace(resultMap, true);
-
 		List<ResultMap> resultMaps = new ArrayList<ResultMap>();
 		if (resultMap != null) {
 			// 2.1 resultMap是高级功能
@@ -381,7 +377,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 				MetaClass metaResultType = MetaClass.forClass(resultType);
 				javaType = metaResultType.getSetterType(property);
 			} catch (Exception e) {
-				// ignore, following null check statement will deal with the situation
+				// ignore
 			}
 		}
 		if (javaType == null) {

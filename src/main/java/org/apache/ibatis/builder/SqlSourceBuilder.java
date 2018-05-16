@@ -23,16 +23,15 @@ public class SqlSourceBuilder extends BaseBuilder {
 	}
 
 	public SqlSource parse(String originalSql, Class<?> parameterType, Map<String, Object> additionalParameters) {
-		ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler(configuration, parameterType,
-				additionalParameters);
-		// 替换#{}中间的部分,如何替换，逻辑在ParameterMappingTokenHandler
+		ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler(configuration, parameterType, additionalParameters);
+		//替换#{}中间的部分
 		GenericTokenParser parser = new GenericTokenParser("#{", "}", handler);
 		String sql = parser.parse(originalSql);
-		// 返回静态SQL源码
+		//返回静态SQL源码
 		return new StaticSqlSource(configuration, sql, handler.getParameterMappings());
 	}
 
-	// 参数映射记号处理器，静态内部类
+	//参数映射记号处理器，静态内部类
 	private static class ParameterMappingTokenHandler extends BaseBuilder implements TokenHandler {
 
 		private List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
@@ -59,13 +58,13 @@ public class SqlSourceBuilder extends BaseBuilder {
 
 		// 构建参数映射
 		private ParameterMapping buildParameterMapping(String content) {
-			// 例子：#{favouriteSection,jdbcType=VARCHAR}
-			// 先解析参数映射,就是转化成一个hashmap
+			//例子：#{favouriteSection,jdbcType=VARCHAR}
+			//先解析参数映射,就是转化成一个hashmap
 			Map<String, String> propertiesMap = parseParameterMapping(content);
 			String property = propertiesMap.get("property");
 			Class<?> propertyType;
-			// 这里分支比较多，需要逐个理解
-			if (metaParameters.hasGetter(property)) { // issue #448 get type from additional params
+			//这里分支比较多，需要逐个理解
+			if (metaParameters.hasGetter(property)) {
 				propertyType = metaParameters.getGetterType(property);
 			} else if (typeHandlerRegistry.hasTypeHandler(parameterType)) {
 				propertyType = parameterType;
@@ -81,7 +80,7 @@ public class SqlSourceBuilder extends BaseBuilder {
 			} else {
 				propertyType = Object.class;
 			}
-			// 提供配置信息, 参数名以及参数的java类型来获得参数映射构建器
+			//提供配置信息, 参数名以及参数的java类型来获得参数映射构建器
 			ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, property, propertyType);
 			Class<?> javaType = propertyType;
 			String typeHandlerAlias = null;
@@ -123,7 +122,7 @@ public class SqlSourceBuilder extends BaseBuilder {
 				// 根据java类型和类型处理器别名来获取到类型处理器
 				builder.typeHandler(resolveTypeHandler(javaType, typeHandlerAlias));
 			}
-			return builder.build(); // 到这里成功构建参数映射, 返回ParameterMapping
+			return builder.build(); //到这里成功构建参数映射,返回ParameterMapping
 		}
 
 		// 根据字符串解析参数, 构建出一个Map

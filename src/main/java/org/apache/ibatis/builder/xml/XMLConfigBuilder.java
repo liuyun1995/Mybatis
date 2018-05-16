@@ -271,8 +271,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 					// 7.2数据源
 					DataSourceFactory dsFactory = dataSourceElement(child.evalNode("dataSource"));
 					DataSource dataSource = dsFactory.getDataSource();
-					Environment.Builder environmentBuilder = new Environment.Builder(id).transactionFactory(txFactory)
-							.dataSource(dataSource);
+					Environment.Builder environmentBuilder = new Environment.Builder(id).transactionFactory(txFactory).dataSource(dataSource);
 					configuration.setEnvironment(environmentBuilder.build());
 				}
 			}
