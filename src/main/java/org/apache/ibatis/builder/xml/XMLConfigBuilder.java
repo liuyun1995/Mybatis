@@ -27,7 +27,7 @@ import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.JdbcType;
 
-//XML配置构建器
+//config文件解析器
 public class XMLConfigBuilder extends BaseBuilder {
 
 	private boolean parsed;     //是否已解析
@@ -81,58 +81,52 @@ public class XMLConfigBuilder extends BaseBuilder {
 	//从根节点开始解析配置
 	private void parseConfiguration(XNode root) {
 		try {
-			// 1.解析<properties>
+			//1.解析<properties>
 			propertiesElement(root.evalNode("properties"));
-			// 2.解析<typeAliases>
+			//2.解析<typeAliases>
 			typeAliasesElement(root.evalNode("typeAliases"));
-			// 3.解析<plugins>
+			//3.解析<plugins>
 			pluginElement(root.evalNode("plugins"));
-			// 4.解析<objectFactory>
+			//4.解析<objectFactory>
 			objectFactoryElement(root.evalNode("objectFactory"));
-			// 5.解析<reflectorFactory>
+			//5.解析<reflectorFactory>
 			objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
-			// 6.解析<settings>
+			//6.解析<settings>
 			settingsElement(root.evalNode("settings"));
-			// 7.解析<environments>
+			//7.解析<environments>
 			environmentsElement(root.evalNode("environments"));
-			// 8.解析<databaseIdProvider>
+			//8.解析<databaseIdProvider>
 			databaseIdProviderElement(root.evalNode("databaseIdProvider"));
-			// 9.解析<typeHandler>
+			//9.解析<typeHandler>
 			typeHandlerElement(root.evalNode("typeHandlers"));
-			// 10.解析<mappers>
+			//10.解析<mappers>
 			mapperElement(root.evalNode("mappers"));
 		} catch (Exception e) {
 			throw new BuilderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
 		}
 	}
 	
-	//1.解析<properties>节点
+	//1.解析<properties>
 	private void propertiesElement(XNode context) throws Exception {
 		if (context != null) {
-			// 如果在这些地方,属性多于一个的话,MyBatis按照如下的顺序加载它们:
-			// 1.在 properties元素体内指定的属性首先被读取。
-			// 2.从类路径下资源或 properties元素的url属性中加载的属性第二被读取,它会覆盖已经存在的完全一样的属性。
-			// 3.作为方法参数传递的属性最后被读取, 它也会覆盖任一已经存在的完全一样的属性,这些属性可能是从 properties 元素体内和资源/url
-			// 属性中加载的。
-			// 传入方式是调用构造函数时传入，public XMLConfigBuilder(Reader reader, String environment,
-			// Properties props)
-
-			// 1.XNode.getChildrenAsProperties函数方便得到孩子所有Properties
 			Properties defaults = context.getChildrenAsProperties();
-			// 2.然后查找resource或者url,加入前面的Properties
+			//获取resource属性值
 			String resource = context.getStringAttribute("resource");
+			//获取url属性值
 			String url = context.getStringAttribute("url");
 			if (resource != null && url != null) {
 				throw new BuilderException("The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
 			}
 			if (resource != null) {
+				//添加resource的全部配置
 				defaults.putAll(Resources.getResourceAsProperties(resource));
 			} else if (url != null) {
+				//添加url的全部配置
 				defaults.putAll(Resources.getUrlAsProperties(url));
 			}
-			// 3.Variables也全部加入Properties
 			Properties vars = configuration.getVariables();
 			if (vars != null) {
+				//添加构造方法传入的全部配置
 				defaults.putAll(vars);
 			}
 			parser.setVariables(defaults);
@@ -209,7 +203,6 @@ public class XMLConfigBuilder extends BaseBuilder {
 	private void settingsElement(XNode context) throws Exception {
 		if (context != null) {
 			Properties props = context.getChildrenAsProperties();
-			// Check that all settings are known to the configuration class
 			// 检查下是否在Configuration类里都有相应的setter方法（没有拼写错误）
 			MetaClass metaConfig = MetaClass.forClass(Configuration.class);
 			for (Object key : props.keySet()) {
@@ -218,49 +211,47 @@ public class XMLConfigBuilder extends BaseBuilder {
 							+ " is not known.  Make sure you spelled it correctly (case sensitive).");
 				}
 			}
-			// 下面非常简单，一个个设置属性
-			// 如何自动映射列到字段/ 属性
+			//自动映射行为
 			configuration.setAutoMappingBehavior(AutoMappingBehavior.valueOf(props.getProperty("autoMappingBehavior", "PARTIAL")));
-			// 缓存
+			//是否启用缓存
 			configuration.setCacheEnabled(booleanValueOf(props.getProperty("cacheEnabled"), true));
-			// proxyFactory (CGLIB | JAVASSIST)
-			// 延迟加载的核心技术就是用代理模式，CGLIB/JAVASSIST两者选一
+			//设置代理工厂
 			configuration.setProxyFactory((ProxyFactory) createInstance(props.getProperty("proxyFactory")));
-			// 延迟加载
+			//是否延迟加载
 			configuration.setLazyLoadingEnabled(booleanValueOf(props.getProperty("lazyLoadingEnabled"), false));
-			// 延迟加载时，每种属性是否还要按需加载
+			//延迟加载时, 每种属性是否还要按需加载
 			configuration.setAggressiveLazyLoading(booleanValueOf(props.getProperty("aggressiveLazyLoading"), true));
-			// 允不允许多种结果集从一个单独 的语句中返回
+			//允不允许多种结果集从一个单独 的语句中返回
 			configuration.setMultipleResultSetsEnabled(booleanValueOf(props.getProperty("multipleResultSetsEnabled"), true));
-			// 使用列标签代替列名
+			//使用列标签代替列名
 			configuration.setUseColumnLabel(booleanValueOf(props.getProperty("useColumnLabel"), true));
-			// 允许 JDBC 支持生成的键
+			//允许 JDBC 支持生成的键
 			configuration.setUseGeneratedKeys(booleanValueOf(props.getProperty("useGeneratedKeys"), false));
-			// 配置默认的执行器
+			//配置默认的执行器
 			configuration.setDefaultExecutorType(ExecutorType.valueOf(props.getProperty("defaultExecutorType", "SIMPLE")));
-			// 超时时间
+			//超时时间
 			configuration.setDefaultStatementTimeout(integerValueOf(props.getProperty("defaultStatementTimeout"), null));
-			// 是否将DB字段自动映射到驼峰式Java属性（A_COLUMN-->aColumn）
+			//是否将下划线转成驼峰形式
 			configuration.setMapUnderscoreToCamelCase(booleanValueOf(props.getProperty("mapUnderscoreToCamelCase"), false));
-			// 嵌套语句上使用RowBounds
+			//嵌套语句上使用RowBounds
 			configuration.setSafeRowBoundsEnabled(booleanValueOf(props.getProperty("safeRowBoundsEnabled"), false));
-			// 默认用session级别的缓存
+			//默认用session级别的缓存
 			configuration.setLocalCacheScope(LocalCacheScope.valueOf(props.getProperty("localCacheScope", "SESSION")));
-			// 为null值设置jdbctype
+			//为null值设置jdbctype
 			configuration.setJdbcTypeForNull(JdbcType.valueOf(props.getProperty("jdbcTypeForNull", "OTHER")));
-			// Object的哪些方法将触发延迟加载
+			//Object的哪些方法将触发延迟加载
 			configuration.setLazyLoadTriggerMethods(stringSetValueOf(props.getProperty("lazyLoadTriggerMethods"), "equals,clone,hashCode,toString"));
-			// 使用安全的ResultHandler
+			//使用安全的ResultHandler
 			configuration.setSafeResultHandlerEnabled(booleanValueOf(props.getProperty("safeResultHandlerEnabled"), true));
-			// 动态SQL生成语言所使用的脚本语言
+			//动态SQL生成语言所使用的脚本语言
 			configuration.setDefaultScriptingLanguage(resolveClass(props.getProperty("defaultScriptingLanguage")));
-			// 当结果集中含有Null值时是否执行映射对象的setter或者Map对象的put方法。此设置对于原始类型如int,boolean等无效。
+			//当结果集中含有Null值时是否执行映射对象的setter或者Map对象的put方法。此设置对于原始类型如int,boolean等无效。
 			configuration.setCallSettersOnNulls(booleanValueOf(props.getProperty("callSettersOnNulls"), false));
-			// logger名字的前缀
+			//logger名字的前缀
 			configuration.setLogPrefix(props.getProperty("logPrefix"));
-			// 显式定义用什么log框架，不定义则用默认的自动发现jar包机制
+			//显式定义用什么log框架，不定义则用默认的自动发现jar包机制
 			configuration.setLogImpl(resolveClass(props.getProperty("logImpl")));
-			// 配置工厂
+			//配置工厂
 			configuration.setConfigurationFactory(resolveClass(props.getProperty("configurationFactory")));
 		}
 	}

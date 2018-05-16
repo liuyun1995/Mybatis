@@ -13,12 +13,12 @@ import org.w3c.dom.NodeList;
 
 public class XNode {
 	
-	private Node node;
-	private String name;
-	private String body;
-	private Properties attributes;
-	private Properties variables;
-	private XPathParser xpathParser;
+	private Node node;                  //dom结点
+	private String name;                //dom结点名
+	private String body;                //dom结点体
+	private Properties attributes;      //dom结点属性集合
+	private Properties variables;       //变量属性
+	private XPathParser xpathParser;    //XPath解析器
 	
 	public XNode(XPathParser xpathParser, Node node, Properties variables) {
 		this.xpathParser = xpathParser;
@@ -33,6 +33,7 @@ public class XNode {
 		return new XNode(xpathParser, node, variables);
 	}
 
+	//获取父结点
 	public XNode getParent() {
 		Node parent = node.getParentNode();
 		if (parent == null || !(parent instanceof Element)) {
@@ -42,6 +43,7 @@ public class XNode {
 		}
 	}
 
+	//获取结点路径
 	public String getPath() {
 		StringBuilder builder = new StringBuilder();
 		Node current = node;
@@ -71,7 +73,7 @@ public class XNode {
 			if (current != this) {
 				builder.insert(0, "_");
 			}
-			// 先拿id，拿不到再拿value,再拿不到拿property
+			//先拿id, 拿不到再拿value, 再拿不到拿property
 			String value = current.getStringAttribute("id",
 					current.getStringAttribute("value", current.getStringAttribute("property", null)));
 			if (value != null) {
@@ -188,11 +190,12 @@ public class XNode {
 		}
 	}
 
-	// 以下是一些getAttribute的方法
+	//获取enum属性值
 	public <T extends Enum<T>> T getEnumAttribute(Class<T> enumType, String name) {
 		return getEnumAttribute(enumType, name, null);
 	}
 
+	//获取enum属性值(带缺省值)
 	public <T extends Enum<T>> T getEnumAttribute(Class<T> enumType, String name, T def) {
 		String value = getStringAttribute(name);
 		if (value == null) {
@@ -202,10 +205,12 @@ public class XNode {
 		}
 	}
 
+	//获取string属性值
 	public String getStringAttribute(String name) {
 		return getStringAttribute(name, null);
 	}
 
+	//获取string属性值(带缺省值)
 	public String getStringAttribute(String name, String def) {
 		String value = attributes.getProperty(name);
 		if (value == null) {
@@ -215,10 +220,12 @@ public class XNode {
 		}
 	}
 
+	//获取boolean属性值
 	public Boolean getBooleanAttribute(String name) {
 		return getBooleanAttribute(name, null);
 	}
 
+	//获取boolean属性值(带缺省值)
 	public Boolean getBooleanAttribute(String name, Boolean def) {
 		String value = attributes.getProperty(name);
 		if (value == null) {
@@ -228,10 +235,12 @@ public class XNode {
 		}
 	}
 
+	//获取int属性值
 	public Integer getIntAttribute(String name) {
 		return getIntAttribute(name, null);
 	}
 
+	//获取int属性值(带缺省值)
 	public Integer getIntAttribute(String name, Integer def) {
 		String value = attributes.getProperty(name);
 		if (value == null) {
@@ -241,10 +250,12 @@ public class XNode {
 		}
 	}
 
+	//获取long属性值
 	public Long getLongAttribute(String name) {
 		return getLongAttribute(name, null);
 	}
 
+	//获取long属性值(带缺省值)
 	public Long getLongAttribute(String name, Long def) {
 		String value = attributes.getProperty(name);
 		if (value == null) {
@@ -254,10 +265,12 @@ public class XNode {
 		}
 	}
 
+	//获取double属性值
 	public Double getDoubleAttribute(String name) {
 		return getDoubleAttribute(name, null);
 	}
 
+	//获取double属性值(带缺省值)
 	public Double getDoubleAttribute(String name, Double def) {
 		String value = attributes.getProperty(name);
 		if (value == null) {
@@ -267,10 +280,12 @@ public class XNode {
 		}
 	}
 
+	//获取float属性值
 	public Float getFloatAttribute(String name) {
 		return getFloatAttribute(name, null);
 	}
 
+	//获取float属性值(带缺省值)
 	public Float getFloatAttribute(String name, Float def) {
 		String value = attributes.getProperty(name);
 		if (value == null) {
@@ -280,7 +295,7 @@ public class XNode {
 		}
 	}
 
-	// 得到孩子，原理是调用Node.getChildNodes
+	//获取子节点列表
 	public List<XNode> getChildren() {
 		List<XNode> children = new ArrayList<XNode>();
 		NodeList nodeList = node.getChildNodes();
@@ -288,6 +303,7 @@ public class XNode {
 			for (int i = 0, n = nodeList.getLength(); i < n; i++) {
 				Node node = nodeList.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
+					//包装成XNode并放入列表中
 					children.add(new XNode(xpathParser, node, variables));
 				}
 			}
@@ -295,20 +311,23 @@ public class XNode {
 		return children;
 	}
 
-	// 得到孩子，返回Properties，孩子的格式肯定都有name,value属性
+	//获取子节点属性
 	public Properties getChildrenAsProperties() {
 		Properties properties = new Properties();
+		//遍历子节点列表
 		for (XNode child : getChildren()) {
+			//获取name属性值
 			String name = child.getStringAttribute("name");
+			//获取value属性值
 			String value = child.getStringAttribute("value");
+			//放入properties中
 			if (name != null && value != null) {
 				properties.setProperty(name, value);
 			}
 		}
 		return properties;
 	}
-
-	// 打印信息，为了调试用
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -325,7 +344,6 @@ public class XNode {
 		if (!children.isEmpty()) {
 			builder.append(">\n");
 			for (XNode node : children) {
-				// 递归取得孩子的toString
 				builder.append(node.toString());
 			}
 			builder.append("</");
@@ -344,22 +362,27 @@ public class XNode {
 		return builder.toString();
 	}
 
-	// 以下2个方法在构造时就解析
+	//解析结点的属性
 	private Properties parseAttributes(Node n) {
 		Properties attributes = new Properties();
+		//获取dom属性节点集合
 		NamedNodeMap attributeNodes = n.getAttributes();
 		if (attributeNodes != null) {
 			for (int i = 0; i < attributeNodes.getLength(); i++) {
+				//获取dom属性结点
 				Node attribute = attributeNodes.item(i);
+				//解析dom属性结点对应的值
 				String value = PropertyParser.parse(attribute.getNodeValue(), variables);
+				//将键值对放入attributes中
 				attributes.put(attribute.getNodeName(), value);
 			}
 		}
 		return attributes;
 	}
 
+	//解析结点体
 	private String parseBody(Node node) {
-		// 取不到body，循环取孩子的body，只要取到第一个，立即返回
+		//获取结点体的数据
 		String data = getBodyData(node);
 		if (data == null) {
 			NodeList children = node.getChildNodes();
@@ -374,7 +397,9 @@ public class XNode {
 		return data;
 	}
 
+	//获取结点体数据
 	private String getBodyData(Node child) {
+		//如果是CDATA类型或文本类型, 则解析出数据
 		if (child.getNodeType() == Node.CDATA_SECTION_NODE || child.getNodeType() == Node.TEXT_NODE) {
 			String data = ((CharacterData) child).getData();
 			data = PropertyParser.parse(data, variables);

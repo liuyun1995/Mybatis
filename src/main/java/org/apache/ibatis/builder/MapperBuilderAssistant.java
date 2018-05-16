@@ -247,6 +247,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		return value == null ? defaultValue : value;
 	}
 
+	//设置Statement缓存
 	private void setStatementCache(boolean isSelect, boolean flushCache, boolean useCache, Cache cache,
 			MappedStatement.Builder statementBuilder) {
 		flushCache = valueOrDefault(flushCache, !isSelect);
@@ -314,19 +315,19 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		statementBuilder.timeout(timeout);
 	}
 
-	// 构建result map
+	// 构建resultMap
 	public ResultMapping buildResultMapping(Class<?> resultType, String property, String column, Class<?> javaType,
 			JdbcType jdbcType, String nestedSelect, String nestedResultMap, String notNullColumn, String columnPrefix,
 			Class<? extends TypeHandler<?>> typeHandler, List<ResultFlag> flags, String resultSet, String foreignColumn,
 			boolean lazy) {
 		Class<?> javaTypeClass = resolveResultJavaType(resultType, property, javaType);
 		TypeHandler<?> typeHandlerInstance = resolveTypeHandler(javaTypeClass, typeHandler);
-		// 解析复合的列名,一般用不到，返回的是空
+		//解析复合的列名, 一般用不到, 返回的是空
 		List<ResultMapping> composites = parseCompositeColumnName(column);
 		if (composites.size() > 0) {
 			column = null;
 		}
-		// 构建result map
+		//构建resultMap
 		ResultMapping.Builder builder = new ResultMapping.Builder(configuration, property, column, javaTypeClass);
 		builder.jdbcType(jdbcType);
 		builder.nestedQueryId(applyCurrentNamespace(nestedSelect, true));

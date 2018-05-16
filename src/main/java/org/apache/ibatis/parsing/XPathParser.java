@@ -30,7 +30,7 @@ public class XPathParser {
 	private Document document;
 	private boolean validation;
 	private EntityResolver entityResolver;
-	private Properties variables;
+	private Properties variables;             //属性
 	private XPath xpath;
 	
 	public XPathParser(String xml) {
@@ -209,7 +209,6 @@ public class XPathParser {
 
 	private Object evaluate(String expression, Object root, QName returnType) {
 		try {
-			// 最终合流到这儿，直接调用XPath.evaluate
 			return xpath.evaluate(expression, root, returnType);
 		} catch (Exception e) {
 			throw new BuilderException("Error evaluating XPath.  Cause: " + e, e);
