@@ -13,9 +13,7 @@ import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.apache.ibatis.scripting.defaults.RawSqlSource;
 import org.apache.ibatis.session.Configuration;
 
-/**
- * XML语言驱动
- */
+//XML语言驱动
 public class XMLLanguageDriver implements LanguageDriver {
 
 	public ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject,
@@ -32,13 +30,10 @@ public class XMLLanguageDriver implements LanguageDriver {
 
 	// 注解方式构建mapper，一般不用，可以暂时忽略
 	public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType) {
-		// issue #3
 		if (script.startsWith("<script>")) {
-			XPathParser parser = new XPathParser(script, false, configuration.getVariables(),
-					new XMLMapperEntityResolver());
+			XPathParser parser = new XPathParser(script, false, configuration.getVariables(), new XMLMapperEntityResolver());
 			return createSqlSource(configuration, parser.evalNode("/script"), parameterType);
 		} else {
-			// issue #127
 			script = PropertyParser.parse(script, configuration.getVariables());
 			TextSqlNode textSqlNode = new TextSqlNode(script);
 			// 一种是动态，一种是原始

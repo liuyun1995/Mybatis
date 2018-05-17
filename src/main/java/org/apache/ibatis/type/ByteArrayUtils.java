@@ -2,9 +2,7 @@ package org.apache.ibatis.type;
 
 class ByteArrayUtils {
 
-	private ByteArrayUtils() {
-		// Prevent Instantiation
-	}
+	private ByteArrayUtils() {}
 
 	static byte[] convertToPrimitiveArray(Byte[] objects) {
 		final byte[] bytes = new byte[objects.length];

@@ -16,9 +16,7 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
-/**
- * 默认参数处理器
- */
+//默认参数处理器
 public class DefaultParameterHandler implements ParameterHandler {
 
 	private final TypeHandlerRegistry typeHandlerRegistry;

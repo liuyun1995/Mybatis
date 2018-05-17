@@ -1,8 +1,6 @@
 package org.apache.ibatis.scripting.xmltags;
 
-/**
- * 静态文本SQL节点
- */
+//静态文本SQL节点
 public class StaticTextSqlNode implements SqlNode {
 	private String text;
 

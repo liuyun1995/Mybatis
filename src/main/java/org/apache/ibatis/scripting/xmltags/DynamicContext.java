@@ -11,16 +11,13 @@ import ognl.PropertyAccessor;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
 
-/**
- * 动态上下文
- */
+//动态上下文
 public class DynamicContext {
 
 	public static final String PARAMETER_OBJECT_KEY = "_parameter";
 	public static final String DATABASE_ID_KEY = "_databaseId";
 
 	static {
-		// TODO OgnlRuntime
 		// 定义属性->getter方法映射，ContextMap到ContextAccessor的映射，注册到ognl运行时
 		// 参考http://commons.apache.org/proper/commons-ognl/developer-guide.html
 		OgnlRuntime.setPropertyAccessor(ContextMap.class, new ContextAccessor());

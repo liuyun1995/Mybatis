@@ -2,9 +2,7 @@ package org.apache.ibatis.transaction;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 
-/**
- * 事务异常,继承PersistenceException
- */
+//事务异常
 public class TransactionException extends PersistenceException {
 
 	private static final long serialVersionUID = -433589569461084605L;

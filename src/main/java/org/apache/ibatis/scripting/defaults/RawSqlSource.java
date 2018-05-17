@@ -9,9 +9,7 @@ import org.apache.ibatis.scripting.xmltags.DynamicContext;
 import org.apache.ibatis.scripting.xmltags.SqlNode;
 import org.apache.ibatis.session.Configuration;
 
-/**
- * 原始SQL源码，比DynamicSqlSource快
- */
+//原始SQL源码，比DynamicSqlSource快
 public class RawSqlSource implements SqlSource {
 
 	private final SqlSource sqlSource;

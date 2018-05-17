@@ -26,17 +26,8 @@ public class SimpleTypeRegistry {
 		SIMPLE_TYPE_SET.add(BigDecimal.class);
 	}
 
-	private SimpleTypeRegistry() {
-		// Prevent Instantiation
-	}
+	private SimpleTypeRegistry() {}
 
-	/*
-	 * Tells us if the class passed in is a known common type
-	 *
-	 * @param clazz The class to check
-	 * 
-	 * @return True if the class is known
-	 */
 	public static boolean isSimpleType(Class<?> clazz) {
 		return SIMPLE_TYPE_SET.contains(clazz);
 	}

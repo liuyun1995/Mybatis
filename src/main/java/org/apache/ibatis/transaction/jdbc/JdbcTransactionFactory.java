@@ -9,9 +9,7 @@ import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionFactory;
 
-/**
- * JdbcTransaction工厂
- */
+//JdbcTransaction工厂
 public class JdbcTransactionFactory implements TransactionFactory {
 
 	public void setProperties(Properties props) {}

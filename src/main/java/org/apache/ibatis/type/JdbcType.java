@@ -4,11 +4,9 @@ import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * JDBC类型枚举
- */
+//JDBC类型枚举
 public enum JdbcType {
-	// 就是包装一下java.sql.Types
+	//就是包装一下java.sql.Types
 	ARRAY(Types.ARRAY), 
 	BIT(Types.BIT), 
 	TINYINT(Types.TINYINT), 

@@ -7,6 +7,7 @@ import javax.sql.DataSource;
 
 import org.apache.ibatis.session.TransactionIsolationLevel;
 
+//事务工厂
 public interface TransactionFactory {
 
 	// 设置属性

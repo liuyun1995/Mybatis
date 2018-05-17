@@ -15,14 +15,11 @@ import java.util.Set;
 
 import org.apache.ibatis.io.ResolverUtil;
 
-/**
- * 类型处理器注册机
- */
+//类型处理器注册机
 public final class TypeHandlerRegistry {
 
 	// 枚举型map
-	private final Map<JdbcType, TypeHandler<?>> JDBC_TYPE_HANDLER_MAP = new EnumMap<JdbcType, TypeHandler<?>>(
-			JdbcType.class);
+	private final Map<JdbcType, TypeHandler<?>> JDBC_TYPE_HANDLER_MAP = new EnumMap<JdbcType, TypeHandler<?>>(JdbcType.class);
 	private final Map<Type, Map<JdbcType, TypeHandler<?>>> TYPE_HANDLER_MAP = new HashMap<Type, Map<JdbcType, TypeHandler<?>>>();
 	private final TypeHandler<Object> UNKNOWN_TYPE_HANDLER = new UnknownTypeHandler(this);
 	private final Map<Class<?>, TypeHandler<?>> ALL_TYPE_HANDLERS_MAP = new HashMap<Class<?>, TypeHandler<?>>();
@@ -58,7 +55,7 @@ public final class TypeHandlerRegistry {
 		register(double.class, new DoubleTypeHandler());
 		register(JdbcType.DOUBLE, new DoubleTypeHandler());
 
-		// 以下是为同一个类型的多种变种注册到多个不同的handler
+		//以下是为同一个类型的多种变种注册到多个不同的handler
 		register(String.class, new StringTypeHandler());
 		register(String.class, JdbcType.CHAR, new StringTypeHandler());
 		register(String.class, JdbcType.CLOB, new ClobTypeHandler());
@@ -109,8 +106,7 @@ public final class TypeHandlerRegistry {
 		register(java.sql.Date.class, new SqlDateTypeHandler());
 		register(java.sql.Time.class, new SqlTimeTypeHandler());
 		register(java.sql.Timestamp.class, new SqlTimestampTypeHandler());
-
-		// issue #273
+		
 		register(Character.class, new CharacterTypeHandler());
 		register(char.class, new CharacterTypeHandler());
 	}
@@ -168,7 +164,6 @@ public final class TypeHandlerRegistry {
 		if (handler == null && type != null && type instanceof Class && Enum.class.isAssignableFrom((Class<?>) type)) {
 			handler = new EnumTypeHandler((Class<?>) type);
 		}
-		// type drives generics here
 		return (TypeHandler<T>) handler;
 	}
 
@@ -180,12 +175,6 @@ public final class TypeHandlerRegistry {
 		JDBC_TYPE_HANDLER_MAP.put(jdbcType, handler);
 	}
 
-	//
-	// REGISTER INSTANCE
-	//
-
-	// Only handler
-
 	@SuppressWarnings("unchecked")
 	public <T> void register(TypeHandler<T> typeHandler) {
 		boolean mappedTypeFound = false;
@@ -196,7 +185,6 @@ public final class TypeHandlerRegistry {
 				mappedTypeFound = true;
 			}
 		}
-		// @since 3.1.0 - try to auto-discover the mapped type
 		if (!mappedTypeFound && typeHandler instanceof TypeReference) {
 			try {
 				TypeReference<T> typeReference = (TypeReference<T>) typeHandler;
@@ -325,12 +313,7 @@ public final class TypeHandlerRegistry {
 			}
 		}
 	}
-
-	// get information
-
-	/**
-	 * @since 3.2.2
-	 */
+	
 	public Collection<TypeHandler<?>> getTypeHandlers() {
 		return Collections.unmodifiableCollection(ALL_TYPE_HANDLERS_MAP.values());
 	}

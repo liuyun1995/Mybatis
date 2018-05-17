@@ -14,9 +14,7 @@ import org.apache.ibatis.session.Configuration;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-/**
- * XML脚本构建器
- */
+//XML脚本构建器
 public class XMLScriptBuilder extends BaseBuilder {
 
 	private XNode context;
@@ -60,7 +58,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 				} else {
 					contents.add(new StaticTextSqlNode(data));
 				}
-			} else if (child.getNode().getNodeType() == Node.ELEMENT_NODE) { // issue #628
+			} else if (child.getNode().getNodeType() == Node.ELEMENT_NODE) {
 				String nodeName = child.getNode().getNodeName();
 				NodeHandler handler = nodeHandlers(nodeName);
 				if (handler == null) {
@@ -92,9 +90,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 	}
 
 	private class BindHandler implements NodeHandler {
-		public BindHandler() {
-			// Prevent Synthetic Access
-		}
+		public BindHandler() {}
 
 		public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
 			final String name = nodeToHandle.getStringAttribute("name");
@@ -105,9 +101,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 	}
 
 	private class TrimHandler implements NodeHandler {
-		public TrimHandler() {
-			// Prevent Synthetic Access
-		}
+		public TrimHandler() {}
 
 		public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
 			List<SqlNode> contents = parseDynamicTags(nodeToHandle);
@@ -123,9 +117,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 	}
 
 	private class WhereHandler implements NodeHandler {
-		public WhereHandler() {
-			// Prevent Synthetic Access
-		}
+		public WhereHandler() {}
 
 		public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
 			List<SqlNode> contents = parseDynamicTags(nodeToHandle);
@@ -136,9 +128,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 	}
 
 	private class SetHandler implements NodeHandler {
-		public SetHandler() {
-			// Prevent Synthetic Access
-		}
+		public SetHandler() {}
 
 		public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
 			List<SqlNode> contents = parseDynamicTags(nodeToHandle);
@@ -149,9 +139,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 	}
 
 	private class ForEachHandler implements NodeHandler {
-		public ForEachHandler() {
-			// Prevent Synthetic Access
-		}
+		public ForEachHandler() {}
 
 		public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
 			List<SqlNode> contents = parseDynamicTags(nodeToHandle);
@@ -169,9 +157,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 	}
 
 	private class IfHandler implements NodeHandler {
-		public IfHandler() {
-			// Prevent Synthetic Access
-		}
+		public IfHandler() {}
 
 		public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
 			List<SqlNode> contents = parseDynamicTags(nodeToHandle);
@@ -183,9 +169,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 	}
 
 	private class OtherwiseHandler implements NodeHandler {
-		public OtherwiseHandler() {
-			// Prevent Synthetic Access
-		}
+		public OtherwiseHandler() {}
 
 		public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
 			List<SqlNode> contents = parseDynamicTags(nodeToHandle);
@@ -195,9 +179,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 	}
 
 	private class ChooseHandler implements NodeHandler {
-		public ChooseHandler() {
-			// Prevent Synthetic Access
-		}
+		public ChooseHandler() {}
 
 		public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
 			List<SqlNode> whenSqlNodes = new ArrayList<SqlNode>();

@@ -8,16 +8,12 @@ import org.apache.ibatis.builder.BuilderException;
 import ognl.Ognl;
 import ognl.OgnlException;
 
-/**
- * OGNL缓存,根据以上链接，大致是说ognl有性能问题，所以加了一个缓存
- */
+//OGNL缓存,根据以上链接，大致是说ognl有性能问题，所以加了一个缓存
 public final class OgnlCache {
 
 	private static final Map<String, Object> expressionCache = new ConcurrentHashMap<String, Object>();
 
-	private OgnlCache() {
-		// Prevent Instantiation of Static Class
-	}
+	private OgnlCache() {}
 
 	public static Object getValue(String expression, Object root) {
 		try {

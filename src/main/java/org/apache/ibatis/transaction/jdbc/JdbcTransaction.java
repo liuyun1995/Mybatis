@@ -11,9 +11,7 @@ import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionException;
 
-/**
- * Jdbc事务。直接利用JDBC的commit,rollback。 它依赖于从数据源得 到的连接来管理事务范围。
- */
+//Jdbc事务。直接利用JDBC的commit,rollback。 它依赖于从数据源得到的连接来管理事务范围。
 public class JdbcTransaction implements Transaction {
 
 	private static final Log log = LogFactory.getLog(JdbcTransaction.class);

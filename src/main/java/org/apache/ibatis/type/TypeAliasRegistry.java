@@ -17,12 +17,10 @@ import java.util.Set;
 import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.io.Resources;
 
-/**
- * 类型别名注册器
- */
+//类型别名注册器
 public class TypeAliasRegistry {
 
-	// 类型别名是放在内存的
+	//类型别名是放在内存的
 	private final Map<String, Class<?>> TYPE_ALIASES = new HashMap<String, Class<?>>();
 
 	public TypeAliasRegistry() {
@@ -101,7 +99,6 @@ public class TypeAliasRegistry {
 			if (string == null) {
 				return null;
 			}
-			// issue #748
 			// 先转成小写再解析
 			// 这里转个小写也有bug？见748号bug(在google code上)
 			// https://code.google.com/p/mybatis/issues
@@ -127,13 +124,10 @@ public class TypeAliasRegistry {
 
 	// 扫描并注册包下所有继承于superType的类型别名
 	public void registerAliases(String packageName, Class<?> superType) {
-		// TODO ResolverUtil
 		ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<Class<?>>();
 		resolverUtil.find(new ResolverUtil.IsA(superType), packageName);
 		Set<Class<? extends Class<?>>> typeSet = resolverUtil.getClasses();
 		for (Class<?> type : typeSet) {
-			// Ignore inner classes and interfaces (including package-info.java)
-			// Skip also inner classes. See issue #6
 			if (!type.isAnonymousClass() && !type.isInterface() && !type.isMemberClass()) {
 				registerAlias(type);
 			}
@@ -157,7 +151,6 @@ public class TypeAliasRegistry {
 		if (alias == null) {
 			throw new TypeException("The parameter alias cannot be null");
 		}
-		// issue #748
 		String key = alias.toLowerCase(Locale.ENGLISH);
 		// 如果已经存在key了，且value和之前不一致，报错
 		// 这里逻辑略显复杂，感觉没必要，一个key对一个value呗，存在key直接报错不就得了
@@ -175,10 +168,7 @@ public class TypeAliasRegistry {
 			throw new TypeException("Error registering type alias " + alias + " for " + value + ". Cause: " + e, e);
 		}
 	}
-
-	/**
-	 * @since 3.2.2
-	 */
+	
 	public Map<String, Class<?>> getTypeAliases() {
 		return Collections.unmodifiableMap(TYPE_ALIASES);
 	}
