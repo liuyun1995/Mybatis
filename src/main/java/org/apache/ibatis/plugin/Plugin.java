@@ -10,9 +10,7 @@ import java.util.Set;
 
 import org.apache.ibatis.reflection.ExceptionUtil;
 
-/**
- * 插件,用的代理模式
- */
+//插件,用的代理模式
 public class Plugin implements InvocationHandler {
 
 	private Object target;

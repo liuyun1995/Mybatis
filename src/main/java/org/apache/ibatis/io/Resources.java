@@ -10,30 +10,31 @@ import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.Properties;
 
-/**
- * 通过类加载器获得resource的辅助类
- */
 public class Resources {
 
-	// 大多数方法都是委托给ClassLoaderWrapper，再去做真正的事
+	//类加载器包装器
 	private static ClassLoaderWrapper classLoaderWrapper = new ClassLoaderWrapper();
-	
+	//文件编码
 	private static Charset charset;
 
 	Resources() {}
 	
+	//获取默认类加载器
 	public static ClassLoader getDefaultClassLoader() {
 		return classLoaderWrapper.defaultClassLoader;
 	}
 	
+	//设置默认类加载器
 	public static void setDefaultClassLoader(ClassLoader defaultClassLoader) {
 		classLoaderWrapper.defaultClassLoader = defaultClassLoader;
 	}
 	
+	//通过Resource获取URL
 	public static URL getResourceURL(String resource) throws IOException {
 		return getResourceURL(null, resource);
 	}
 	
+	//通过Resource获取URL
 	public static URL getResourceURL(ClassLoader loader, String resource) throws IOException {
 		URL url = classLoaderWrapper.getResourceAsURL(resource, loader);
 		if (url == null) {
@@ -42,10 +43,12 @@ public class Resources {
 		return url;
 	}
 	
+	//通过Resource获取InputStream
 	public static InputStream getResourceAsStream(String resource) throws IOException {
 		return getResourceAsStream(null, resource);
 	}
 	
+	//通过Resource获取InputStream
 	public static InputStream getResourceAsStream(ClassLoader loader, String resource) throws IOException {
 		InputStream in = classLoaderWrapper.getResourceAsStream(resource, loader);
 		if (in == null) {
@@ -54,6 +57,7 @@ public class Resources {
 		return in;
 	}
 	
+	//通过Resource获取Properties
 	public static Properties getResourceAsProperties(String resource) throws IOException {
 		Properties props = new Properties();
 		InputStream in = getResourceAsStream(resource);
@@ -62,6 +66,7 @@ public class Resources {
 		return props;
 	}
 	
+	//通过Resource获取Properties
 	public static Properties getResourceAsProperties(ClassLoader loader, String resource) throws IOException {
 		Properties props = new Properties();
 		InputStream in = getResourceAsStream(loader, resource);
@@ -70,6 +75,7 @@ public class Resources {
 		return props;
 	}
 	
+	//通过Resource获取Reader
 	public static Reader getResourceAsReader(String resource) throws IOException {
 		Reader reader;
 		if (charset == null) {
@@ -80,6 +86,7 @@ public class Resources {
 		return reader;
 	}
 	
+	//通过Resource获取Reader
 	public static Reader getResourceAsReader(ClassLoader loader, String resource) throws IOException {
 		Reader reader;
 		if (charset == null) {
@@ -90,20 +97,24 @@ public class Resources {
 		return reader;
 	}
 	
+	//通过Resource获取File
 	public static File getResourceAsFile(String resource) throws IOException {
 		return new File(getResourceURL(resource).getFile());
 	}
 	
+	//通过Resource获取File
 	public static File getResourceAsFile(ClassLoader loader, String resource) throws IOException {
 		return new File(getResourceURL(loader, resource).getFile());
 	}
 	
+	//通过url获取InputStream
 	public static InputStream getUrlAsStream(String urlString) throws IOException {
 		URL url = new URL(urlString);
 		URLConnection conn = url.openConnection();
 		return conn.getInputStream();
 	}
 	
+	//通过url获取Reader
 	public static Reader getUrlAsReader(String urlString) throws IOException {
 		Reader reader;
 		if (charset == null) {
@@ -114,6 +125,7 @@ public class Resources {
 		return reader;
 	}
 	
+	//通过url获取Properties
 	public static Properties getUrlAsProperties(String urlString) throws IOException {
 		Properties props = new Properties();
 		InputStream in = getUrlAsStream(urlString);
@@ -122,14 +134,17 @@ public class Resources {
 		return props;
 	}
 	
+	//根据类名获取Class
 	public static Class<?> classForName(String className) throws ClassNotFoundException {
 		return classLoaderWrapper.classForName(className);
 	}
 
+	//获取编码
 	public static Charset getCharset() {
 		return charset;
 	}
 
+	//设置编码
 	public static void setCharset(Charset charset) {
 		Resources.charset = charset;
 	}

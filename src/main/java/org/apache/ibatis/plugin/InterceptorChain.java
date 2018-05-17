@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * 拦截器链
- */
+//拦截器链
 public class InterceptorChain {
 
 	// 内部就是一个拦截器的List

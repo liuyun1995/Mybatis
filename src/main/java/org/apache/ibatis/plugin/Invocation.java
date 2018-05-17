@@ -3,9 +3,7 @@ package org.apache.ibatis.plugin;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-/**
- * 调用
- */
+//调用
 public class Invocation {
 
 	// 调用的对象

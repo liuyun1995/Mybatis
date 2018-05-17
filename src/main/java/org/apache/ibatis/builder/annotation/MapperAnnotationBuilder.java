@@ -106,7 +106,6 @@ public class MapperAnnotationBuilder {
 			Method[] methods = type.getMethods();
 			for (Method method : methods) {
 				try {
-					// issue #237
 					if (!method.isBridge()) {
 						parseStatement(method);
 					}
@@ -198,7 +197,6 @@ public class MapperAnnotationBuilder {
 		applyConstructorArgs(args, returnType, resultMappings);
 		applyResults(results, returnType, resultMappings);
 		Discriminator disc = applyDiscriminator(resultMapId, returnType, discriminator);
-		// TODO add AutoMappingBehaviour
 		assistant.addResultMap(resultMapId, returnType, null, disc, resultMappings, null);
 		createDiscriminatorResultMaps(resultMapId, returnType, discriminator);
 	}
@@ -209,10 +207,8 @@ public class MapperAnnotationBuilder {
 			for (Case c : discriminator.cases()) {
 				String caseResultMapId = resultMapId + "-" + c.value();
 				List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
-				// issue #136
 				applyConstructorArgs(c.constructArgs(), resultType, resultMappings);
 				applyResults(c.results(), resultType, resultMappings);
-				// TODO add AutoMappingBehaviour
 				assistant.addResultMap(caseResultMapId, c.type(), resultMapId, null, resultMappings, null);
 			}
 		}
@@ -277,8 +273,7 @@ public class MapperAnnotationBuilder {
 			if (options != null) {
 				flushCache = options.flushCache();
 				useCache = options.useCache();
-				fetchSize = options.fetchSize() > -1 || options.fetchSize() == Integer.MIN_VALUE ? options.fetchSize()
-						: null; // issue #348
+				fetchSize = options.fetchSize() > -1 || options.fetchSize() == Integer.MIN_VALUE ? options.fetchSize() : null;
 				timeout = options.timeout() > -1 ? options.timeout() : null;
 				statementType = options.statementType();
 				resultSetType = options.resultSetType();
@@ -304,7 +299,6 @@ public class MapperAnnotationBuilder {
 					timeout,
 					// ParameterMapID
 					null, parameterTypeClass, resultMapId, getReturnType(method), resultSetType, flushCache, useCache,
-					// TODO issue #577
 					false, keyGenerator, keyProperty, keyColumn,
 					// DatabaseID
 					null, languageDriver,
@@ -331,7 +325,6 @@ public class MapperAnnotationBuilder {
 				if (parameterType == null) {
 					parameterType = parameterTypes[i];
 				} else {
-					// issue #135
 					parameterType = ParamMap.class;
 				}
 			}
@@ -341,7 +334,6 @@ public class MapperAnnotationBuilder {
 
 	private Class<?> getReturnType(Method method) {
 		Class<?> returnType = method.getReturnType();
-		// issue #508
 		if (void.class.equals(returnType)) {
 			ResultType rt = method.getAnnotation(ResultType.class);
 			if (rt != null) {
@@ -359,15 +351,12 @@ public class MapperAnnotationBuilder {
 						// (issue #443) actual type can be a also a parameterized type
 						returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
 					} else if (returnTypeParameter instanceof GenericArrayType) {
-						Class<?> componentType = (Class<?>) ((GenericArrayType) returnTypeParameter)
-								.getGenericComponentType();
-						// (issue #525) support List<byte[]>
+						Class<?> componentType = (Class<?>) ((GenericArrayType) returnTypeParameter).getGenericComponentType();
 						returnType = Array.newInstance(componentType, 0).getClass();
 					}
 				}
 			}
 		} else if (method.isAnnotationPresent(MapKey.class) && Map.class.isAssignableFrom(returnType)) {
-			// (issue 504) Do not look into Maps if there is not MapKey annotation
 			Type returnTypeParameter = method.getGenericReturnType();
 			if (returnTypeParameter instanceof ParameterizedType) {
 				Type[] actualTypeArguments = ((ParameterizedType) returnTypeParameter).getActualTypeArguments();
@@ -376,7 +365,6 @@ public class MapperAnnotationBuilder {
 					if (returnTypeParameter instanceof Class) {
 						returnType = (Class<?>) returnTypeParameter;
 					} else if (returnTypeParameter instanceof ParameterizedType) {
-						// (issue 443) actual type can be a also a parameterized type
 						returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
 					}
 				}

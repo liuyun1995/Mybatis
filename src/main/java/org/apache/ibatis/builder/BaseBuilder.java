@@ -35,14 +35,17 @@ public abstract class BaseBuilder {
 		return Pattern.compile(regex == null ? defaultValue : regex);
 	}
 
+	//转成Boolean类型
 	protected Boolean booleanValueOf(String value, Boolean defaultValue) {
 		return value == null ? defaultValue : Boolean.valueOf(value);
 	}
 
+	//转成Integer类型
 	protected Integer integerValueOf(String value, Integer defaultValue) {
 		return value == null ? defaultValue : Integer.valueOf(value);
 	}
 	
+	//转成Set类型
 	protected Set<String> stringSetValueOf(String value, String defaultValue) {
 		value = (value == null ? defaultValue : value);
 		return new HashSet<String>(Arrays.asList(value.split(",")));
@@ -84,7 +87,7 @@ public abstract class BaseBuilder {
 		}
 	}
 
-	//根据别名解析Class, 然后创建实例
+	//根据别名创建实例
 	protected Object createInstance(String alias) {
 		Class<?> clazz = resolveClass(alias);
 		if (clazz == null) {
@@ -97,7 +100,7 @@ public abstract class BaseBuilder {
 		}
 	}
 
-	// 根据别名解析Class,其实是去查看类型别名注册/事务管理器别名
+	//根据别名解析Class
 	protected Class<?> resolveClass(String alias) {
 		if (alias == null) {
 			return null;
@@ -109,14 +112,14 @@ public abstract class BaseBuilder {
 		}
 	}
 
-	// 解析类型处理器
+	//解析类型处理器
 	protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, String typeHandlerAlias) {
 		if (typeHandlerAlias == null) {
 			return null;
 		}
-		// 先取得别名所属的Class
+		//先取得别名所属的Class
 		Class<?> type = resolveClass(typeHandlerAlias);
-		// 如果不是TypeHandler的子类,报错
+		//如果不是TypeHandler的子类,报错
 		if (type != null && !TypeHandler.class.isAssignableFrom(type)) {
 			throw new BuilderException("Type " + type.getName()
 					+ " is not a valid TypeHandler because it does not implement TypeHandler interface");

@@ -2,9 +2,7 @@ package org.apache.ibatis.plugin;
 
 import java.util.Properties;
 
-/**
- * 拦截器
- */
+//拦截器
 public interface Interceptor {
 
 	// 拦截
