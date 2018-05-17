@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.ibatis.session.Configuration;
 
+//参数映射
 public class ParameterMap {
 
 	private String id;
@@ -14,20 +15,25 @@ public class ParameterMap {
 	private ParameterMap() {}
 
 	public static class Builder {
+		
 		private ParameterMap parameterMap = new ParameterMap();
+		
 		public Builder(Configuration configuration, String id, Class<?> type,
 				List<ParameterMapping> parameterMappings) {
 			parameterMap.id = id;
 			parameterMap.type = type;
 			parameterMap.parameterMappings = parameterMappings;
 		}
+		
 		public Class<?> type() {
 			return parameterMap.type;
 		}
+		
 		public ParameterMap build() {
 			parameterMap.parameterMappings = Collections.unmodifiableList(parameterMap.parameterMappings);
 			return parameterMap;
 		}
+		
 	}
 
 	public String getId() {

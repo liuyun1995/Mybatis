@@ -13,7 +13,7 @@ import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
-//抽象基础构建器
+//基础构建器
 public abstract class BaseBuilder {
 
 	protected final Configuration configuration;             //配置代表类
@@ -112,37 +112,39 @@ public abstract class BaseBuilder {
 		}
 	}
 
-	//解析类型处理器
+	//解析类型处理器(根据java类型和类型处理器别名)
 	protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, String typeHandlerAlias) {
 		if (typeHandlerAlias == null) {
 			return null;
 		}
-		//先取得别名所属的Class
+		//根据别名获取对应的类
 		Class<?> type = resolveClass(typeHandlerAlias);
-		//如果不是TypeHandler的子类,报错
+		//若不是TypeHandler子类则报错
 		if (type != null && !TypeHandler.class.isAssignableFrom(type)) {
 			throw new BuilderException("Type " + type.getName()
 					+ " is not a valid TypeHandler because it does not implement TypeHandler interface");
 		}
 		@SuppressWarnings("unchecked")
 		Class<? extends TypeHandler<?>> typeHandlerType = (Class<? extends TypeHandler<?>>) type;
-		// 再去调用另一个重载的方法
+		//再调用另一个重载方法
 		return resolveTypeHandler(javaType, typeHandlerType);
 	}
 
+	//解析类型处理器(根据java类型和类型处理器)
 	protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, Class<? extends TypeHandler<?>> typeHandlerType) {
 		if (typeHandlerType == null) {
 			return null;
 		}
-		// 去typeHandlerRegistry查询对应的TypeHandler
+		//去注册机上获取对应的类型处理器
 		TypeHandler<?> handler = typeHandlerRegistry.getMappingTypeHandler(typeHandlerType);
+		//若为空则新建一个类型处理器
 		if (handler == null) {
-			// 如果没有在Registry找到，调用typeHandlerRegistry.getInstance来new一个TypeHandler返回
 			handler = typeHandlerRegistry.getInstance(javaType, typeHandlerType);
 		}
 		return handler;
 	}
 
+	//根据别名获取对应的类
 	protected Class<?> resolveAlias(String alias) {
 		return typeAliasRegistry.resolveAlias(alias);
 	}

@@ -277,13 +277,14 @@ public final class TypeHandlerRegistry {
 		register(javaTypeClass, jdbcType, getInstance(javaTypeClass, typeHandlerClass));
 	}
 
-	// Construct a handler (used also from Builders)
-
+	//获取类型处理器实例
 	@SuppressWarnings("unchecked")
 	public <T> TypeHandler<T> getInstance(Class<?> javaTypeClass, Class<?> typeHandlerClass) {
 		if (javaTypeClass != null) {
 			try {
+				//获取类型处理器的构造器
 				Constructor<?> c = typeHandlerClass.getConstructor(Class.class);
+				//调用构造器并传入java类型作为参数
 				return (TypeHandler<T>) c.newInstance(javaTypeClass);
 			} catch (NoSuchMethodException ignored) {
 				// ignored
@@ -291,6 +292,7 @@ public final class TypeHandlerRegistry {
 				throw new TypeException("Failed invoking constructor for handler " + typeHandlerClass, e);
 			}
 		}
+		//若java类型为空, 则调用空的构造方法构造类型处理器
 		try {
 			Constructor<?> c = typeHandlerClass.getConstructor();
 			return (TypeHandler<T>) c.newInstance();

@@ -34,7 +34,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
-//映射构建器助手
+//Mapper构建器助手
 public class MapperBuilderAssistant extends BaseBuilder {
 	
 	private String currentNamespace;
@@ -42,16 +42,19 @@ public class MapperBuilderAssistant extends BaseBuilder {
 	private Cache currentCache;
 	private boolean unresolvedCacheRef;
 
+	//构造方法
 	public MapperBuilderAssistant(Configuration configuration, String resource) {
 		super(configuration);
 		ErrorContext.instance().resource(resource);
 		this.resource = resource;
 	}
 
+	//获取当前Namespace
 	public String getCurrentNamespace() {
 		return currentNamespace;
 	}
 
+	//设置当前Namespace
 	public void setCurrentNamespace(String currentNamespace) {
 		if (currentNamespace == null) {
 			throw new BuilderException("The mapper element requires a namespace attribute to be specified.");
@@ -63,7 +66,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		this.currentNamespace = currentNamespace;
 	}
 
-	//加上当前namespace前缀，如selectPerson-->org.a.b.selectPerson
+	//加上当前namespace前缀
 	public String applyCurrentNamespace(String base, boolean isReference) {
 		if (base == null) {
 			return null;
@@ -121,6 +124,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		return cache;
 	}
 
+	//添加ParameterMap
 	public ParameterMap addParameterMap(String id, Class<?> parameterClass, List<ParameterMapping> parameterMappings) {
 		id = applyCurrentNamespace(id, false);
 		ParameterMap.Builder parameterMapBuilder = new ParameterMap.Builder(configuration, id, parameterClass,
@@ -130,15 +134,13 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		return parameterMap;
 	}
 
+	//构建ParameterMapping
 	public ParameterMapping buildParameterMapping(Class<?> parameterType, String property, Class<?> javaType,
 			JdbcType jdbcType, String resultMap, ParameterMode parameterMode,
 			Class<? extends TypeHandler<?>> typeHandler, Integer numericScale) {
 		resultMap = applyCurrentNamespace(resultMap, true);
-
-		// Class parameterType = parameterMapBuilder.type();
 		Class<?> javaTypeClass = resolveParameterJavaType(parameterType, property, javaType, jdbcType);
 		TypeHandler<?> typeHandlerInstance = resolveTypeHandler(javaTypeClass, typeHandler);
-
 		ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, property, javaTypeClass);
 		builder.jdbcType(jdbcType);
 		builder.resultMapId(resultMap);
@@ -148,7 +150,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		return builder.build();
 	}
 
-	//增加ResultMap
+	//添加ResultMap
 	public ResultMap addResultMap(String id, Class<?> type, String extend, Discriminator discriminator,
 			List<ResultMapping> resultMappings, Boolean autoMapping) {
 		id = applyCurrentNamespace(id, false);
@@ -191,6 +193,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		return resultMap;
 	}
 
+	//构建Discriminator
 	public Discriminator buildDiscriminator(Class<?> resultType, String column, Class<?> javaType, JdbcType jdbcType,
 			Class<? extends TypeHandler<?>> typeHandler, Map<String, String> discriminatorMap) {
 		ResultMapping resultMapping = buildResultMapping(resultType, null, column, javaType, jdbcType, null, null, null,
@@ -206,23 +209,21 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		return discriminatorBuilder.build();
 	}
 
-	// 增加映射语句
+	//添加MappedStatement
 	public MappedStatement addMappedStatement(String id, SqlSource sqlSource, StatementType statementType,
 			SqlCommandType sqlCommandType, Integer fetchSize, Integer timeout, String parameterMap,
 			Class<?> parameterType, String resultMap, Class<?> resultType, ResultSetType resultSetType,
 			boolean flushCache, boolean useCache, boolean resultOrdered, KeyGenerator keyGenerator, String keyProperty,
 			String keyColumn, String databaseId, LanguageDriver lang, String resultSets) {
-
+		
 		if (unresolvedCacheRef) {
 			throw new IncompleteElementException("Cache-ref not yet resolved");
 		}
-
-		// 为id加上namespace前缀
+		//为id加上namespace前缀
 		id = applyCurrentNamespace(id, false);
-		// 是否是select语句
+		//是否是select语句
 		boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
-
-		// 又是建造者模式
+		
 		MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType);
 		statementBuilder.resource(resource);
 		statementBuilder.fetchSize(fetchSize);
@@ -234,34 +235,31 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		statementBuilder.lang(lang);
 		statementBuilder.resultOrdered(resultOrdered);
 		statementBuilder.resulSets(resultSets);
+		//设置超时时间
 		setStatementTimeout(timeout, statementBuilder);
-
-		// 1.参数映射
+		//设置ParameterMap
 		setStatementParameterMap(parameterMap, parameterType, statementBuilder);
-		// 2.结果映射
+		//设置ResultMap
 		setStatementResultMap(resultMap, resultType, resultSetType, statementBuilder);
+		//设置语句缓存
 		setStatementCache(isSelect, flushCache, useCache, currentCache, statementBuilder);
-
+		//进行构建
 		MappedStatement statement = statementBuilder.build();
-		// 建造好调用configuration.addMappedStatement
+		//添加到配置信息中
 		configuration.addMappedStatement(statement);
 		return statement;
 	}
 
-	private <T> T valueOrDefault(T value, T defaultValue) {
-		return value == null ? defaultValue : value;
+	//设置超时时间
+	private void setStatementTimeout(Integer timeout, MappedStatement.Builder statementBuilder) {
+		if (timeout == null) {
+			//获取默认超时时间
+			timeout = configuration.getDefaultStatementTimeout();
+		}
+		statementBuilder.timeout(timeout);
 	}
 
-	//设置Statement缓存
-	private void setStatementCache(boolean isSelect, boolean flushCache, boolean useCache, Cache cache,
-			MappedStatement.Builder statementBuilder) {
-		flushCache = valueOrDefault(flushCache, !isSelect);
-		useCache = valueOrDefault(useCache, isSelect);
-		statementBuilder.flushCacheRequired(flushCache);
-		statementBuilder.useCache(useCache);
-		statementBuilder.cache(cache);
-	}
-
+	//设置ParameterMap
 	private void setStatementParameterMap(String parameterMap, Class<?> parameterTypeClass,
 			MappedStatement.Builder statementBuilder) {
 		parameterMap = applyCurrentNamespace(parameterMap, true);
@@ -279,13 +277,12 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		}
 	}
 
-	//2.result map
+	//设置ResultMap
 	private void setStatementResultMap(String resultMap, Class<?> resultType, ResultSetType resultSetType,
 			MappedStatement.Builder statementBuilder) {
 		resultMap = applyCurrentNamespace(resultMap, true);
 		List<ResultMap> resultMaps = new ArrayList<ResultMap>();
 		if (resultMap != null) {
-			// 2.1 resultMap是高级功能
 			String[] resultMapNames = resultMap.split(",");
 			for (String resultMapName : resultMapNames) {
 				try {
@@ -297,7 +294,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		} else if (resultType != null) {
 			// 2.2 resultType,一般用这个足矣了
 			// <select id="selectUsers" resultType="User">
-			// 这种情况下,MyBatis 会在幕后自动创建一个 ResultMap,基于属性名来映射列到 JavaBean 的属性上。
+			// 这种情况下,MyBatis 会在幕后自动创建一个 ResultMap,基于属性名来映射列到 JavaBean的属性上。
 			// 如果列名没有精确匹配,你可以在列名上使用 select 字句的别名来匹配标签。
 			// 创建一个inline result map, 把resultType设上就OK了，
 			// 然后后面被DefaultResultSetHandler.createResultObject()使用
@@ -307,17 +304,23 @@ public class MapperBuilderAssistant extends BaseBuilder {
 			resultMaps.add(inlineResultMapBuilder.build());
 		}
 		statementBuilder.resultMaps(resultMaps);
-
 		statementBuilder.resultSetType(resultSetType);
 	}
-
-	private void setStatementTimeout(Integer timeout, MappedStatement.Builder statementBuilder) {
-		if (timeout == null) {
-			timeout = configuration.getDefaultStatementTimeout();
-		}
-		statementBuilder.timeout(timeout);
+	
+	//设置语句缓存
+	private void setStatementCache(boolean isSelect, boolean flushCache, boolean useCache, Cache cache,
+			MappedStatement.Builder statementBuilder) {
+		flushCache = valueOrDefault(flushCache, !isSelect);
+		useCache = valueOrDefault(useCache, isSelect);
+		statementBuilder.flushCacheRequired(flushCache);
+		statementBuilder.useCache(useCache);
+		statementBuilder.cache(cache);
 	}
 
+	private <T> T valueOrDefault(T value, T defaultValue) {
+		return value == null ? defaultValue : value;
+	}
+	
 	//构建ResultMapping
 	public ResultMapping buildResultMapping(Class<?> resultType, String property, String column, Class<?> javaType,
 			JdbcType jdbcType, String nestedSelect, String nestedResultMap, String notNullColumn, String columnPrefix,
@@ -346,6 +349,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		return builder.build();
 	}
 
+	//解析重复列名
 	private Set<String> parseMultipleColumnNames(String columnName) {
 		Set<String> columns = new HashSet<String>();
 		if (columnName != null) {
@@ -362,7 +366,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		return columns;
 	}
 
-	// 解析复合列名，即列名由多个组成，可以先忽略
+	//解析复合列名, 即列名由多个组成, 可以先忽略
 	private List<ResultMapping> parseCompositeColumnName(String columnName) {
 		List<ResultMapping> composites = new ArrayList<ResultMapping>();
 		if (columnName != null && (columnName.indexOf('=') > -1 || columnName.indexOf(',') > -1)) {
@@ -378,6 +382,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		return composites;
 	}
 
+	//解析返回java类型
 	private Class<?> resolveResultJavaType(Class<?> resultType, String property, Class<?> javaType) {
 		if (javaType == null && property != null) {
 			try {
@@ -393,6 +398,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		return javaType;
 	}
 
+	//解析参数java类型
 	private Class<?> resolveParameterJavaType(Class<?> resultType, String property, Class<?> javaType,
 			JdbcType jdbcType) {
 		if (javaType == null) {
@@ -411,7 +417,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		return javaType;
 	}
 	
-	// 向后兼容方法
+	//向后兼容方法
 	public ResultMapping buildResultMapping(Class<?> resultType, String property, String column, Class<?> javaType,
 			JdbcType jdbcType, String nestedSelect, String nestedResultMap, String notNullColumn, String columnPrefix,
 			Class<? extends TypeHandler<?>> typeHandler, List<ResultFlag> flags) {
@@ -419,7 +425,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 				notNullColumn, columnPrefix, typeHandler, flags, null, null, configuration.isLazyLoadingEnabled());
 	}
 
-	//取得语言驱动
+	//获取语言驱动
 	public LanguageDriver getLanguageDriver(Class<?> langClass) {
 		if (langClass != null) {
 			//注册语言驱动
@@ -432,7 +438,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		return configuration.getLanguageRegistry().getDriver(langClass);
 	}
 	
-	// 向后兼容方法
+	//向后兼容方法
 	public MappedStatement addMappedStatement(String id, SqlSource sqlSource, StatementType statementType,
 			SqlCommandType sqlCommandType, Integer fetchSize, Integer timeout, String parameterMap,
 			Class<?> parameterType, String resultMap, Class<?> resultType, ResultSetType resultSetType,

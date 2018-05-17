@@ -8,24 +8,22 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 //参数映射
+//例子：#{property,javaType=int,jdbcType=NUMERIC}
 public class ParameterMapping {
 
 	private Configuration configuration;
 
-	// 例子：#{property,javaType=int,jdbcType=NUMERIC}
+	private String property;                   //参数名
+	private ParameterMode mode;                //参数模式
+	private Class<?> javaType = Object.class; //java类型
+	private JdbcType jdbcType;                //jdbc类型
+	private Integer numericScale;             //numericScale
+	private TypeHandler<?> typeHandler;       //类型处理器
+	private String resultMapId;               //结果映射ID
+	private String jdbcTypeName;              //jdbc类型名
+	private String expression;                //表达式
 
-	private String property; // 参数名, 对应property
-	private ParameterMode mode; // 参数模式
-	private Class<?> javaType = Object.class; // java类型, 对应上面的javaType=int
-	private JdbcType jdbcType; // jdbc类型, 对应上面的jdbcType=NUMERIC
-	private Integer numericScale; // numericScale
-	private TypeHandler<?> typeHandler; // 类型处理器
-	private String resultMapId; // 结果映射ID
-	private String jdbcTypeName; // jdbc类型名, 对应jdbcType=NUMERIC
-	private String expression; // 表达式
-
-	private ParameterMapping() {
-	}
+	private ParameterMapping() {}
 
 	// 静态内部类，建造者模式
 	public static class Builder {
@@ -85,11 +83,11 @@ public class ParameterMapping {
 			return this;
 		}
 
-		// 构建方法
+		//构建方法
 		public ParameterMapping build() {
-			resolveTypeHandler(); // 1.确定类型处理器
-			validate(); // 2.进行验证
-			return parameterMapping; // 3.返回构造完毕的参数映射器
+			resolveTypeHandler();     //1.确定类型处理器
+			validate();               //2.进行验证
+			return parameterMapping; //3.返回构造完毕的参数映射器
 		}
 
 		private void validate() {
@@ -107,9 +105,9 @@ public class ParameterMapping {
 			}
 		}
 
-		// 确定类型处理器方法
+		//确定类型处理器方法
 		private void resolveTypeHandler() {
-			// 如果没有指定特殊的typeHandler，则根据javaType，jdbcType来查表确定一个默认的typeHandler
+			//如果没有指定特殊的typeHandler，则根据javaType，jdbcType来查表确定一个默认的typeHandler
 			if (parameterMapping.typeHandler == null && parameterMapping.javaType != null) {
 				Configuration configuration = parameterMapping.configuration;
 				TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
@@ -123,76 +121,35 @@ public class ParameterMapping {
 	public String getProperty() {
 		return property;
 	}
-
-	/**
-	 * Used for handling output of callable statements
-	 * 
-	 * @return
-	 */
+	
 	public ParameterMode getMode() {
 		return mode;
 	}
 
-	/**
-	 * Used for handling output of callable statements
-	 * 
-	 * @return
-	 */
 	public Class<?> getJavaType() {
 		return javaType;
 	}
-
-	/**
-	 * Used in the UnknownTypeHandler in case there is no handler for the property
-	 * type
-	 * 
-	 * @return
-	 */
+	
 	public JdbcType getJdbcType() {
 		return jdbcType;
 	}
-
-	/**
-	 * Used for handling output of callable statements
-	 * 
-	 * @return
-	 */
+	
 	public Integer getNumericScale() {
 		return numericScale;
 	}
-
-	/**
-	 * Used when setting parameters to the PreparedStatement
-	 * 
-	 * @return
-	 */
+	
 	public TypeHandler<?> getTypeHandler() {
 		return typeHandler;
 	}
-
-	/**
-	 * Used for handling output of callable statements
-	 * 
-	 * @return
-	 */
+	
 	public String getResultMapId() {
 		return resultMapId;
 	}
-
-	/**
-	 * Used for handling output of callable statements
-	 * 
-	 * @return
-	 */
+	
 	public String getJdbcTypeName() {
 		return jdbcTypeName;
 	}
-
-	/**
-	 * Not used
-	 * 
-	 * @return
-	 */
+	
 	public String getExpression() {
 		return expression;
 	}
