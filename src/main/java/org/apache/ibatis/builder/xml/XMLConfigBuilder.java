@@ -366,36 +366,42 @@ public class XMLConfigBuilder extends BaseBuilder {
 	//10.解析<mappers>节点
 	private void mapperElement(XNode parent) throws Exception {
 		if (parent != null) {
+			//遍历所有子节点
 			for (XNode child : parent.getChildren()) {
+				//解析<package>节点
 				if ("package".equals(child.getName())) {
-					// 10.4自动扫描包下所有映射器
 					String mapperPackage = child.getStringAttribute("name");
 					configuration.addMappers(mapperPackage);
+				//解析<mapper>节点
 				} else {
+					//获取resource属性
 					String resource = child.getStringAttribute("resource");
+					//获取url属性
 					String url = child.getStringAttribute("url");
+					//获取class属性
 					String mapperClass = child.getStringAttribute("class");
+					
+					//使用resource相对路径
 					if (resource != null && url == null && mapperClass == null) {
-						// 10.1使用类路径
 						ErrorContext.instance().resource(resource);
 						InputStream inputStream = Resources.getResourceAsStream(resource);
-						// 映射器比较复杂，调用XMLMapperBuilder
-						// 注意在for循环里每个mapper都重新new一个XMLMapperBuilder，来解析
+						//新建XMLMapperBuilder来解析
 						XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource,
 								configuration.getSqlFragments());
 						mapperParser.parse();
+					//使用url绝对路径
 					} else if (resource == null && url != null && mapperClass == null) {
-						// 10.2使用绝对url路径
 						ErrorContext.instance().resource(url);
 						InputStream inputStream = Resources.getUrlAsStream(url);
-						// 映射器比较复杂，调用XMLMapperBuilder
+						//新建XMLMapperBuilder来解析
 						XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, url,
 								configuration.getSqlFragments());
 						mapperParser.parse();
+					//使用mapperClass类路径
 					} else if (resource == null && url == null && mapperClass != null) {
-						// 10.3使用java类名
+						//根据类路径获取Class
 						Class<?> mapperInterface = Resources.classForName(mapperClass);
-						// 直接把这个映射加入配置
+						//直接将Class加入配置中
 						configuration.addMapper(mapperInterface);
 					} else {
 						throw new BuilderException(

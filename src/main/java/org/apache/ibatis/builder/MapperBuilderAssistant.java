@@ -63,7 +63,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		this.currentNamespace = currentNamespace;
 	}
 
-	// 为id加上namespace前缀，如selectPerson-->org.a.b.selectPerson
+	//加上当前namespace前缀，如selectPerson-->org.a.b.selectPerson
 	public String applyCurrentNamespace(String base, boolean isReference) {
 		if (base == null) {
 			return null;
@@ -83,16 +83,19 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		return currentNamespace + "." + base;
 	}
 
+	//使用指定namespace的缓存
 	public Cache useCacheRef(String namespace) {
 		if (namespace == null) {
 			throw new BuilderException("cache-ref element requires a namespace attribute.");
 		}
 		try {
 			unresolvedCacheRef = true;
+			//根据namespace获取缓存
 			Cache cache = configuration.getCache(namespace);
 			if (cache == null) {
 				throw new IncompleteElementException("No cache for namespace '" + namespace + "' could be found.");
 			}
+			//根据当前缓存
 			currentCache = cache;
 			unresolvedCacheRef = false;
 			return cache;
@@ -101,18 +104,19 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		}
 	}
 
+	//使用新缓存
 	public Cache useNewCache(Class<? extends Cache> typeClass, Class<? extends Cache> evictionClass, Long flushInterval,
 			Integer size, boolean readWrite, boolean blocking, Properties props) {
-		// 这里面又判断了一下是否为null就用默认值，有点和XMLMapperBuilder.cacheElement逻辑重复了
+		//再次验证是否为null, 否则就用默认值
 		typeClass = valueOrDefault(typeClass, PerpetualCache.class);
 		evictionClass = valueOrDefault(evictionClass, LruCache.class);
-		// 调用CacheBuilder构建cache,id=currentNamespace
+		//使用CacheBuilder构建cache
 		Cache cache = new CacheBuilder(currentNamespace).implementation(typeClass).addDecorator(evictionClass)
 				.clearInterval(flushInterval).size(size).readWrite(readWrite).blocking(blocking).properties(props)
 				.build();
-		// 加入缓存
+		//将该缓存加入到配置中
 		configuration.addCache(cache);
-		// 当前的缓存
+		//设置当前的缓存
 		currentCache = cache;
 		return cache;
 	}
@@ -144,21 +148,23 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		return builder.build();
 	}
 
-	// 增加ResultMap
+	//增加ResultMap
 	public ResultMap addResultMap(String id, Class<?> type, String extend, Discriminator discriminator,
 			List<ResultMapping> resultMappings, Boolean autoMapping) {
 		id = applyCurrentNamespace(id, false);
 		extend = applyCurrentNamespace(extend, true);
-
 		//建造者模式
-		ResultMap.Builder resultMapBuilder = new ResultMap.Builder(configuration, id, type, resultMappings,
-				autoMapping);
+		ResultMap.Builder resultMapBuilder = new ResultMap.Builder(configuration, id, type, resultMappings, autoMapping);
 		if (extend != null) {
+			//如果没有extend对应的ResultMap, 则抛出异常
 			if (!configuration.hasResultMap(extend)) {
 				throw new IncompleteElementException("Could not find a parent resultmap with id '" + extend + "'");
 			}
+			//获取extend对应的ResultMap
 			ResultMap resultMap = configuration.getResultMap(extend);
+			//获取extend的ResultMapping集合
 			List<ResultMapping> extendedResultMappings = new ArrayList<ResultMapping>(resultMap.getResultMappings());
+			//移除重复的resultMappings
 			extendedResultMappings.removeAll(resultMappings);
 			// Remove parent constructor if this resultMap declares a constructor.
 			boolean declaresConstructor = false;
@@ -176,6 +182,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 					}
 				}
 			}
+			//添加额外的ResultMapping
 			resultMappings.addAll(extendedResultMappings);
 		}
 		resultMapBuilder.discriminator(discriminator);
@@ -311,7 +318,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		statementBuilder.timeout(timeout);
 	}
 
-	// 构建resultMap
+	//构建ResultMapping
 	public ResultMapping buildResultMapping(Class<?> resultType, String property, String column, Class<?> javaType,
 			JdbcType jdbcType, String nestedSelect, String nestedResultMap, String notNullColumn, String columnPrefix,
 			Class<? extends TypeHandler<?>> typeHandler, List<ResultFlag> flags, String resultSet, String foreignColumn,
@@ -323,7 +330,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		if (composites.size() > 0) {
 			column = null;
 		}
-		//构建resultMap
+		//构建ResultMapping
 		ResultMapping.Builder builder = new ResultMapping.Builder(configuration, property, column, javaTypeClass);
 		builder.jdbcType(jdbcType);
 		builder.nestedQueryId(applyCurrentNamespace(nestedSelect, true));

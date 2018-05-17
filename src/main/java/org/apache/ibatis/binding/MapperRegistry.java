@@ -14,16 +14,17 @@ import java.util.Set;
 //映射器注册机
 public class MapperRegistry {
 
+	//配置信息
 	private Configuration config;
-	// 将已经添加的映射都放入HashMap
+	//已知Mapper映射
 	private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new HashMap<Class<?>, MapperProxyFactory<?>>();
 
 	public MapperRegistry(Configuration config) {
 		this.config = config;
 	}
 
+	//返回代理类
 	@SuppressWarnings("unchecked")
-	// 返回代理类
 	public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
 		final MapperProxyFactory<T> mapperProxyFactory = (MapperProxyFactory<T>) knownMappers.get(type);
 		if (mapperProxyFactory == null) {
@@ -40,25 +41,22 @@ public class MapperRegistry {
 		return knownMappers.containsKey(type);
 	}
 
-	// 看一下如何添加一个映射
+	//添加Mapper方法
 	public <T> void addMapper(Class<T> type) {
-		// mapper必须是接口！才会添加
+		//mapper必须是接口才会添加
 		if (type.isInterface()) {
+			//如果重复添加,则报错
 			if (hasMapper(type)) {
-				// 如果重复添加了，报错
 				throw new BindingException("Type " + type + " is already known to the MapperRegistry.");
 			}
 			boolean loadCompleted = false;
 			try {
 				knownMappers.put(type, new MapperProxyFactory<T>(type));
-				// It's important that the type is added before the parser is run
-				// otherwise the binding may automatically be attempted by the
-				// mapper parser. If the type is already known, it won't try.
 				MapperAnnotationBuilder parser = new MapperAnnotationBuilder(config, type);
 				parser.parse();
 				loadCompleted = true;
 			} finally {
-				// 如果加载过程中出现异常需要再将这个mapper从mybatis中删除,这种方式比较丑陋吧，难道是不得已而为之？
+				//如果出现异常则将其移除
 				if (!loadCompleted) {
 					knownMappers.remove(type);
 				}

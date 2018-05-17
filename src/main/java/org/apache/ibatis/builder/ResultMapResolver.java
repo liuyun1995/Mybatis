@@ -6,7 +6,7 @@ import org.apache.ibatis.mapping.Discriminator;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
 
-//结果映射解析器
+//ResultMap解析器
 public class ResultMapResolver {
 	
 	private final MapperBuilderAssistant assistant;
@@ -28,7 +28,9 @@ public class ResultMapResolver {
 		this.autoMapping = autoMapping;
 	}
 
+	//生成ResultMap对象
 	public ResultMap resolve() {
+		//反调构建助手的方法
 		return assistant.addResultMap(this.id, this.type, this.extend, this.discriminator, this.resultMappings, this.autoMapping);
 	}
 
