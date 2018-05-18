@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-//映射器注册机
+//Mapper注册器
 public class MapperRegistry {
 
 	//配置信息
@@ -23,14 +23,16 @@ public class MapperRegistry {
 		this.config = config;
 	}
 
-	//返回代理类
+	//获取Mapper代理类
 	@SuppressWarnings("unchecked")
 	public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
+		//获取mapper代理工厂
 		final MapperProxyFactory<T> mapperProxyFactory = (MapperProxyFactory<T>) knownMappers.get(type);
 		if (mapperProxyFactory == null) {
 			throw new BindingException("Type " + type + " is not known to the MapperRegistry.");
 		}
 		try {
+			//通过代理工厂生成mapper代理类
 			return mapperProxyFactory.newInstance(sqlSession);
 		} catch (Exception e) {
 			throw new BindingException("Error getting mapper instance. Cause: " + e, e);

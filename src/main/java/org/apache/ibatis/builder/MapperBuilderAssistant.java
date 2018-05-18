@@ -37,10 +37,10 @@ import org.apache.ibatis.type.TypeHandler;
 //Mapper构建器助手
 public class MapperBuilderAssistant extends BaseBuilder {
 	
-	private String currentNamespace;
-	private String resource;
-	private Cache currentCache;
-	private boolean unresolvedCacheRef;
+	private String currentNamespace;       //当前namespace
+	private String resource;               //xml文件资源路径
+	private Cache currentCache;            //当前缓存
+	private boolean unresolvedCacheRef;   //是否为进行缓存关系转换
 
 	//构造方法
 	public MapperBuilderAssistant(Configuration configuration, String resource) {

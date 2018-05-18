@@ -227,7 +227,7 @@ public class DefaultSqlSession implements SqlSession {
 	}
 
 	public <T> T getMapper(Class<T> type) {
-		// 最后会去调用MapperRegistry.getMapper
+		//最后会去调用MapperRegistry.getMapper
 		return configuration.<T>getMapper(type, this);
 	}
 

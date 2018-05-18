@@ -25,32 +25,35 @@ public class MapperMethod {
 		this.method = new MethodSignature(config, method);
 	}
 
-	// 执行
+	//执行方法
 	public Object execute(SqlSession sqlSession, Object[] args) {
 		Object result;
-		// 可以看到执行时就是4种情况，insert|update|delete|select，分别调用SqlSession的4大类方法
+		//执行insert方法
 		if (SqlCommandType.INSERT == command.getType()) {
 			Object param = method.convertArgsToSqlCommandParam(args);
 			result = rowCountResult(sqlSession.insert(command.getName(), param));
+		//执行update方法
 		} else if (SqlCommandType.UPDATE == command.getType()) {
 			Object param = method.convertArgsToSqlCommandParam(args);
 			result = rowCountResult(sqlSession.update(command.getName(), param));
+		//执行delete方法
 		} else if (SqlCommandType.DELETE == command.getType()) {
 			Object param = method.convertArgsToSqlCommandParam(args);
 			result = rowCountResult(sqlSession.delete(command.getName(), param));
+		//执行select方法
 		} else if (SqlCommandType.SELECT == command.getType()) {
+			//如果有结果处理器
 			if (method.returnsVoid() && method.hasResultHandler()) {
-				// 如果有结果处理器
 				executeWithResultHandler(sqlSession, args);
 				result = null;
+			//如果结果有多条记录
 			} else if (method.returnsMany()) {
-				// 如果结果有多条记录
 				result = executeForMany(sqlSession, args);
+			//如果结果是map
 			} else if (method.returnsMap()) {
-				// 如果结果是map
 				result = executeForMap(sqlSession, args);
+			//否则就是一条记录
 			} else {
-				// 否则就是一条记录
 				Object param = method.convertArgsToSqlCommandParam(args);
 				result = sqlSession.selectOne(command.getName(), param);
 			}
@@ -86,7 +89,7 @@ public class MapperMethod {
 		return result;
 	}
 
-	// 结果处理器
+	//执行带结果处理器的查询
 	private void executeWithResultHandler(SqlSession sqlSession, Object[] args) {
 		MappedStatement ms = sqlSession.getConfiguration().getMappedStatement(command.getName());
 		if (void.class.equals(ms.getResultMaps().get(0).getType())) {
@@ -103,7 +106,7 @@ public class MapperMethod {
 		}
 	}
 
-	// 多条记录
+	//执行返回多条记录的查询
 	private <E> Object executeForMany(SqlSession sqlSession, Object[] args) {
 		List<E> result;
 		Object param = method.convertArgsToSqlCommandParam(args);
@@ -139,6 +142,7 @@ public class MapperMethod {
 		return array;
 	}
 
+	//执行返回map的查询
 	private <K, V> Map<K, V> executeForMap(SqlSession sqlSession, Object[] args) {
 		Map<K, V> result;
 		Object param = method.convertArgsToSqlCommandParam(args);
@@ -151,7 +155,7 @@ public class MapperMethod {
 		return result;
 	}
 
-	// 参数map，静态内部类,更严格的get方法，如果没有相应的key，报错
+	//参数映射
 	public static class ParamMap<V> extends HashMap<String, V> {
 
 		private static final long serialVersionUID = -2212268410512043556L;
@@ -166,7 +170,7 @@ public class MapperMethod {
 
 	}
 
-	// SQL命令，静态内部类
+	//SQL命令
 	public static class SqlCommand {
 
 		private final String name;
@@ -178,7 +182,7 @@ public class MapperMethod {
 			if (configuration.hasStatement(statementName)) {
 				ms = configuration.getMappedStatement(statementName);
 			} else if (!mapperInterface.equals(method.getDeclaringClass().getName())) { // issue #35
-				// 如果不是这个mapper接口的方法，再去查父类
+				//如果不是这个mapper接口的方法，再去查父类
 				String parentStatementName = method.getDeclaringClass().getName() + "." + method.getName();
 				if (configuration.hasStatement(parentStatementName)) {
 					ms = configuration.getMappedStatement(parentStatementName);
@@ -203,7 +207,7 @@ public class MapperMethod {
 		}
 	}
 
-	// 方法签名，静态内部类
+	//方法签名
 	public static class MethodSignature {
 
 		private final boolean returnsMany;
@@ -327,7 +331,7 @@ public class MapperMethod {
 			return mapKey;
 		}
 
-		// 得到所有参数
+		//获取所有参数
 		private SortedMap<Integer, String> getParams(Method method, boolean hasNamedParameters) {
 			// 用一个TreeMap,这样就保证还是按参数的先后顺序
 			final SortedMap<Integer, String> params = new TreeMap<Integer, String>();
