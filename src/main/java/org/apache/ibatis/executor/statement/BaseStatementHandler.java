@@ -50,31 +50,33 @@ public abstract class BaseStatementHandler implements StatementHandler {
 
 		this.boundSql = boundSql;
 
-		// 生成parameterHandler
+		//生成parameterHandler
 		this.parameterHandler = configuration.newParameterHandler(mappedStatement, parameterObject, boundSql);
-		// 生成resultSetHandler
+		//生成resultSetHandler
 		this.resultSetHandler = configuration.newResultSetHandler(executor, mappedStatement, rowBounds,
 				parameterHandler, resultHandler, boundSql);
 	}
 
+	//获取绑定sql
 	public BoundSql getBoundSql() {
 		return boundSql;
 	}
 
+	//获取参数处理器
 	public ParameterHandler getParameterHandler() {
 		return parameterHandler;
 	}
 
-	// 准备语句
+	//准备语句
 	public Statement prepare(Connection connection) throws SQLException {
 		ErrorContext.instance().sql(boundSql.getSql());
 		Statement statement = null;
 		try {
 			//实例化Statement
 			statement = instantiateStatement(connection);
-			// 设置超时
+			//设置超时
 			setStatementTimeout(statement);
-			// 设置读取条数
+			//设置读取条数
 			setFetchSize(statement);
 			return statement;
 		} catch (SQLException e) {
@@ -86,10 +88,10 @@ public abstract class BaseStatementHandler implements StatementHandler {
 		}
 	}
 
-	// 如何实例化Statement，交给子类做
+	//实例化Statement方法
 	protected abstract Statement instantiateStatement(Connection connection) throws SQLException;
 
-	// 设置超时,其实就是调用Statement.setQueryTimeout
+	//设置超时
 	protected void setStatementTimeout(Statement stmt) throws SQLException {
 		Integer timeout = mappedStatement.getTimeout();
 		Integer defaultTimeout = configuration.getDefaultStatementTimeout();
@@ -100,7 +102,7 @@ public abstract class BaseStatementHandler implements StatementHandler {
 		}
 	}
 
-	// 设置读取条数,其实就是调用Statement.setFetchSize
+	//设置读取条数
 	protected void setFetchSize(Statement stmt) throws SQLException {
 		Integer fetchSize = mappedStatement.getFetchSize();
 		if (fetchSize != null) {
@@ -108,7 +110,7 @@ public abstract class BaseStatementHandler implements StatementHandler {
 		}
 	}
 
-	// 关闭语句
+	//关闭语句
 	protected void closeStatement(Statement statement) {
 		try {
 			if (statement != null) {
@@ -119,10 +121,12 @@ public abstract class BaseStatementHandler implements StatementHandler {
 		}
 	}
 
-	// 生成key
+	//生成key
 	protected void generateKeys(Object parameter) {
+		//获取键值生成器
 		KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();
 		ErrorContext.instance().store();
+		//在执行前生成
 		keyGenerator.processBefore(executor, mappedStatement, null, parameter);
 		ErrorContext.instance().recall();
 	}

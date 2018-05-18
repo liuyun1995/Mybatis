@@ -371,6 +371,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 				//解析<package>节点
 				if ("package".equals(child.getName())) {
 					String mapperPackage = child.getStringAttribute("name");
+					//添加指定包下的所有Mapper
 					configuration.addMappers(mapperPackage);
 				//解析<mapper>节点
 				} else {

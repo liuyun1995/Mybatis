@@ -34,6 +34,7 @@ public class SelectKeyGenerator implements KeyGenerator {
 		}
 	}
 
+	//生成键值
 	private void processGeneratedKeys(Executor executor, MappedStatement ms, Object parameter) {
 		try {
 			if (parameter != null && keyStatement != null && keyStatement.getKeyProperties() != null) {
@@ -69,6 +70,7 @@ public class SelectKeyGenerator implements KeyGenerator {
 		}
 	}
 
+	//处理多个属性
 	private void handleMultipleProperties(String[] keyProperties, MetaObject metaParam, MetaObject metaResult) {
 		String[] keyColumns = keyStatement.getKeyColumns();
 		if (keyColumns == null || keyColumns.length == 0) {

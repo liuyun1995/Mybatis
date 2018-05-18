@@ -52,14 +52,17 @@ class ResultSetWrapper {
 		}
 	}
 
+	//获取结果集
 	public ResultSet getResultSet() {
 		return resultSet;
 	}
 
+	//获取列名集合
 	public List<String> getColumnNames() {
 		return this.columnNames;
 	}
 
+	//获取类名集合
 	public List<String> getClassNames() {
 		return Collections.unmodifiableList(classNames);
 	}
@@ -108,6 +111,7 @@ class ResultSetWrapper {
 		return handler;
 	}
 
+	//根据类名获取类
 	private Class<?> resolveClass(String className) {
 		try {
 			return Resources.classForName(className);

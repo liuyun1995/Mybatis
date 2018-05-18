@@ -39,20 +39,22 @@ public class MapperRegistry {
 		}
 	}
 
+	//判断是否存在该Mapper
 	public <T> boolean hasMapper(Class<T> type) {
 		return knownMappers.containsKey(type);
 	}
 
 	//添加Mapper方法
 	public <T> void addMapper(Class<T> type) {
-		//mapper必须是接口才会添加
+		//验证该类型是否是接口
 		if (type.isInterface()) {
-			//如果重复添加,则报错
+			//若已存在该Mapper则抛出异常
 			if (hasMapper(type)) {
 				throw new BindingException("Type " + type + " is already known to the MapperRegistry.");
 			}
 			boolean loadCompleted = false;
 			try {
+				//将类型和代理工厂放入映射表中
 				knownMappers.put(type, new MapperProxyFactory<T>(type));
 				MapperAnnotationBuilder parser = new MapperAnnotationBuilder(config, type);
 				parser.parse();
@@ -66,12 +68,13 @@ public class MapperRegistry {
 		}
 	}
 	
+	//获取所有Mapper集合
 	public Collection<Class<?>> getMappers() {
 		return Collections.unmodifiableCollection(knownMappers.keySet());
 	}
 	
+	//添加所有的Mapper(指定包下和指定父类)
 	public void addMappers(String packageName, Class<?> superType) {
-		// 查找包下所有是superType的类
 		ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<Class<?>>();
 		resolverUtil.find(new ResolverUtil.IsA(superType), packageName);
 		Set<Class<? extends Class<?>>> mapperSet = resolverUtil.getClasses();
@@ -80,7 +83,7 @@ public class MapperRegistry {
 		}
 	}
 
-	// 查找包下所有类，从版本3.2.2开始有这个功能
+	//添加所有的Mapper(指定包下)
 	public void addMappers(String packageName) {
 		addMappers(packageName, Object.class);
 	}
