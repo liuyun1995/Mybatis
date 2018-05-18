@@ -34,7 +34,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
-//Mapper构建器助手
+//Mapper构建助手
 public class MapperBuilderAssistant extends BaseBuilder {
 	
 	private String currentNamespace;       //当前namespace
@@ -49,12 +49,12 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		this.resource = resource;
 	}
 
-	//获取当前Namespace
+	//获取当前namespace
 	public String getCurrentNamespace() {
 		return currentNamespace;
 	}
 
-	//设置当前Namespace
+	//设置当前namespace
 	public void setCurrentNamespace(String currentNamespace) {
 		if (currentNamespace == null) {
 			throw new BuilderException("The mapper element requires a namespace attribute to be specified.");
@@ -168,7 +168,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 			List<ResultMapping> extendedResultMappings = new ArrayList<ResultMapping>(resultMap.getResultMappings());
 			//移除重复的resultMappings
 			extendedResultMappings.removeAll(resultMappings);
-			// Remove parent constructor if this resultMap declares a constructor.
+			//如果resultMap声明了constructor, 则移除继承的constructor
 			boolean declaresConstructor = false;
 			for (ResultMapping resultMapping : resultMappings) {
 				if (resultMapping.getFlags().contains(ResultFlag.CONSTRUCTOR)) {
@@ -316,10 +316,6 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		statementBuilder.useCache(useCache);
 		statementBuilder.cache(cache);
 	}
-
-	private <T> T valueOrDefault(T value, T defaultValue) {
-		return value == null ? defaultValue : value;
-	}
 	
 	//构建ResultMapping
 	public ResultMapping buildResultMapping(Class<?> resultType, String property, String column, Class<?> javaType,
@@ -431,7 +427,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 			//注册语言驱动
 			configuration.getLanguageRegistry().register(langClass);
 		} else {
-			//如果为null，则取得默认驱动（mybatis3.2以前大家一直用的方法）
+			//如果为null, 则取得默认驱动（mybatis3.2以前大家一直用的方法）
 			langClass = configuration.getLanguageRegistry().getDefaultDriverClass();
 		}
 		//再去调configuration
@@ -447,6 +443,11 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		return addMappedStatement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap,
 				parameterType, resultMap, resultType, resultSetType, flushCache, useCache, resultOrdered, keyGenerator,
 				keyProperty, keyColumn, databaseId, lang, null);
+	}
+	
+	//value为空时取默认值
+	private <T> T valueOrDefault(T value, T defaultValue) {
+		return value == null ? defaultValue : value;
 	}
 
 }

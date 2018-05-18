@@ -25,12 +25,10 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
-/**
- * 结果延迟加载器映射
- */
+//结果延迟加载器映射
 public class ResultLoaderMap {
 
-	// 加载对的hashmap
+	//加载对的hashmap
 	private final Map<String, LoadPair> loaderMap = new HashMap<String, LoadPair>();
 
 	// 把要延迟加载的属性记到ResultLoaderMap里（一个哈希表）
@@ -69,7 +67,7 @@ public class ResultLoaderMap {
 		// 先删除key，防止第二次又去查数据库就不对了
 		LoadPair pair = loaderMap.remove(property.toUpperCase(Locale.ENGLISH));
 		if (pair != null) {
-			// 去数据库查
+			//去数据库查
 			pair.load();
 			return true;
 		}
@@ -88,10 +86,7 @@ public class ResultLoaderMap {
 		String[] parts = property.split("\\.");
 		return parts[0].toUpperCase(Locale.ENGLISH);
 	}
-
-	/**
-	 * Property which was not loaded yet.
-	 */
+	
 	// 静态内部类，加载对
 	public static class LoadPair implements Serializable {
 

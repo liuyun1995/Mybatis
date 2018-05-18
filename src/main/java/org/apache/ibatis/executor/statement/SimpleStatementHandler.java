@@ -52,9 +52,11 @@ public class SimpleStatementHandler extends BaseStatementHandler {
 
 	// select-->结果给ResultHandler
 	public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
+		//获取原生sql
 		String sql = boundSql.getSql();
+		//调用jdbc执行语句
 		statement.execute(sql);
-		// 先执行Statement.execute，然后交给ResultSetHandler.handleResultSets
+		//先执行Statement.execute，然后交给ResultSetHandler.handleResultSets
 		return resultSetHandler.<E>handleResultSets(statement);
 	}
 

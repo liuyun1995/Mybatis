@@ -267,15 +267,14 @@ public final class MappedStatement {
 	}
 
 	public BoundSql getBoundSql(Object parameterObject) {
-		// 其实就是调用sqlSource.getBoundSql
+		//获取绑定SQL
 		BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
-		// 剩下的可以暂时忽略
+		//获取绑定SQL的参数映射列表
 		List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
 		if (parameterMappings == null || parameterMappings.isEmpty()) {
-			boundSql = new BoundSql(configuration, boundSql.getSql(), parameterMap.getParameterMappings(),
-					parameterObject);
+			boundSql = new BoundSql(configuration, boundSql.getSql(), parameterMap.getParameterMappings(), parameterObject);
 		}
-		// check for nested result maps in parameter mappings (issue #30)
+		//check for nested result maps in parameter mappings (issue #30)
 		for (ParameterMapping pm : boundSql.getParameterMappings()) {
 			String rmId = pm.getResultMapId();
 			if (rmId != null) {

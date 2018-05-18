@@ -11,9 +11,9 @@ import org.apache.ibatis.session.Configuration;
 
 public class ProviderSqlSource implements SqlSource {
 
-	private SqlSourceBuilder sqlSourceParser;
-	private Class<?> providerType;
-	private Method providerMethod;
+	private SqlSourceBuilder sqlSourceParser;        //sqlSource构建器
+	private Class<?> providerType;                   //provider类型
+	private Method providerMethod;                   //provider方法
 	private boolean providerTakesParameterObject;
 
 	public ProviderSqlSource(Configuration config, Object provider) {
@@ -40,11 +40,15 @@ public class ProviderSqlSource implements SqlSource {
 		}
 	}
 
+	//获取绑定的sql
 	public BoundSql getBoundSql(Object parameterObject) {
+		//创建SqlSource对象
 		SqlSource sqlSource = createSqlSource(parameterObject);
+		//传入参数对象, 获取绑定的sql
 		return sqlSource.getBoundSql(parameterObject);
 	}
 
+	//创建SqlSource
 	private SqlSource createSqlSource(Object parameterObject) {
 		try {
 			String sql;

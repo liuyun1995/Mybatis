@@ -7,7 +7,7 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
-//参数映射
+//参数映射, 对应一个参数表达式
 //例子：#{property,javaType=int,jdbcType=NUMERIC}
 public class ParameterMapping {
 
@@ -15,7 +15,7 @@ public class ParameterMapping {
 
 	private String property;                   //参数名
 	private ParameterMode mode;                //参数模式
-	private Class<?> javaType = Object.class; //java类型
+	private Class<?> javaType = Object.class; //参数java类型
 	private JdbcType jdbcType;                //jdbc类型
 	private Integer numericScale;             //numericScale
 	private TypeHandler<?> typeHandler;       //类型处理器

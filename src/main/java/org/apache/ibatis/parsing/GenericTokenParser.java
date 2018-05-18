@@ -22,8 +22,9 @@ public class GenericTokenParser {
 			//从offset开始找起, 返回第一次出现开始标记的位置
 			int start = text.indexOf(openToken, offset);
 			while (start > -1) {
-				//判断一下${前面是否是反斜杠
+				//判断一下${前面是否有反斜杠
 				if (start > 0 && src[start - 1] == '\\') {
+					//若有反斜杠则不解析
 					builder.append(src, offset, start - offset - 1).append(openToken);
 					//将offset指向开始标记的后端
 					offset = start + openToken.length();
@@ -42,7 +43,7 @@ public class GenericTokenParser {
 						offset = start + openToken.length();
 						//截取括号内字符串
 						String content = new String(src, offset, end - offset);
-						//将括号内的字符串进行变量替换
+						//先对括号内字符串进行变量替换, 再添加到返回串中
 						builder.append(handler.handleToken(content));
 						//将offset指向结束标记的后端
 						offset = end + closeToken.length();

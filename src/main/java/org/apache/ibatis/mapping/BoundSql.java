@@ -26,10 +26,12 @@ public class BoundSql {
 		this.metaParameters = configuration.newMetaObject(additionalParameters);
 	}
 
+	//获取原生sql语句
 	public String getSql() {
 		return sql;
 	}
 
+	//获取参数映射列表
 	public List<ParameterMapping> getParameterMappings() {
 		return parameterMappings;
 	}

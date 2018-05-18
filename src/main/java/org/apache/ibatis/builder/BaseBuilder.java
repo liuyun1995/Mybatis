@@ -26,6 +26,7 @@ public abstract class BaseBuilder {
 		this.typeHandlerRegistry = this.configuration.getTypeHandlerRegistry();
 	}
 
+	//获取配置信息
 	public Configuration getConfiguration() {
 		return configuration;
 	}

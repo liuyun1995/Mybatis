@@ -23,12 +23,19 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 //ResultSet包装类
 class ResultSetWrapper {
 
+	//结果集
 	private final ResultSet resultSet;
+	//类型处理器注册机
 	private final TypeHandlerRegistry typeHandlerRegistry;
+	//列名集合
 	private final List<String> columnNames = new ArrayList<String>();
+	//类名集合
 	private final List<String> classNames = new ArrayList<String>();
+	//jdbc类型集合
 	private final List<JdbcType> jdbcTypes = new ArrayList<JdbcType>();
+	//类型处理映射
 	private final Map<String, Map<Class<?>, TypeHandler<?>>> typeHandlerMap = new HashMap<String, Map<Class<?>, TypeHandler<?>>>();
+	
 	private Map<String, List<String>> mappedColumnNamesMap = new HashMap<String, List<String>>();
 	private Map<String, List<String>> unMappedColumnNamesMap = new HashMap<String, List<String>>();
 
@@ -57,32 +64,45 @@ class ResultSetWrapper {
 		return Collections.unmodifiableList(classNames);
 	}
 	
+	//获取类型处理器
 	public TypeHandler<?> getTypeHandler(Class<?> propertyType, String columnName) {
 		TypeHandler<?> handler = null;
+		//根据列名获取类型处理器映射(二级缓存)
 		Map<Class<?>, TypeHandler<?>> columnHandlers = typeHandlerMap.get(columnName);
 		if (columnHandlers == null) {
 			columnHandlers = new HashMap<Class<?>, TypeHandler<?>>();
 			typeHandlerMap.put(columnName, columnHandlers);
 		} else {
+			//根据参数类型获取类型处理器
 			handler = columnHandlers.get(propertyType);
 		}
 		if (handler == null) {
+			//根据参数类型去类型处理器注册器上获取
 			handler = typeHandlerRegistry.getTypeHandler(propertyType);
 			if (handler == null || handler instanceof UnknownTypeHandler) {
+				//在列名集合中找到该列名的位置
 				final int index = columnNames.indexOf(columnName);
+				//获取对应位置的jdbc类型
 				final JdbcType jdbcType = jdbcTypes.get(index);
+				//获取对应位置的java类型
 				final Class<?> javaType = resolveClass(classNames.get(index));
+				
+				//若java类型和jdbc类型都不为空
 				if (javaType != null && jdbcType != null) {
 					handler = typeHandlerRegistry.getTypeHandler(javaType, jdbcType);
+				//若只有java类型
 				} else if (javaType != null) {
 					handler = typeHandlerRegistry.getTypeHandler(javaType);
+				//若只有jdbc类型
 				} else if (jdbcType != null) {
 					handler = typeHandlerRegistry.getTypeHandler(jdbcType);
 				}
 			}
+			//若类型处理器仍为空, 或者是未知类型处理器, 则设置为Object类型处理器
 			if (handler == null || handler instanceof UnknownTypeHandler) {
 				handler = new ObjectTypeHandler();
 			}
+			//放入列处理器映射表中
 			columnHandlers.put(propertyType, handler);
 		}
 		return handler;

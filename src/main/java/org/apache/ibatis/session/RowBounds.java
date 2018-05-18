@@ -1,19 +1,15 @@
 package org.apache.ibatis.session;
 
-/**
- * 分页用，记录限制
- */
+//分页用, 记录限制
 public class RowBounds {
 
 	public static final int NO_ROW_OFFSET = 0;
 	public static final int NO_ROW_LIMIT = Integer.MAX_VALUE;
 	public static final RowBounds DEFAULT = new RowBounds();
 
-	// offset,limit就等于一般分页的start,limit,
-	private int offset;
-	private int limit;
-
-	// 默认是一页Integer.MAX_VALUE条
+	private int offset;  //开始位置
+	private int limit;   //限制条数
+	
 	public RowBounds() {
 		this.offset = NO_ROW_OFFSET;
 		this.limit = NO_ROW_LIMIT;
@@ -24,10 +20,12 @@ public class RowBounds {
 		this.limit = limit;
 	}
 
+	//获取开始位置
 	public int getOffset() {
 		return offset;
 	}
 
+	//获取取出条数
 	public int getLimit() {
 		return limit;
 	}

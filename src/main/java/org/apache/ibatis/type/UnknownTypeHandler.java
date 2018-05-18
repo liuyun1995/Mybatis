@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
 
+//未知类型处理器
 public class UnknownTypeHandler extends BaseTypeHandler<Object> {
 
 	private static final ObjectTypeHandler OBJECT_TYPE_HANDLER = new ObjectTypeHandler();

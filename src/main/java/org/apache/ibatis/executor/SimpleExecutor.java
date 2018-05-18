@@ -40,6 +40,7 @@ public class SimpleExecutor extends BaseExecutor {
 		}
 	}
 	
+	//执行查询方法
 	@Override
 	public <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler,
 			BoundSql boundSql) throws SQLException {
@@ -51,9 +52,9 @@ public class SimpleExecutor extends BaseExecutor {
 			// 这里看到ResultHandler传入了
 			StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, 
 					rowBounds, resultHandler, boundSql);
-			// 准备语句
+			//准备语句
 			stmt = prepareStatement(handler, ms.getStatementLog());
-			// StatementHandler.query
+			//执行查询
 			return handler.<E>query(stmt, resultHandler);
 		} finally {
 			closeStatement(stmt);

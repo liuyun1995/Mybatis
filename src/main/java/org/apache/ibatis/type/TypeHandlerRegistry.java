@@ -131,26 +131,32 @@ public final class TypeHandlerRegistry {
 		return ALL_TYPE_HANDLERS_MAP.get(handlerType);
 	}
 
+	//获取类型处理器
 	public <T> TypeHandler<T> getTypeHandler(Class<T> type) {
 		return getTypeHandler((Type) type, null);
 	}
 
+	//获取类型处理器
 	public <T> TypeHandler<T> getTypeHandler(TypeReference<T> javaTypeReference) {
 		return getTypeHandler(javaTypeReference, null);
 	}
 
+	//获取类型处理器
 	public TypeHandler<?> getTypeHandler(JdbcType jdbcType) {
 		return JDBC_TYPE_HANDLER_MAP.get(jdbcType);
 	}
 
+	//获取类型处理器
 	public <T> TypeHandler<T> getTypeHandler(Class<T> type, JdbcType jdbcType) {
 		return getTypeHandler((Type) type, jdbcType);
 	}
 
+	//获取类型处理器
 	public <T> TypeHandler<T> getTypeHandler(TypeReference<T> javaTypeReference, JdbcType jdbcType) {
 		return getTypeHandler(javaTypeReference.getRawType(), jdbcType);
 	}
 
+	//获取类型处理器
 	@SuppressWarnings("unchecked")
 	private <T> TypeHandler<T> getTypeHandler(Type type, JdbcType jdbcType) {
 		Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(type);
@@ -167,14 +173,17 @@ public final class TypeHandlerRegistry {
 		return (TypeHandler<T>) handler;
 	}
 
+	//获取未知的类型处理器
 	public TypeHandler<Object> getUnknownTypeHandler() {
 		return UNKNOWN_TYPE_HANDLER;
 	}
 
+	//注册类型处理器
 	public void register(JdbcType jdbcType, TypeHandler<?> handler) {
 		JDBC_TYPE_HANDLER_MAP.put(jdbcType, handler);
 	}
 
+	//注册类型处理器
 	@SuppressWarnings("unchecked")
 	public <T> void register(TypeHandler<T> typeHandler) {
 		boolean mappedTypeFound = false;
