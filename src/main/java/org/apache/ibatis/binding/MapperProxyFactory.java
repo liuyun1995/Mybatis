@@ -40,6 +40,7 @@ public class MapperProxyFactory<T> {
 
 	//实例化一个Mapper代理
 	public T newInstance(SqlSession sqlSession) {
+		//新建Mapper代理类
 		final MapperProxy<T> mapperProxy = new MapperProxy<T>(sqlSession, mapperInterface, methodCache);
 		return newInstance(mapperProxy);
 	}

@@ -13,28 +13,25 @@ import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 
-/**
- * 映射的语句
- */
+//映射的语句
 public final class MappedStatement {
 
 	private String resource;
-	private Configuration configuration;
+	private Configuration configuration;          //配置信息
 	private String id;
 	private Integer fetchSize;
-	private Integer timeout;
-	private StatementType statementType;
-	private ResultSetType resultSetType;
-	// SQL源码
-	private SqlSource sqlSource;
-	private Cache cache;
-	private ParameterMap parameterMap;
-	private List<ResultMap> resultMaps;
-	private boolean flushCacheRequired;
-	private boolean useCache;
-	private boolean resultOrdered;
-	private SqlCommandType sqlCommandType;
-	private KeyGenerator keyGenerator;
+	private Integer timeout;                      //超时时间
+	private StatementType statementType;          //语句类型
+	private ResultSetType resultSetType;          //结果集合类型
+	private SqlSource sqlSource;                  //SQL源码
+	private Cache cache;                          //缓存
+	private ParameterMap parameterMap;            //参数映射
+	private List<ResultMap> resultMaps;           //结果映射集合
+	private boolean flushCacheRequired;          //是否在需要时刷新缓存
+	private boolean useCache;                    //是否使用缓存
+	private boolean resultOrdered;               //是否对结果排序
+	private SqlCommandType sqlCommandType;        //sql命令类型
+	private KeyGenerator keyGenerator;            //主键生成器
 	private String[] keyProperties;
 	private String[] keyColumns;
 	private boolean hasNestedResultMaps;
@@ -43,11 +40,9 @@ public final class MappedStatement {
 	private LanguageDriver lang;
 	private String[] resultSets;
 
-	MappedStatement() {
-		// constructor disabled
-	}
+	MappedStatement() {}
 
-	// 静态内部类，建造者模式
+	//静态内部类，建造者模式
 	public static class Builder {
 		private MappedStatement mappedStatement = new MappedStatement();
 
@@ -88,8 +83,7 @@ public final class MappedStatement {
 		public Builder resultMaps(List<ResultMap> resultMaps) {
 			mappedStatement.resultMaps = resultMaps;
 			for (ResultMap resultMap : resultMaps) {
-				mappedStatement.hasNestedResultMaps = mappedStatement.hasNestedResultMaps
-						|| resultMap.hasNestedResultMaps();
+				mappedStatement.hasNestedResultMaps = mappedStatement.hasNestedResultMaps || resultMap.hasNestedResultMaps();
 			}
 			return this;
 		}
@@ -266,15 +260,15 @@ public final class MappedStatement {
 		return resultSets;
 	}
 
+	//获取绑定sql
 	public BoundSql getBoundSql(Object parameterObject) {
-		//获取绑定SQL
+		//获取绑定sql
 		BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
 		//获取绑定SQL的参数映射列表
 		List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
 		if (parameterMappings == null || parameterMappings.isEmpty()) {
 			boundSql = new BoundSql(configuration, boundSql.getSql(), parameterMap.getParameterMappings(), parameterObject);
 		}
-		//check for nested result maps in parameter mappings (issue #30)
 		for (ParameterMapping pm : boundSql.getParameterMappings()) {
 			String rmId = pm.getResultMapId();
 			if (rmId != null) {

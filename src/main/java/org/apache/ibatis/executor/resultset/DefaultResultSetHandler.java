@@ -129,12 +129,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 	//处理结果集
 	public List<Object> handleResultSets(Statement stmt) throws SQLException {
 		ErrorContext.instance().activity("handling results").object(mappedStatement.getId());
-
 		final List<Object> multipleResults = new ArrayList<Object>();
-
 		int resultSetCount = 0;
 		ResultSetWrapper rsw = getFirstResultSet(stmt);
-		
 		//获取ResultMap集合
 		List<ResultMap> resultMaps = mappedStatement.getResultMaps();
 		//获取ResultMap数量
@@ -170,6 +167,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
 	//获取第一个结果集
 	private ResultSetWrapper getFirstResultSet(Statement stmt) throws SQLException {
+		//获取jdbc结果集
 		ResultSet rs = stmt.getResultSet();
 		while (rs == null) {
 			if (stmt.getMoreResults()) {
@@ -180,17 +178,18 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 				}
 			}
 		}
-		//如果结果集不为空, 则返回结果集包装类
+		//若结果集不为空则返回结果集包装类
 		return rs != null ? new ResultSetWrapper(rs, configuration) : null;
 	}
 
+	//获取下一个结果集
 	private ResultSetWrapper getNextResultSet(Statement stmt) throws SQLException {
-		// Making this method tolerant of bad JDBC drivers
 		try {
 			if (stmt.getConnection().getMetaData().supportsMultipleResultSets()) {
-				// Crazy Standard JDBC way of determining if there are more results
 				if (!((!stmt.getMoreResults()) && (stmt.getUpdateCount() == -1))) {
+					//获取jdbc结果集
 					ResultSet rs = stmt.getResultSet();
+					//若结果集不为空则返回结果集包装类
 					return rs != null ? new ResultSetWrapper(rs, configuration) : null;
 				}
 			}

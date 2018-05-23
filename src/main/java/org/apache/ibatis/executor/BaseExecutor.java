@@ -92,7 +92,7 @@ public abstract class BaseExecutor implements Executor {
 		if (closed) {
 			throw new ExecutorException("Executor was closed.");
 		}
-		// 先清局部缓存，再更新，如何更新交由子类，模板方法模式
+		//先清局部缓存，再更新，如何更新交由子类，模板方法模式
 		clearLocalCache();
 		return doUpdate(ms, parameter);
 	}

@@ -18,51 +18,61 @@ import org.apache.ibatis.session.RowBounds;
 //简单语句处理器
 public class SimpleStatementHandler extends BaseStatementHandler {
 
+	//构造器
 	public SimpleStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter,
 			RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
 		super(executor, mappedStatement, parameter, rowBounds, resultHandler, boundSql);
 	}
 
+	//更新方法
 	public int update(Statement statement) throws SQLException {
+		//获取原生sql语句
 		String sql = boundSql.getSql();
+		//获取参数对象
 		Object parameterObject = boundSql.getParameterObject();
+		//获取主键生成器
 		KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();
 		int rows;
+		//如果主键生成器是Jdbc3KeyGenerator
 		if (keyGenerator instanceof Jdbc3KeyGenerator) {
 			statement.execute(sql, Statement.RETURN_GENERATED_KEYS);
 			rows = statement.getUpdateCount();
 			keyGenerator.processAfter(executor, mappedStatement, statement, parameterObject);
+		//如果主键生成器是SelectKeyGenerator
 		} else if (keyGenerator instanceof SelectKeyGenerator) {
 			statement.execute(sql);
 			rows = statement.getUpdateCount();
 			keyGenerator.processAfter(executor, mappedStatement, statement, parameterObject);
+		//如果没有主键生成器
 		} else {
-			// 如果没有keyGenerator,直接调用Statement.execute和Statement.getUpdateCount
+			//使用Statement执行sql
 			statement.execute(sql);
+			//获取更新的行数
 			rows = statement.getUpdateCount();
 		}
 		return rows;
 	}
 
 	public void batch(Statement statement) throws SQLException {
+		//获取原生sql语句
 		String sql = boundSql.getSql();
-		// 调用Statement.addBatch
+		//调用Statement.addBatch
 		statement.addBatch(sql);
 	}
 
-	// select-->结果给ResultHandler
+	//查询方法
 	public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
 		//获取原生sql
 		String sql = boundSql.getSql();
-		//调用jdbc执行语句
+		//使用jdbc来执行sql
 		statement.execute(sql);
-		//先执行Statement.execute，然后交给ResultSetHandler.handleResultSets
+		//使用结果处理器处理结果
 		return resultSetHandler.<E>handleResultSets(statement);
 	}
 
 	@Override
 	protected Statement instantiateStatement(Connection connection) throws SQLException {
-		// 调用Connection.createStatement
+		//调用Connection.createStatement
 		if (mappedStatement.getResultSetType() != null) {
 			return connection.createStatement(mappedStatement.getResultSetType().getValue(),
 					ResultSet.CONCUR_READ_ONLY);
@@ -72,7 +82,7 @@ public class SimpleStatementHandler extends BaseStatementHandler {
 	}
 
 	public void parameterize(Statement statement) throws SQLException {
-		// N/A
+		//N/A
 	}
 
 }

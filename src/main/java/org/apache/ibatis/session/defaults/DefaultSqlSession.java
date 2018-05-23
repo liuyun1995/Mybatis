@@ -126,25 +126,28 @@ public class DefaultSqlSession implements SqlSession {
 		}
 	}
 
+	//插入方法
 	public int insert(String statement) {
 		return insert(statement, null);
 	}
 
+	//插入方法
 	public int insert(String statement, Object parameter) {
 		return update(statement, parameter);
 	}
-
+	
+	//更新方法
 	public int update(String statement) {
 		return update(statement, null);
 	}
 
-	// 核心update
+	//核心update
 	public int update(String statement, Object parameter) {
 		try {
-			// 每次要更新之前，dirty标志设为true
+			//更新之前将dirty设为true
 			dirty = true;
 			MappedStatement ms = configuration.getMappedStatement(statement);
-			// 转而用执行器来update结果
+			//调用执行器的update方法
 			return executor.update(ms, wrapCollection(parameter));
 		} catch (Exception e) {
 			throw ExceptionFactory.wrapException("Error updating database.  Cause: " + e, e);
@@ -153,25 +156,27 @@ public class DefaultSqlSession implements SqlSession {
 		}
 	}
 
+	//删除方法
 	public int delete(String statement) {
-		// delete也是调用update
 		return update(statement, null);
 	}
 
+	//删除方法
 	public int delete(String statement, Object parameter) {
 		return update(statement, parameter);
 	}
 
+	//提交事务
 	public void commit() {
 		commit(false);
 	}
 
-	// 核心commit
+	//核心commit
 	public void commit(boolean force) {
 		try {
-			// 转而用执行器来commit
+			//调用执行器的commit方法
 			executor.commit(isCommitOrRollbackRequired(force));
-			// 每次commit之后，dirty标志设为false
+			//在提交之后将dirty设为false
 			dirty = false;
 		} catch (Exception e) {
 			throw ExceptionFactory.wrapException("Error committing transaction.  Cause: " + e, e);
@@ -180,16 +185,17 @@ public class DefaultSqlSession implements SqlSession {
 		}
 	}
 
+	//回滚方法
 	public void rollback() {
 		rollback(false);
 	}
 
-	// 核心rollback
+	//核心rollback
 	public void rollback(boolean force) {
 		try {
-			// 转而用执行器来rollback
+			//调用执行器的回滚方法
 			executor.rollback(isCommitOrRollbackRequired(force));
-			// 每次rollback之后，dirty标志设为false
+			//回滚之后将dirty设为false
 			dirty = false;
 		} catch (Exception e) {
 			throw ExceptionFactory.wrapException("Error rolling back transaction.  Cause: " + e, e);
@@ -198,10 +204,10 @@ public class DefaultSqlSession implements SqlSession {
 		}
 	}
 
-	// 核心flushStatements
+	//核心flushStatements
 	public List<BatchResult> flushStatements() {
 		try {
-			// 转而用执行器来flushStatements
+			//转而用执行器来flushStatements
 			return executor.flushStatements();
 		} catch (Exception e) {
 			throw ExceptionFactory.wrapException("Error flushing statements.  Cause: " + e, e);
@@ -210,12 +216,12 @@ public class DefaultSqlSession implements SqlSession {
 		}
 	}
 
-	// 核心close
+	//核心close
 	public void close() {
 		try {
-			// 转而用执行器来close
+			//转而用执行器来close
 			executor.close(isCommitOrRollbackRequired(false));
-			// 每次close之后，dirty标志设为false
+			//每次close之后，dirty标志设为false
 			dirty = false;
 		} finally {
 			ErrorContext.instance().reset();
@@ -239,18 +245,18 @@ public class DefaultSqlSession implements SqlSession {
 		}
 	}
 
-	// 核心clearCache
+	//核心clearCache
 	public void clearCache() {
 		// 转而用执行器来clearLocalCache
 		executor.clearLocalCache();
 	}
 
-	// 检查是否需要强制commit或rollback
+	//检查是否需要强制commit或rollback
 	private boolean isCommitOrRollbackRequired(boolean force) {
 		return (!autoCommit && dirty) || force;
 	}
 
-	// 把参数包装成Collection
+	//把参数包装成Collection
 	private Object wrapCollection(final Object object) {
 		if (object instanceof Collection) {
 			StrictMap<Object> map = new StrictMap<Object>();
@@ -264,11 +270,11 @@ public class DefaultSqlSession implements SqlSession {
 			map.put("array", object);
 			return map;
 		}
-		// 参数若不是集合型，直接返回原来值
+		//参数若不是集合型，直接返回原来值
 		return object;
 	}
 
-	// 严格的Map，如果找不到对应的key，直接抛BindingException例外，而不是返回null
+	//严格的Map，如果找不到对应的key，直接抛BindingException例外，而不是返回null
 	public static class StrictMap<V> extends HashMap<String, V> {
 
 		private static final long serialVersionUID = -5741767162221585340L;

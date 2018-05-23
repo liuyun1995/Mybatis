@@ -26,14 +26,13 @@ public class SimpleExecutor extends BaseExecutor {
 	public int doUpdate(MappedStatement ms, Object parameter) throws SQLException {
 		Statement stmt = null;
 		try {
+			//获取配置信息
 			Configuration configuration = ms.getConfiguration();
-			// 新建一个StatementHandler
-			// 这里看到ResultHandler传入的是null
-			StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, RowBounds.DEFAULT, null,
-					null);
-			// 准备语句
+			//新建语句处理器
+			StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, RowBounds.DEFAULT, null, null);
+			//获取准备语句
 			stmt = prepareStatement(handler, ms.getStatementLog());
-			// StatementHandler.update
+			//执行语句处理器的更新方法
 			return handler.update(stmt);
 		} finally {
 			closeStatement(stmt);
@@ -70,11 +69,11 @@ public class SimpleExecutor extends BaseExecutor {
 	//预处理语句
 	private Statement prepareStatement(StatementHandler handler, Log statementLog) throws SQLException {
 		Statement stmt;
-		//获取连接
+		//获取数据库连接
 		Connection connection = getConnection(statementLog);
-		//调用StatementHandler.prepare
+		//调用语句处理器获取Statement对象
 		stmt = handler.prepare(connection);
-		//调用StatementHandler.parameterize
+		//调用语句处理器参数化
 		handler.parameterize(stmt);
 		return stmt;
 	}

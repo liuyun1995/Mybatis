@@ -17,8 +17,8 @@ import java.util.*;
 //映射器方法
 public class MapperMethod {
 
-	private final SqlCommand command;
-	private final MethodSignature method;
+	private final SqlCommand command;       //方法命令
+	private final MethodSignature method;   //方法签名
 
 	public MapperMethod(Class<?> mapperInterface, Method method, Configuration config) {
 		this.command = new SqlCommand(config, mapperInterface, method);
@@ -68,7 +68,7 @@ public class MapperMethod {
 		return result;
 	}
 
-	// 这个方法对返回值的类型进行了一些检查，使得更安全
+	//这个方法对返回值的类型进行了一些检查，使得更安全
 	private Object rowCountResult(int rowCount) {
 		final Object result;
 		if (method.returnsVoid()) {
@@ -177,11 +177,13 @@ public class MapperMethod {
 		private final SqlCommandType type;
 
 		public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) {
+			//获取语句名
 			String statementName = mapperInterface.getName() + "." + method.getName();
 			MappedStatement ms = null;
+			//如果配置信息中存在该语句名, 则直接取出
 			if (configuration.hasStatement(statementName)) {
 				ms = configuration.getMappedStatement(statementName);
-			} else if (!mapperInterface.equals(method.getDeclaringClass().getName())) { // issue #35
+			} else if (!mapperInterface.equals(method.getDeclaringClass().getName())) {
 				//如果不是这个mapper接口的方法，再去查父类
 				String parentStatementName = method.getDeclaringClass().getName() + "." + method.getName();
 				if (configuration.hasStatement(parentStatementName)) {
