@@ -47,6 +47,7 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
 		}
 	}
 
+	//获取数据源
 	public DataSource getDataSource() {
 		return dataSource;
 	}

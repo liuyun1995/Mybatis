@@ -68,7 +68,7 @@ public class XMLStatementBuilder extends BaseBuilder {
 		Class<?> resultTypeClass = resolveClass(resultType);
 		//获取resultSetType属性
 		String resultSetType = context.getStringAttribute("resultSetType");
-		//获取语句类型
+		//获取语句类型, 默认为PREPARED
 		StatementType statementType = StatementType.valueOf(context.getStringAttribute("statementType", StatementType.PREPARED.toString()));
 		//根据resultSetType名获取结果集类型
 		ResultSetType resultSetTypeEnum = resolveResultSetType(resultSetType);

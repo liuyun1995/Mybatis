@@ -13,15 +13,16 @@ import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 //原类型
 public class MetaClass {
-
-	// 有一个反射器
-	// 可以看到方法基本都是再次委派给这个Reflector
+	
+	//反射器
 	private Reflector reflector;
 
+	//构造器
 	private MetaClass(Class<?> type) {
 		this.reflector = Reflector.forClass(type);
 	}
 
+	//根据类型获取原类型
 	public static MetaClass forClass(Class<?> type) {
 		return new MetaClass(type);
 	}
@@ -51,10 +52,12 @@ public class MetaClass {
 		return findProperty(name);
 	}
 
+	//获取getter方法名称集合
 	public String[] getGetterNames() {
 		return reflector.getGetablePropertyNames();
 	}
 
+	//获取setter方法名称集合
 	public String[] getSetterNames() {
 		return reflector.getSetablePropertyNames();
 	}
@@ -122,6 +125,7 @@ public class MetaClass {
 		return null;
 	}
 
+	//是否有setter方法
 	public boolean hasSetter(String name) {
 		PropertyTokenizer prop = new PropertyTokenizer(name);
 		if (prop.hasNext()) {
@@ -136,6 +140,7 @@ public class MetaClass {
 		}
 	}
 
+	//是否有getter方法
 	public boolean hasGetter(String name) {
 		PropertyTokenizer prop = new PropertyTokenizer(name);
 		if (prop.hasNext()) {

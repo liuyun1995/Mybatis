@@ -24,6 +24,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 		this.configuration = configuration;
 	}
 
+	//获取会话
 	public SqlSession openSession() {
 		return openSessionFromDataSource(configuration.getDefaultExecutorType(), null, false);
 	}
@@ -60,7 +61,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 		return configuration;
 	}
 
-	// 从数据源获取会话
+	//从数据源中获取会话
 	private SqlSession openSessionFromDataSource(ExecutorType execType, TransactionIsolationLevel level,
 			boolean autoCommit) {
 		Transaction tx = null;
@@ -83,6 +84,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 		}
 	}
 
+	//从数据库连接中获取会话
 	private SqlSession openSessionFromConnection(ExecutorType execType, Connection connection) {
 		try {
 			boolean autoCommit;
@@ -103,6 +105,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 		}
 	}
 
+	//从环境信息中获取事务工厂
 	private TransactionFactory getTransactionFactoryFromEnvironment(Environment environment) {
 		// 如果没有配置事务工厂，则返回托管事务工厂
 		if (environment == null || environment.getTransactionFactory() == null) {
@@ -111,6 +114,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 		return environment.getTransactionFactory();
 	}
 
+	//关闭事务
 	private void closeTransaction(Transaction tx) {
 		if (tx != null) {
 			try {

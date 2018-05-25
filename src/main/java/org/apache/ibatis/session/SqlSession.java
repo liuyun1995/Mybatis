@@ -52,6 +52,7 @@ public interface SqlSession extends Closeable {
 	
 	void rollback(boolean force);
 	
+	//刷新语句
 	List<BatchResult> flushStatements();
 
 	//关闭会话

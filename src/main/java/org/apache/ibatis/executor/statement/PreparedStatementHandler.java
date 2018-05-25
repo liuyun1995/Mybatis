@@ -24,7 +24,7 @@ public class PreparedStatementHandler extends BaseStatementHandler {
 	}
 
 	public int update(Statement statement) throws SQLException {
-		// 调用PreparedStatement.execute和PreparedStatement.getUpdateCount
+		//调用PreparedStatement.execute和PreparedStatement.getUpdateCount
 		PreparedStatement ps = (PreparedStatement) statement;
 		ps.execute();
 		int rows = ps.getUpdateCount();
@@ -39,9 +39,13 @@ public class PreparedStatementHandler extends BaseStatementHandler {
 		ps.addBatch();
 	}
 
+	//查询方法
 	public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
+		//强转为PreparedStatement对象
 		PreparedStatement ps = (PreparedStatement) statement;
+		//执行语句
 		ps.execute();
+		//使用结果集处理器来处理结果
 		return resultSetHandler.<E>handleResultSets(ps);
 	}
 
@@ -65,7 +69,7 @@ public class PreparedStatementHandler extends BaseStatementHandler {
 	}
 
 	public void parameterize(Statement statement) throws SQLException {
-		// 调用ParameterHandler.setParameters
+		//调用参数处理器设置参数
 		parameterHandler.setParameters((PreparedStatement) statement);
 	}
 

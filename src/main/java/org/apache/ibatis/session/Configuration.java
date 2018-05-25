@@ -151,7 +151,7 @@ public class Configuration {
 	//主键生成器映射
 	protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<KeyGenerator>("Key Generators collection");
 
-	//加载的资源集合
+	//已加载的xml资源路径
 	protected final Set<String> loadedResources = new HashSet<String>();
 	//SQL语句片映射
 	protected final Map<String, XNode> sqlFragments = new StrictMap<XNode>("XML fragments parsed from previous mappers");
@@ -468,10 +468,9 @@ public class Configuration {
 	//创建参数处理器
 	public ParameterHandler newParameterHandler(MappedStatement mappedStatement, Object parameterObject,
 			BoundSql boundSql) {
-		//创建ParameterHandler
-		ParameterHandler parameterHandler = mappedStatement.getLang().createParameterHandler(mappedStatement,
-				parameterObject, boundSql);
-		//插件在这里插入
+		//创建参数处理器
+		ParameterHandler parameterHandler = mappedStatement.getLang().createParameterHandler(mappedStatement, parameterObject, boundSql);
+		//先经过拦截器插件处理
 		parameterHandler = (ParameterHandler) interceptorChain.pluginAll(parameterHandler);
 		return parameterHandler;
 	}
@@ -491,24 +490,24 @@ public class Configuration {
 	public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement,
 			Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
 		//创建路由选择语句处理器
-		StatementHandler statementHandler = new RoutingStatementHandler(executor, mappedStatement, parameterObject,
-				rowBounds, resultHandler, boundSql);
-		//插件在这里插入
+		StatementHandler statementHandler = new RoutingStatementHandler(executor, mappedStatement, parameterObject, rowBounds, resultHandler, boundSql);
+		//先经过拦截器插件处理再返回
 		statementHandler = (StatementHandler) interceptorChain.pluginAll(statementHandler);
 		return statementHandler;
 	}
 
+	//生成执行器
 	public Executor newExecutor(Transaction transaction) {
 		return newExecutor(transaction, defaultExecutorType);
 	}
 
-	//产生执行器
+	//生成执行器
 	public Executor newExecutor(Transaction transaction, ExecutorType executorType) {
+		//如果执行器类型为空的话就使用默认的执行器类型
 		executorType = executorType == null ? defaultExecutorType : executorType;
-		//这句再做一下保护,囧,防止粗心大意的人将defaultExecutorType设成null?
 		executorType = executorType == null ? ExecutorType.SIMPLE : executorType;
 		Executor executor;
-		//然后就是简单的3个分支，产生3种执行器BatchExecutor/ReuseExecutor/SimpleExecutor
+		//根据执行器类型生成不同的执行器
 		if (ExecutorType.BATCH == executorType) {
 			executor = new BatchExecutor(this, transaction);
 		} else if (ExecutorType.REUSE == executorType) {
@@ -516,7 +515,7 @@ public class Configuration {
 		} else {
 			executor = new SimpleExecutor(this, transaction);
 		}
-		//如果要求缓存，生成另一种CachingExecutor(默认就是有缓存),装饰者模式,所以默认都是返回CachingExecutor
+		//如果要求缓存则返回CachingExecutor
 		if (cacheEnabled) {
 			executor = new CachingExecutor(executor);
 		}

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 public class BooleanTypeHandler extends BaseTypeHandler<Boolean> {
 
+	//设置非空的参数
 	@Override
 	public void setNonNullParameter(PreparedStatement ps, int i, Boolean parameter, JdbcType jdbcType)
 			throws SQLException {

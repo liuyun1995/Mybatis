@@ -13,7 +13,7 @@ import java.util.Properties;
 import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
-//SqlSession管理器
+//SqlSession管理器, 实现了SqlSession接口
 public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
 	private final SqlSessionFactory sqlSessionFactory;   //sqlSession工厂
@@ -21,12 +21,16 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
 	private ThreadLocal<SqlSession> localSqlSession = new ThreadLocal<SqlSession>();
 
+	//构造器
 	private SqlSessionManager(SqlSessionFactory sqlSessionFactory) {
 		this.sqlSessionFactory = sqlSessionFactory;
+		//生成sqlSession代理, 这里使用的是JDK动态代理
 		this.sqlSessionProxy = (SqlSession) Proxy.newProxyInstance(SqlSessionFactory.class.getClassLoader(),
 				new Class[] { SqlSession.class }, new SqlSessionInterceptor());
 	}
 
+	//------------------------------------------实例化SqlSessionManager方法-------------------------------------------
+	
 	public static SqlSessionManager newInstance(Reader reader) {
 		return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader, null, null));
 	}
@@ -55,6 +59,8 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 		return new SqlSessionManager(sqlSessionFactory);
 	}
 
+	//------------------------------------------实例化SqlSessionManager方法-------------------------------------------
+	
 	public void startManagedSession() {
 		this.localSqlSession.set(openSession());
 	}
@@ -195,10 +201,12 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 		return sqlSessionProxy.delete(statement, parameter);
 	}
 
+	//获取Mapper
 	public <T> T getMapper(Class<T> type) {
 		return getConfiguration().getMapper(type, this);
 	}
 
+	//获取数据库连接
 	public Connection getConnection() {
 		final SqlSession sqlSession = localSqlSession.get();
 		if (sqlSession == null) {
@@ -207,6 +215,7 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 		return sqlSession.getConnection();
 	}
 
+	//清空缓存
 	public void clearCache() {
 		final SqlSession sqlSession = localSqlSession.get();
 		if (sqlSession == null) {
@@ -215,6 +224,7 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 		sqlSession.clearCache();
 	}
 
+	//提交事务
 	public void commit() {
 		final SqlSession sqlSession = localSqlSession.get();
 		if (sqlSession == null) {
@@ -223,6 +233,7 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 		sqlSession.commit();
 	}
 
+	//提交事务
 	public void commit(boolean force) {
 		final SqlSession sqlSession = localSqlSession.get();
 		if (sqlSession == null) {
@@ -231,6 +242,7 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 		sqlSession.commit(force);
 	}
 
+	//回滚事务
 	public void rollback() {
 		final SqlSession sqlSession = localSqlSession.get();
 		if (sqlSession == null) {
@@ -239,6 +251,7 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 		sqlSession.rollback();
 	}
 
+	//回滚事务
 	public void rollback(boolean force) {
 		final SqlSession sqlSession = localSqlSession.get();
 		if (sqlSession == null) {
@@ -247,7 +260,9 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 		sqlSession.rollback(force);
 	}
 
+	//刷新语句
 	public List<BatchResult> flushStatements() {
+		//获取当前线程的会话
 		final SqlSession sqlSession = localSqlSession.get();
 		if (sqlSession == null) {
 			throw new SqlSessionException("Error:  Cannot rollback.  No managed session is started.");
@@ -255,6 +270,7 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 		return sqlSession.flushStatements();
 	}
 
+	//关闭会话
 	public void close() {
 		final SqlSession sqlSession = localSqlSession.get();
 		if (sqlSession == null) {
@@ -270,28 +286,36 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 	//sqlSession代理
 	private class SqlSessionInterceptor implements InvocationHandler {
 		
+		//空的构造器, 不需传入会话, 在调用时会根据情况创建会话
 		public SqlSessionInterceptor() {}
 
 		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+			//获取当前线程的会话
 			final SqlSession sqlSession = SqlSessionManager.this.localSqlSession.get();
+			//若当前线程存在SqlSession则直接调用
 			if (sqlSession != null) {
-				//若当前线程存在SqlSession则直接调用
 				try {
 					return method.invoke(sqlSession, args);
 				} catch (Throwable t) {
 					throw ExceptionUtil.unwrapThrowable(t);
 				}
+			//否则调用openSession方法获取sqlSession再调用
 			} else {
-				//否则调用openSession方法获取sqlSession再调用
+				//获取新的会话对象
 				final SqlSession autoSqlSession = openSession();
 				try {
+					//执行方法
 					final Object result = method.invoke(autoSqlSession, args);
+					//提交事务
 					autoSqlSession.commit();
+					//返回结果
 					return result;
 				} catch (Throwable t) {
+					//出现异常回滚事务
 					autoSqlSession.rollback();
 					throw ExceptionUtil.unwrapThrowable(t);
 				} finally {
+					//最后关闭会话
 					autoSqlSession.close();
 				}
 			}

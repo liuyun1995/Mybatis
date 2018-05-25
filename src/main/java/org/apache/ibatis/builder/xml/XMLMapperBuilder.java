@@ -36,7 +36,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 	private XPathParser parser;                        //XPath解析器
 	private MapperBuilderAssistant builderAssistant;   //构建助手
 	private Map<String, XNode> sqlFragments;           //SQL片段映射表
-	private String resource;
+	private String resource;                           //mapper.xml文件资源路径
 
 	//构造器1
 	public XMLMapperBuilder(InputStream inputStream, Configuration configuration, String resource,
@@ -58,8 +58,8 @@ public class XMLMapperBuilder extends BaseBuilder {
 		super(configuration);
 		this.builderAssistant = new MapperBuilderAssistant(configuration, resource);
 		this.parser = parser;
-		this.sqlFragments = sqlFragments;
 		this.resource = resource;
+		this.sqlFragments = sqlFragments;
 	}
 
 	//解析方法
@@ -92,7 +92,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 			if (namespace.equals("")) {
 				throw new BuilderException("Mapper's namespace cannot be empty");
 			}
-			//设置namespace属性
+			//设置mapper名称空间
 			builderAssistant.setCurrentNamespace(namespace);
 			//1.解析<cache-ref>
 			cacheRefElement(context.evalNode("cache-ref"));
@@ -192,10 +192,10 @@ public class XMLMapperBuilder extends BaseBuilder {
 		// 基本上就是循环把resultMap加入到Configuration里去,保持2份，一份缩略，一分全名
 		for (XNode resultMapNode : list) {
 			try {
-				// 循环调resultMapElement
+				//循环调resultMapElement
 				resultMapElement(resultMapNode);
 			} catch (IncompleteElementException e) {
-				// ignore, it will be retried
+				//ignore
 			}
 		}
 	}
@@ -290,13 +290,15 @@ public class XMLMapperBuilder extends BaseBuilder {
 		Class<? extends TypeHandler<?>> typeHandlerClass = (Class<? extends TypeHandler<?>>) resolveClass(typeHandler);
 		JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
 		Map<String, String> discriminatorMap = new HashMap<String, String>();
+		//遍历所有子结点
 		for (XNode caseChild : context.getChildren()) {
+			//获取value属性值
 			String value = caseChild.getStringAttribute("value");
+			//获取resultMap属性值
 			String resultMap = caseChild.getStringAttribute("resultMap", processNestedResultMappings(caseChild, resultMappings));
 			discriminatorMap.put(value, resultMap);
 		}
-		return builderAssistant.buildDiscriminator(resultType, column, javaTypeClass, jdbcTypeEnum, typeHandlerClass,
-				discriminatorMap);
+		return builderAssistant.buildDiscriminator(resultType, column, javaTypeClass, jdbcTypeEnum, typeHandlerClass, discriminatorMap);
 	}
 	
 	//4.5 构建ResultMapping

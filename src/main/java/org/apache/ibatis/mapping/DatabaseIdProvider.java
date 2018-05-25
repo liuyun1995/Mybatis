@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+//数据库ID提供者
 public interface DatabaseIdProvider {
 
 	void setProperties(Properties p);

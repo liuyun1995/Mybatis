@@ -47,22 +47,21 @@ public class SimpleExecutor extends BaseExecutor {
 		try {
 			//获取配置信息
 			Configuration configuration = ms.getConfiguration();
-			// 新建一个StatementHandler
-			// 这里看到ResultHandler传入了
-			StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, 
-					rowBounds, resultHandler, boundSql);
-			//准备语句
+			//新建语句处理器
+			StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);
+			//获取Statement对象, 在该方法中设置参数
 			stmt = prepareStatement(handler, ms.getStatementLog());
-			//执行查询
+			//调用语句处理器的查询方法
 			return handler.<E>query(stmt, resultHandler);
 		} finally {
 			closeStatement(stmt);
 		}
 	}
 
+	//冲刷语句
 	@Override
 	public List<BatchResult> doFlushStatements(boolean isRollback) throws SQLException {
-		// doFlushStatements只是给batch用的，所以这里返回空
+		//doFlushStatements只是给batch用的，所以这里返回空
 		return Collections.emptyList();
 	}
 

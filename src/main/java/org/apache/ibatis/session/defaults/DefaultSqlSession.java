@@ -70,17 +70,17 @@ public class DefaultSqlSession implements SqlSession {
 
 	//核心selectMap
 	public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
-		// 转而去调用selectList
+		//转而去调用selectList
 		final List<?> list = selectList(statement, parameter, rowBounds);
 		final DefaultMapResultHandler<K, V> mapResultHandler = new DefaultMapResultHandler<K, V>(mapKey,
 				configuration.getObjectFactory(), configuration.getObjectWrapperFactory());
 		final DefaultResultContext context = new DefaultResultContext();
 		for (Object o : list) {
-			// 循环用DefaultMapResultHandler处理每条记录
+			//循环用DefaultMapResultHandler处理每条记录
 			context.nextResultObject(o);
 			mapResultHandler.handleResult(context);
 		}
-		// 注意这个DefaultMapResultHandler里面存了所有已处理的记录(内部实现可能就是一个Map)，最后再返回一个Map
+		//注意这个DefaultMapResultHandler里面存了所有已处理的记录(内部实现可能就是一个Map)，最后再返回一个Map
 		return mapResultHandler.getMappedResults();
 	}
 

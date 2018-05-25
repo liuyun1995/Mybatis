@@ -12,19 +12,25 @@ import org.apache.ibatis.executor.BaseExecutor;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 
-//厂商数据库Id提供者
+//厂商数据库ID提供者
 public class VendorDatabaseIdProvider implements DatabaseIdProvider {
 
 	private static final Log log = LogFactory.getLog(BaseExecutor.class);
 
 	private Properties properties;
+	
+	//设置属性
+	public void setProperties(Properties p) {
+		this.properties = p;
+	}
 
+	//根据数据源获取数据库名称
 	public String getDatabaseId(DataSource dataSource) {
 		if (dataSource == null) {
 			throw new NullPointerException("dataSource cannot be null");
 		}
 		try {
-			//根据dataSource得到数据库名字
+			//根据数据源获取数据库名字
 			return getDatabaseName(dataSource);
 		} catch (Exception e) {
 			log.error("Could not get a databaseId from dataSource", e);
@@ -32,38 +38,42 @@ public class VendorDatabaseIdProvider implements DatabaseIdProvider {
 		return null;
 	}
 
-	public void setProperties(Properties p) {
-		this.properties = p;
-	}
-
+	//根据数据源获取数据库名字
 	private String getDatabaseName(DataSource dataSource) throws SQLException {
-		//先得到productName
+		//获取数据库产品名称
 		String productName = getDatabaseProductName(dataSource);
+		//如果属性不为空
 		if (this.properties != null) {
-			//如果设置了缩写properties，则一个个比较返回匹配的缩写
+			//遍历所有属性
 			for (Map.Entry<Object, Object> property : properties.entrySet()) {
+				//如果存在属性键为数据库名, 则返回该属性值
 				if (productName.contains((String) property.getKey())) {
 					return (String) property.getValue();
 				}
 			}
+			//如果属性中不存在数据库名, 则返回null
 			return null;
 		}
+		//否则直接返回数据库名称
 		return productName;
 	}
 
+	//根据数据源获取数据库产品名称
 	private String getDatabaseProductName(DataSource dataSource) throws SQLException {
 		Connection con = null;
 		try {
+			//获取数据库连接
 			con = dataSource.getConnection();
-			//核心就是DatabaseMetaData.getDatabaseProductName()得到数据库产品名字
+			//获取数据库元数据
 			DatabaseMetaData metaData = con.getMetaData();
+			//获取数据库产品名称
 			return metaData.getDatabaseProductName();
 		} finally {
 			if (con != null) {
 				try {
 					con.close();
 				} catch (SQLException e) {
-					// ignored
+					//ignored
 				}
 			}
 		}

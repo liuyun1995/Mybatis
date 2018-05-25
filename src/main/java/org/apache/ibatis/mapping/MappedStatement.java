@@ -13,7 +13,7 @@ import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 
-//映射的语句
+//映射的语句(select|insert|update|delete)
 public final class MappedStatement {
 
 	private String resource;

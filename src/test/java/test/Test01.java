@@ -11,13 +11,11 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 public class Test01 {
 
 	public static void main(String[] args) throws IOException {
-		
 		String resource = "mybatis-config.xml";
 		InputStream inputStream = Resources.getResourceAsStream(resource);
 		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-
 		SqlSession session = sqlSessionFactory.openSession();
-		
+		session.selectOne("");
 	}
 
 }
