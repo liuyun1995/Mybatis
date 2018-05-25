@@ -18,7 +18,7 @@ public final class MappedStatement {
 
 	private String resource;
 	private Configuration configuration;          //配置信息
-	private String id;
+	private String id;                            //标签id属性值
 	private Integer fetchSize;
 	private Integer timeout;                      //超时时间
 	private StatementType statementType;          //语句类型
@@ -32,9 +32,9 @@ public final class MappedStatement {
 	private boolean resultOrdered;               //是否对结果排序
 	private SqlCommandType sqlCommandType;        //sql命令类型
 	private KeyGenerator keyGenerator;            //主键生成器
-	private String[] keyProperties;
-	private String[] keyColumns;
-	private boolean hasNestedResultMaps;
+	private String[] keyProperties;               //主键字段名集合
+	private String[] keyColumns;                  //主键列名集合
+	private boolean hasNestedResultMaps;         //是否有嵌套的结果映射
 	private String databaseId;
 	private Log statementLog;
 	private LanguageDriver lang;
@@ -44,8 +44,9 @@ public final class MappedStatement {
 
 	//静态内部类，建造者模式
 	public static class Builder {
+		
 		private MappedStatement mappedStatement = new MappedStatement();
-
+		
 		public Builder(Configuration configuration, String id, SqlSource sqlSource, SqlCommandType sqlCommandType) {
 			mappedStatement.configuration = configuration;
 			mappedStatement.id = id;

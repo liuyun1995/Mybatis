@@ -32,18 +32,16 @@ public enum JdbcType {
 	BLOB(Types.BLOB), 
 	CLOB(Types.CLOB), 
 	BOOLEAN(Types.BOOLEAN), 
-	CURSOR(-10), //Oracle
+	CURSOR(-10),
 	UNDEFINED(Integer.MIN_VALUE + 1000),
-	//太周到了，还考虑jdk5兼容性，jdk6的常量都不是直接引用
-	NVARCHAR(Types.NVARCHAR), //JDK6
-	NCHAR(Types.NCHAR),        //JDK6
-	NCLOB(Types.NCLOB),        //JDK6
+	NVARCHAR(Types.NVARCHAR),
+	NCHAR(Types.NCHAR),
+	NCLOB(Types.NCLOB),
 	STRUCT(Types.STRUCT);
 
 	public final int TYPE_CODE;
 	private static Map<Integer, JdbcType> codeLookup = new HashMap<Integer, JdbcType>();
-
-	//一开始就将数字对应的枚举型放入hashmap
+	
 	static {
 		for (JdbcType type : JdbcType.values()) {
 			codeLookup.put(type.TYPE_CODE, type);

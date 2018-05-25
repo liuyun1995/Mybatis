@@ -19,7 +19,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 public class Jdbc3KeyGenerator implements KeyGenerator {
 
 	public void processBefore(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
-		// do nothing
+		//do nothing
 	}
 
 	public void processAfter(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
@@ -28,11 +28,11 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
 		processBatch(ms, stmt, parameters);
 	}
 
-	// 批处理
+	//批处理
 	public void processBatch(MappedStatement ms, Statement stmt, List<Object> parameters) {
 		ResultSet rs = null;
 		try {
-			// 核心是使用JDBC3的Statement.getGeneratedKeys
+			//核心是使用JDBC3的Statement.getGeneratedKeys
 			rs = stmt.getGeneratedKeys();
 			final Configuration configuration = ms.getConfiguration();
 			final TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
@@ -47,27 +47,27 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
 					}
 					final MetaObject metaParam = configuration.newMetaObject(parameter);
 					if (typeHandlers == null) {
-						// 先取得类型处理器
+						//先取得类型处理器
 						typeHandlers = getTypeHandlers(typeHandlerRegistry, metaParam, keyProperties);
 					}
-					// 填充键值
+					//填充键值
 					populateKeys(rs, metaParam, keyProperties, typeHandlers);
 				}
 			}
 		} catch (Exception e) {
-			throw new ExecutorException(
-					"Error getting generated key or setting result to parameter object. Cause: " + e, e);
+			throw new ExecutorException("Error getting generated key or setting result to parameter object. Cause: " + e, e);
 		} finally {
 			if (rs != null) {
 				try {
 					rs.close();
 				} catch (Exception e) {
-					// ignore
+					//ignore
 				}
 			}
 		}
 	}
 
+	//获取类型处理器
 	private TypeHandler<?>[] getTypeHandlers(TypeHandlerRegistry typeHandlerRegistry, MetaObject metaParam,
 			String[] keyProperties) {
 		TypeHandler<?>[] typeHandlers = new TypeHandler<?>[keyProperties.length];

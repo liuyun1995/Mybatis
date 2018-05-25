@@ -219,7 +219,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		if (unresolvedCacheRef) {
 			throw new IncompleteElementException("Cache-ref not yet resolved");
 		}
-		//为id加上namespace前缀
+		//在id前面加上namespace前缀
 		id = applyCurrentNamespace(id, false);
 		//是否是select语句
 		boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
@@ -243,7 +243,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 		setStatementResultMap(resultMap, resultType, resultSetType, statementBuilder);
 		//设置语句缓存
 		setStatementCache(isSelect, flushCache, useCache, currentCache, statementBuilder);
-		//进行构建
+		//最后进行构建
 		MappedStatement statement = statementBuilder.build();
 		//添加到配置信息中
 		configuration.addMappedStatement(statement);

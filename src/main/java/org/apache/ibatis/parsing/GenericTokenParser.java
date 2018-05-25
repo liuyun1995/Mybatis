@@ -13,7 +13,7 @@ public class GenericTokenParser {
 		this.handler = handler;
 	}
 
-	//解析xml结点文本
+	//解析文本记号
 	public String parse(String text) {
 		StringBuilder builder = new StringBuilder();
 		if (text != null && text.length() > 0) {
@@ -22,11 +22,11 @@ public class GenericTokenParser {
 			//从offset开始找起, 返回第一次出现开始标记的位置
 			int start = text.indexOf(openToken, offset);
 			while (start > -1) {
-				//判断一下${前面是否有反斜杠
+				//判断一下开始标记之前是否有反斜杠
 				if (start > 0 && src[start - 1] == '\\') {
 					//若有反斜杠则不解析
 					builder.append(src, offset, start - offset - 1).append(openToken);
-					//将offset指向开始标记的后端
+					//将offset移至开始标记的后端
 					offset = start + openToken.length();
 				} else {
 					//获取结束标记的位置

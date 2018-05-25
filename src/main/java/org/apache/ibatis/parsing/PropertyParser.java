@@ -7,6 +7,7 @@ public class PropertyParser {
 
 	private PropertyParser() {}
 
+	//解析属性
 	public static String parse(String string, Properties variables) {
 		//生成变量记号处理器
 		VariableTokenHandler handler = new VariableTokenHandler(variables);
@@ -17,10 +18,13 @@ public class PropertyParser {
 	
 	//变量记号处理器
 	private static class VariableTokenHandler implements TokenHandler {
+		
 		private Properties variables;
+		
 		public VariableTokenHandler(Properties variables) {
 			this.variables = variables;
 		}
+		
 		public String handleToken(String content) {
 			//如果属性集合包含了content, 则返回属性值
 			if (variables != null && variables.containsKey(content)) {
@@ -29,6 +33,7 @@ public class PropertyParser {
 			//否则包装回${}形式
 			return "${" + content + "}";
 		}
+		
 	}
 	
 }
