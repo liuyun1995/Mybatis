@@ -16,15 +16,14 @@ import javax.sql.DataSource;
 
 import org.apache.ibatis.io.Resources;
 
-/**
- * 没有池化的数据源
- */
+//非池化数据源
 public class UnpooledDataSource implements DataSource {
 
-	private ClassLoader driverClassLoader;
-	// 作为可选项,你可以传递数据库驱动的属性。要这样做,属性的前缀是以“driver.”开 头的,例如
-	// driver.encoding=UTF8
-	private Properties driverProperties;
+	//驱动加载器
+	private ClassLoader driverClassLoader;   
+	//驱动属性
+	private Properties driverProperties;  
+	//注册驱动集合
 	private static Map<String, Driver> registeredDrivers = new ConcurrentHashMap<String, Driver>();
 
 	private String driver;
@@ -43,9 +42,10 @@ public class UnpooledDataSource implements DataSource {
 		}
 	}
 
-	public UnpooledDataSource() {
-	}
+	//构造器
+	public UnpooledDataSource() {}
 
+	//构造器
 	public UnpooledDataSource(String driver, String url, String username, String password) {
 		this.driver = driver;
 		this.url = url;
@@ -53,12 +53,14 @@ public class UnpooledDataSource implements DataSource {
 		this.password = password;
 	}
 
+	//构造器
 	public UnpooledDataSource(String driver, String url, Properties driverProperties) {
 		this.driver = driver;
 		this.url = url;
 		this.driverProperties = driverProperties;
 	}
 
+	//构造器
 	public UnpooledDataSource(ClassLoader driverClassLoader, String driver, String url, String username,
 			String password) {
 		this.driverClassLoader = driverClassLoader;
@@ -68,6 +70,7 @@ public class UnpooledDataSource implements DataSource {
 		this.password = password;
 	}
 
+	//构造器
 	public UnpooledDataSource(ClassLoader driverClassLoader, String driver, String url, Properties driverProperties) {
 		this.driverClassLoader = driverClassLoader;
 		this.driver = driver;
@@ -75,42 +78,52 @@ public class UnpooledDataSource implements DataSource {
 		this.driverProperties = driverProperties;
 	}
 
+	//获取数据库连接
 	public Connection getConnection() throws SQLException {
 		return doGetConnection(username, password);
 	}
 
+	//获取数据库连接
 	public Connection getConnection(String username, String password) throws SQLException {
 		return doGetConnection(username, password);
 	}
 
+	//设置登录超时时间
 	public void setLoginTimeout(int loginTimeout) throws SQLException {
 		DriverManager.setLoginTimeout(loginTimeout);
 	}
 
+	//获取登录超时时间
 	public int getLoginTimeout() throws SQLException {
 		return DriverManager.getLoginTimeout();
 	}
 
+	//设置日志打印者
 	public void setLogWriter(PrintWriter logWriter) throws SQLException {
 		DriverManager.setLogWriter(logWriter);
 	}
 
+	//获取日志打印者
 	public PrintWriter getLogWriter() throws SQLException {
 		return DriverManager.getLogWriter();
 	}
 
+	//获取驱动加载器
 	public ClassLoader getDriverClassLoader() {
 		return driverClassLoader;
 	}
 
+	//设置驱动加载器
 	public void setDriverClassLoader(ClassLoader driverClassLoader) {
 		this.driverClassLoader = driverClassLoader;
 	}
 
+	//获取驱动属性
 	public Properties getDriverProperties() {
 		return driverProperties;
 	}
 
+	//设置驱动属性
 	public void setDriverProperties(Properties driverProperties) {
 		this.driverProperties = driverProperties;
 	}
@@ -186,6 +199,7 @@ public class UnpooledDataSource implements DataSource {
 		return connection;
 	}
 
+	//初始化驱动
 	private synchronized void initializeDriver() throws SQLException {
 		// 这里便是大家熟悉的初学JDBC时的那几句话了 Class.forName newInstance()
 		if (!registeredDrivers.containsKey(driver)) {
@@ -216,9 +230,7 @@ public class UnpooledDataSource implements DataSource {
 		}
 	}
 
-	/**
-	 * 驱动代理 不是很懂
-	 */
+	//驱动代理
 	private static class DriverProxy implements Driver {
 		private Driver driver;
 

@@ -22,4 +22,5 @@ public class PluginException extends PersistenceException {
 	public PluginException(Throwable cause) {
 		super(cause);
 	}
+	
 }

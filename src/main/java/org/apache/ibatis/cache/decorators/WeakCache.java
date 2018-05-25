@@ -8,9 +8,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
 
-/**
- * 弱引用缓存，可以看到代码和SoftCache如出一辙，就是SoftReference变成了WeakReference
- */
+//弱引用缓存，可以看到代码和SoftCache如出一辙，就是SoftReference变成了WeakReference
 public class WeakCache implements Cache {
 	private final Deque<Object> hardLinksToAvoidGarbageCollection;
 	private final ReferenceQueue<Object> queueOfGarbageCollectedEntries;

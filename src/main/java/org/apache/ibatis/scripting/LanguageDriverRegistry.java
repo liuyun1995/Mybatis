@@ -5,8 +5,7 @@ import java.util.Map;
 
 //脚本语言注册器
 public class LanguageDriverRegistry {
-
-	// map
+	
 	private final Map<Class<?>, LanguageDriver> LANGUAGE_DRIVER_MAP = new HashMap<Class<?>, LanguageDriver>();
 
 	private Class<?> defaultDriverClass = null;

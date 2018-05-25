@@ -8,9 +8,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
 
-/**
- * 软引用缓存,核心是SoftReference
- */
+//软引用缓存,核心是SoftReference
 public class SoftCache implements Cache {
 	// 链表用来引用元素，防垃圾回收
 	private final Deque<Object> hardLinksToAvoidGarbageCollection;

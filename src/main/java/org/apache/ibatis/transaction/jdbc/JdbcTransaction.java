@@ -11,26 +11,29 @@ import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionException;
 
-//Jdbc事务。直接利用JDBC的commit,rollback。 它依赖于从数据源得到的连接来管理事务范围。
+//Jdbc事务
 public class JdbcTransaction implements Transaction {
 
 	private static final Log log = LogFactory.getLog(JdbcTransaction.class);
 
-	protected Connection connection;
-	protected DataSource dataSource;
-	protected TransactionIsolationLevel level;
-	protected boolean autoCommmit;
+	protected Connection connection;              //数据库连接
+	protected DataSource dataSource;              //数据源
+	protected TransactionIsolationLevel level;    //事务隔离级别
+	protected boolean autoCommmit;               //是否自动提交
 
+	//构造器
 	public JdbcTransaction(DataSource ds, TransactionIsolationLevel desiredLevel, boolean desiredAutoCommit) {
 		dataSource = ds;
 		level = desiredLevel;
 		autoCommmit = desiredAutoCommit;
 	}
 
+	//构造器
 	public JdbcTransaction(Connection connection) {
 		this.connection = connection;
 	}
 
+	//获取数据库连接
 	public Connection getConnection() throws SQLException {
 		if (connection == null) {
 			openConnection();
@@ -38,6 +41,7 @@ public class JdbcTransaction implements Transaction {
 		return connection;
 	}
 
+	//提交事务
 	public void commit() throws SQLException {
 		if (connection != null && !connection.getAutoCommit()) {
 			if (log.isDebugEnabled()) {
@@ -47,6 +51,7 @@ public class JdbcTransaction implements Transaction {
 		}
 	}
 
+	//回滚事务
 	public void rollback() throws SQLException {
 		if (connection != null && !connection.getAutoCommit()) {
 			if (log.isDebugEnabled()) {
@@ -56,6 +61,7 @@ public class JdbcTransaction implements Transaction {
 		}
 	}
 
+	//关闭连接
 	public void close() throws SQLException {
 		if (connection != null) {
 			resetAutoCommit();
@@ -77,8 +83,6 @@ public class JdbcTransaction implements Transaction {
 				connection.setAutoCommit(desiredAutoCommit);
 			}
 		} catch (SQLException e) {
-			// Only a very poorly implemented driver would fail here,
-			// and there's not much we can do about that.
 			throw new TransactionException("Error configuring AutoCommit.  "
 					+ "Your driver may not support getAutoCommit() or setAutoCommit(). " + "Requested setting: "
 					+ desiredAutoCommit + ".  Cause: " + e, e);
@@ -105,6 +109,7 @@ public class JdbcTransaction implements Transaction {
 		}
 	}
 
+	//打开数据库连接
 	protected void openConnection() throws SQLException {
 		if (log.isDebugEnabled()) {
 			log.debug("Opening JDBC Connection");

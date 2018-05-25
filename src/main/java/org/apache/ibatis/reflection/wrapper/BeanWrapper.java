@@ -171,14 +171,17 @@ public class BeanWrapper extends BaseWrapper {
 		}
 	}
 
+	//是否是集合
 	public boolean isCollection() {
 		return false;
 	}
 
+	//向集合添加元素
 	public void add(Object element) {
 		throw new UnsupportedOperationException();
 	}
 
+	//向集合添加元素
 	public <E> void addAll(List<E> list) {
 		throw new UnsupportedOperationException();
 	}

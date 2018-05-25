@@ -13,6 +13,7 @@ public class PropertyParser {
 		VariableTokenHandler handler = new VariableTokenHandler(variables);
 		//生成通用记号解析器
 		GenericTokenParser parser = new GenericTokenParser("${", "}", handler);
+		//使用通用记号解析器解析
 		return parser.parse(string);
 	}
 	

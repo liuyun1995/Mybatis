@@ -8,9 +8,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
 
-/**
- * 事务缓存, 一次性存入多个缓存，移除多个缓存
- */
+//事务缓存, 一次性存入多个缓存，移除多个缓存
 public class TransactionalCache implements Cache {
 
 	private Cache delegate;

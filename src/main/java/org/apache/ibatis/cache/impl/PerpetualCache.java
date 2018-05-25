@@ -7,50 +7,56 @@ import java.util.concurrent.locks.ReadWriteLock;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
 
-//永久缓存, 一旦存入就一直保持
+//永久缓存
 public class PerpetualCache implements Cache {
 
-	//每个永久缓存有一个ID来识别
+	//缓存ID
 	private String id;
-
-	//内部就是一个HashMap,所有方法基本就是直接调用HashMap的方法,不支持多线程？
+	//缓存对象
 	private Map<Object, Object> cache = new HashMap<Object, Object>();
 
+	//构造器
 	public PerpetualCache(String id) {
 		this.id = id;
 	}
 
+	//获取缓存ID
 	public String getId() {
 		return id;
 	}
 
+	//获取缓存大小
 	public int getSize() {
 		return cache.size();
 	}
 
+	//放置对象
 	public void putObject(Object key, Object value) {
 		cache.put(key, value);
 	}
 
+	//获取对象
 	public Object getObject(Object key) {
 		return cache.get(key);
 	}
 
+	//删除对象
 	public Object removeObject(Object key) {
 		return cache.remove(key);
 	}
 
+	//清空缓存
 	public void clear() {
 		cache.clear();
 	}
 
+	//获取读写锁
 	public ReadWriteLock getReadWriteLock() {
 		return null;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		// 只要id相等就认为两个cache相同
 		if (getId() == null) {
 			throw new CacheException("Cache instances require an ID.");
 		}

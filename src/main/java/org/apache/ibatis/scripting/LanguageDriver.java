@@ -10,13 +10,13 @@ import org.apache.ibatis.session.Configuration;
 //脚本语言驱动
 public interface LanguageDriver {
 	
-	// 创建参数处理器
+	//创建参数处理器
 	ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
 
-	// 创建SQL源码(mapper xml方式)
+	//创建SQL源码(xml方式)
 	SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
 	
-	// 创建SQL源码(注解方式)
+	//创建SQL源码(注解方式)
 	SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
 
 }

@@ -17,7 +17,7 @@ import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 
-//数据源连接池
+//池化数据源
 public class PooledDataSource implements DataSource {
 
 	private static final Log log = LogFactory.getLog(PooledDataSource.class);

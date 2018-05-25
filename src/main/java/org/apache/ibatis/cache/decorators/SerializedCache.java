@@ -14,25 +14,27 @@ import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
 import org.apache.ibatis.io.Resources;
 
-/**
- * 序列化缓存, 用途是先将对象序列化成2进制，再缓存,好处是将对象压缩了，省内存 坏处是速度慢了
- */
+//序列化缓存, 用途是先将对象序列化成2进制，再缓存,好处是将对象压缩了，省内存 坏处是速度慢了
 public class SerializedCache implements Cache {
 
-	private Cache delegate;
+	private Cache delegate;   //缓存代表
 
+	//构造器
 	public SerializedCache(Cache delegate) {
 		this.delegate = delegate;
 	}
 
+	//获取缓存ID
 	public String getId() {
 		return delegate.getId();
 	}
 
+	//获取缓存大小
 	public int getSize() {
 		return delegate.getSize();
 	}
 
+	//放置对象
 	public void putObject(Object key, Object object) {
 		if (object == null || object instanceof Serializable) {
 			// 先序列化，再委托被包装者putObject
@@ -42,20 +44,24 @@ public class SerializedCache implements Cache {
 		}
 	}
 
+	//获取对象
 	public Object getObject(Object key) {
 		// 先委托被包装者getObject,再反序列化
 		Object object = delegate.getObject(key);
 		return object == null ? null : deserialize((byte[]) object);
 	}
 
+	//移除对象
 	public Object removeObject(Object key) {
 		return delegate.removeObject(key);
 	}
 
+	//清空缓存
 	public void clear() {
 		delegate.clear();
 	}
 
+	//获取读写锁
 	public ReadWriteLock getReadWriteLock() {
 		return null;
 	}
@@ -70,9 +76,9 @@ public class SerializedCache implements Cache {
 		return delegate.equals(obj);
 	}
 
+	//序列化方法
 	private byte[] serialize(Serializable value) {
 		try {
-			// 序列化核心就是ByteArrayOutputStream
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(bos);
 			oos.writeObject(value);
@@ -84,10 +90,10 @@ public class SerializedCache implements Cache {
 		}
 	}
 
+	//反序列化方法
 	private Serializable deserialize(byte[] value) {
 		Serializable result;
 		try {
-			// 反序列化核心就是ByteArrayInputStream
 			ByteArrayInputStream bis = new ByteArrayInputStream(value);
 			ObjectInputStream ois = new CustomObjectInputStream(bis);
 			result = (Serializable) ois.readObject();
@@ -98,7 +104,7 @@ public class SerializedCache implements Cache {
 		return result;
 	}
 
-	// 这个Custom不明白何意
+	//这个Custom不明白何意
 	public static class CustomObjectInputStream extends ObjectInputStream {
 
 		public CustomObjectInputStream(InputStream in) throws IOException {

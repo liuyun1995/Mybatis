@@ -8,9 +8,7 @@ import java.sql.SQLException;
 
 import org.apache.ibatis.reflection.ExceptionUtil;
 
-/**
- * 池化的连接
- */
+//池化连接
 class PooledConnection implements InvocationHandler {
 
 	private static final String CLOSE = "close";

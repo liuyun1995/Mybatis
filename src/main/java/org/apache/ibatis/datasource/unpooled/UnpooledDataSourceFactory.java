@@ -9,9 +9,7 @@ import org.apache.ibatis.datasource.DataSourceFactory;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 
-/**
- * 没有池化的数据源工厂
- */
+//非池化数据源工厂
 public class UnpooledDataSourceFactory implements DataSourceFactory {
 
 	private static final String DRIVER_PROPERTY_PREFIX = "driver.";

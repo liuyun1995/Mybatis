@@ -9,7 +9,6 @@ import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 //对象包装器的基类
 public abstract class BaseWrapper implements ObjectWrapper {
-	// 什么方法都没实现，只提供了一些util方法
 
 	protected static final Object[] NO_ARGUMENTS = new Object[0];
 	protected MetaObject metaObject;
@@ -18,7 +17,7 @@ public abstract class BaseWrapper implements ObjectWrapper {
 		this.metaObject = metaObject;
 	}
 
-	// 解析集合
+	//解析集合
 	protected Object resolveCollection(PropertyTokenizer prop, Object object) {
 		if ("".equals(prop.getName())) {
 			return object;

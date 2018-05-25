@@ -8,36 +8,33 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
 
-/**
- * Simple blocking decorator
- * 
- * Sipmle and inefficient version of EhCache's BlockingCache decorator. It sets
- * a lock over a cache key when the element is not found in cache. This way,
- * other threads will wait until this element is filled instead of hitting the
- * database.
- * 
- * @author Eduardo Macarron
- *
- */
+//块型缓存
 public class BlockingCache implements Cache {
 
+	//超时时间
 	private long timeout;
+	//缓存代表
 	private final Cache delegate;
+	//锁集合
 	private final ConcurrentHashMap<Object, ReentrantLock> locks;
 
+	//构造器
 	public BlockingCache(Cache delegate) {
 		this.delegate = delegate;
 		this.locks = new ConcurrentHashMap<Object, ReentrantLock>();
 	}
 
+	//获取缓存ID
 	public String getId() {
 		return delegate.getId();
 	}
 
+	//获取缓存大小
 	public int getSize() {
 		return delegate.getSize();
 	}
 
+	//放置对象
 	public void putObject(Object key, Object value) {
 		try {
 			delegate.putObject(key, value);
@@ -46,6 +43,7 @@ public class BlockingCache implements Cache {
 		}
 	}
 
+	//获取对象
 	public Object getObject(Object key) {
 		acquireLock(key);
 		Object value = delegate.getObject(key);
@@ -55,24 +53,29 @@ public class BlockingCache implements Cache {
 		return value;
 	}
 
+	//删除对象
 	public Object removeObject(Object key) {
 		return delegate.removeObject(key);
 	}
 
+	//清空缓存
 	public void clear() {
 		delegate.clear();
 	}
 
+	//获取读写锁
 	public ReadWriteLock getReadWriteLock() {
 		return null;
 	}
 
+	//获取键上的锁
 	private ReentrantLock getLockForKey(Object key) {
 		ReentrantLock lock = new ReentrantLock();
 		ReentrantLock previous = locks.putIfAbsent(key, lock);
 		return previous == null ? lock : previous;
 	}
 
+	//请求锁
 	private void acquireLock(Object key) {
 		Lock lock = getLockForKey(key);
 		if (timeout > 0) {
@@ -90,6 +93,7 @@ public class BlockingCache implements Cache {
 		}
 	}
 
+	//释放锁
 	private void releaseLock(Object key) {
 		ReentrantLock lock = locks.get(key);
 		if (lock.isHeldByCurrentThread()) {
@@ -97,11 +101,14 @@ public class BlockingCache implements Cache {
 		}
 	}
 
+	//获取超时时间
 	public long getTimeout() {
 		return timeout;
 	}
 
+	//设置超时时间
 	public void setTimeout(long timeout) {
 		this.timeout = timeout;
 	}
+	
 }

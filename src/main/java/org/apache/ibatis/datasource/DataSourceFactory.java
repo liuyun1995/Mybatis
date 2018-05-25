@@ -6,7 +6,7 @@ import javax.sql.DataSource;
 //数据源工厂
 public interface DataSourceFactory {
 
-	//设置属性,被XMLConfigBuilder所调用
+	//设置属性
 	void setProperties(Properties props);
 
 	//获取数据源

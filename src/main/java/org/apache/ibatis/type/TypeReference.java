@@ -3,12 +3,10 @@ package org.apache.ibatis.type;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-/**
- * 3.1新加的类型引用,为了引用一个泛型类型
- */
+//类型引用
 public abstract class TypeReference<T> {
 
-	// 引用的原生类型
+	//引用的原生类型
 	private final Type rawType;
 
 	protected TypeReference() {

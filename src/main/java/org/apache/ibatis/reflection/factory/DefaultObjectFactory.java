@@ -20,10 +20,12 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
 
 	private static final long serialVersionUID = -8855120656740914948L;
 
+	//根据类型新建对象
 	public <T> T create(Class<T> type) {
 		return create(type, null, null);
 	}
 
+	//新建对象方法
 	@SuppressWarnings("unchecked")
 	public <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
 		//1.解析接口
