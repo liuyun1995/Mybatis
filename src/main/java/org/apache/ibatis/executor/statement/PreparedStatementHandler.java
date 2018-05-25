@@ -51,8 +51,9 @@ public class PreparedStatementHandler extends BaseStatementHandler {
 
 	@Override
 	protected Statement instantiateStatement(Connection connection) throws SQLException {
-		// 调用Connection.prepareStatement
+		//获取原生sql语句
 		String sql = boundSql.getSql();
+		//如果是Jdbc3KeyGenerator主键生成器
 		if (mappedStatement.getKeyGenerator() instanceof Jdbc3KeyGenerator) {
 			String[] keyColumnNames = mappedStatement.getKeyColumns();
 			if (keyColumnNames == null) {
@@ -60,6 +61,7 @@ public class PreparedStatementHandler extends BaseStatementHandler {
 			} else {
 				return connection.prepareStatement(sql, keyColumnNames);
 			}
+		//如果结果集类型不为空
 		} else if (mappedStatement.getResultSetType() != null) {
 			return connection.prepareStatement(sql, mappedStatement.getResultSetType().getValue(),
 					ResultSet.CONCUR_READ_ONLY);
