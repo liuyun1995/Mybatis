@@ -19,6 +19,7 @@ public class MapperRegistry {
 	//已知Mapper映射
 	private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new HashMap<Class<?>, MapperProxyFactory<?>>();
 
+	//构造器
 	public MapperRegistry(Configuration config) {
 		this.config = config;
 	}
