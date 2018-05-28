@@ -12,17 +12,14 @@ import org.apache.ibatis.datasource.DataSourceException;
 import org.apache.ibatis.datasource.DataSourceFactory;
 
 //JNDI数据源工厂
-//这个数据源的实现是为了使用如 Spring或应用服务器这类的容器, 容器可以集中或在外部配置数据源,然后放置一个JNDI上下文的引用
 public class JndiDataSourceFactory implements DataSourceFactory {
 
 	public static final String INITIAL_CONTEXT = "initial_context";
 	public static final String DATA_SOURCE = "data_source";
-	// 和其他数据源配置相似, 它也可以通过名为 “env.” 的前缀直接向初始上下文发送属性。 比如:
-	// env.encoding=UTF8
-	public static final String ENV_PREFIX = "env.";
+	public static final String ENV_PREFIX = "env.";                    //环境前缀
+	private DataSource dataSource;                                       //数据源
 
-	private DataSource dataSource;
-
+	//设置属性
 	public void setProperties(Properties properties) {
 		try {
 			InitialContext initCtx = null;

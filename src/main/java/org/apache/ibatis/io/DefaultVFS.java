@@ -89,13 +89,11 @@ public class DefaultVFS extends VFS {
 						throw e;
 					}
 				}
-
 				// The URL prefix to use when recursively listing child resources
 				String prefix = url.toExternalForm();
 				if (!prefix.endsWith("/")) {
 					prefix = prefix + "/";
 				}
-
 				// Iterate over immediate children, adding files and recursing into directories
 				for (String child : children) {
 					String resourcePath = path + "/" + child;
@@ -104,7 +102,6 @@ public class DefaultVFS extends VFS {
 					resources.addAll(list(childUrl, resourcePath));
 				}
 			}
-
 			return resources;
 		} finally {
 			if (is != null) {

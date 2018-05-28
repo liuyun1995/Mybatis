@@ -261,8 +261,7 @@ public class UnpooledDataSource implements DataSource {
 		public boolean jdbcCompliant() {
 			return this.driver.jdbcCompliant();
 		}
-
-		// @Override only valid jdk7+
+		
 		public Logger getParentLogger() {
 			return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 		}
@@ -275,10 +274,8 @@ public class UnpooledDataSource implements DataSource {
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
 		return false;
 	}
-
-	// @Override only valid jdk7+
+	
 	public Logger getParentLogger() {
-		// requires JDK version 1.6
 		return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	}
 

@@ -6,26 +6,21 @@ import java.util.List;
 //连接池状态
 public class PoolState {
 
+	//池化数据源
 	protected PooledDataSource dataSource;
-
-	// 空闲的连接
+	//空闲连接列表
 	protected final List<PooledConnection> idleConnections = new ArrayList<PooledConnection>();
-	// 活动的连接
+	//活动连接列表
 	protected final List<PooledConnection> activeConnections = new ArrayList<PooledConnection>();
-	// ----------以下是一些统计信息----------
-	// 请求次数
-	protected long requestCount = 0;
-	// 总请求时间
-	protected long accumulatedRequestTime = 0;
-	protected long accumulatedCheckoutTime = 0;
-	protected long claimedOverdueConnectionCount = 0;
-	protected long accumulatedCheckoutTimeOfOverdueConnections = 0;
-	// 总等待时间
-	protected long accumulatedWaitTime = 0;
-	// 要等待的次数
-	protected long hadToWaitCount = 0;
-	// 坏的连接次数
-	protected long badConnectionCount = 0;
+	
+	protected long requestCount = 0;                                    //请求次数
+	protected long accumulatedRequestTime = 0;                          //总请求时间
+	protected long accumulatedCheckoutTime = 0;                         //总请求次数
+	protected long claimedOverdueConnectionCount = 0;                   //过期连接数
+	protected long accumulatedCheckoutTimeOfOverdueConnections = 0;     //过期连接的总的请求次数
+	protected long accumulatedWaitTime = 0;                             //总等待时间
+	protected long hadToWaitCount = 0;                                  //要等待的次数
+	protected long badConnectionCount = 0;                              //坏的连接次数
 
 	public PoolState(PooledDataSource dataSource) {
 		this.dataSource = dataSource;
@@ -73,7 +68,7 @@ public class PoolState {
 		return activeConnections.size();
 	}
 
-	// 打印统计信息，可以供性能优化用
+	//打印统计信息, 可以供性能优化用
 	@Override
 	public synchronized String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -81,8 +76,7 @@ public class PoolState {
 		builder.append("\n jdbcDriver                     ").append(dataSource.getDriver());
 		builder.append("\n jdbcUrl                        ").append(dataSource.getUrl());
 		builder.append("\n jdbcUsername                   ").append(dataSource.getUsername());
-		builder.append("\n jdbcPassword                   ")
-				.append((dataSource.getPassword() == null ? "NULL" : "************"));
+		builder.append("\n jdbcPassword                   ").append((dataSource.getPassword() == null ? "NULL" : "************"));
 		builder.append("\n poolMaxActiveConnections       ").append(dataSource.poolMaximumActiveConnections);
 		builder.append("\n poolMaxIdleConnections         ").append(dataSource.poolMaximumIdleConnections);
 		builder.append("\n poolMaxCheckoutTime            ").append(dataSource.poolMaximumCheckoutTime);

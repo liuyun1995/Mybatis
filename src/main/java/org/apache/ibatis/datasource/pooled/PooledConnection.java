@@ -15,17 +15,16 @@ class PooledConnection implements InvocationHandler {
 	private static final Class<?>[] IFACES = new Class<?>[] { Connection.class };
 
 	private int hashCode = 0;
-	private PooledDataSource dataSource;
-	// 真正的连接
-	private Connection realConnection;
-	// 代理的连接
-	private Connection proxyConnection;
-	private long checkoutTimestamp;
-	private long createdTimestamp;
-	private long lastUsedTimestamp;
-	private int connectionTypeCode;
-	private boolean valid;
+	private PooledDataSource dataSource;       //池化数据源
+	private Connection realConnection;         //真正的连接
+	private Connection proxyConnection;        //代理的连接
+	private long checkoutTimestamp;            //检出时间戳
+	private long createdTimestamp;             //创建时间戳
+	private long lastUsedTimestamp;            //上次使用时间戳
+	private int connectionTypeCode;            //连接类型
+	private boolean valid;                    //是否有效
 	
+	//构造器
 	public PooledConnection(Connection connection, PooledDataSource dataSource) {
 		this.hashCode = connection.hashCode();
 		this.realConnection = connection;
@@ -36,10 +35,12 @@ class PooledConnection implements InvocationHandler {
 		this.proxyConnection = (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(), IFACES, this);
 	}
 	
+	//使连接无效
 	public void invalidate() {
 		valid = false;
 	}
 	
+	//检查连接是否有效
 	public boolean isValid() {
 		return valid && realConnection != null && dataSource.pingConnection(this);
 	}
@@ -113,25 +114,8 @@ class PooledConnection implements InvocationHandler {
 	public long getCheckoutTime() {
 		return System.currentTimeMillis() - checkoutTimestamp;
 	}
-
-	@Override
-	public int hashCode() {
-		return hashCode;
-	}
 	
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof PooledConnection) {
-			return realConnection.hashCode() == (((PooledConnection) obj).realConnection.hashCode());
-		} else if (obj instanceof Connection) {
-			return hashCode == obj.hashCode();
-		} else {
-			return false;
-		}
-	}
-	
-	
+	//调用方法
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		String methodName = method.getName();
 		// 如果调用close的话，忽略它，反而将这个connection加入到池中
@@ -152,9 +136,27 @@ class PooledConnection implements InvocationHandler {
 		}
 	}
 
+	//检查连接是否有效
 	private void checkConnection() throws SQLException {
 		if (!valid) {
 			throw new SQLException("Error accessing PooledConnection. Connection is invalid.");
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return hashCode;
+	}
+	
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof PooledConnection) {
+			return realConnection.hashCode() == (((PooledConnection) obj).realConnection.hashCode());
+		} else if (obj instanceof Connection) {
+			return hashCode == obj.hashCode();
+		} else {
+			return false;
 		}
 	}
 
