@@ -17,12 +17,14 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
 	private final Class<T> mapperInterface;                 //mapper接口
 	private final Map<Method, MapperMethod> methodCache;    //方法缓存映射
 
+	//构造方法
 	public MapperProxy(SqlSession sqlSession, Class<T> mapperInterface, Map<Method, MapperMethod> methodCache) {
 		this.sqlSession = sqlSession;
 		this.mapperInterface = mapperInterface;
 		this.methodCache = methodCache;
 	}
 
+	//调用方法
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		//如果是Object上的方法就调用原方法
 		if (Object.class.equals(method.getDeclaringClass())) {
