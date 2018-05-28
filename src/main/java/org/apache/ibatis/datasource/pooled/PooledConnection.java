@@ -118,7 +118,6 @@ class PooledConnection implements InvocationHandler {
 	//调用方法
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		String methodName = method.getName();
-		// 如果调用close的话，忽略它，反而将这个connection加入到池中
 		if (CLOSE.hashCode() == methodName.hashCode() && CLOSE.equals(methodName)) {
 			dataSource.pushConnection(this);
 			return null;

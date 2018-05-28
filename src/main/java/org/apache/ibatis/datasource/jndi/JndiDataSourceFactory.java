@@ -16,13 +16,14 @@ public class JndiDataSourceFactory implements DataSourceFactory {
 
 	public static final String INITIAL_CONTEXT = "initial_context";
 	public static final String DATA_SOURCE = "data_source";
-	public static final String ENV_PREFIX = "env.";                    //环境前缀
-	private DataSource dataSource;                                       //数据源
+	public static final String ENV_PREFIX = "env.";
+	private DataSource dataSource;
 
 	//设置属性
 	public void setProperties(Properties properties) {
 		try {
 			InitialContext initCtx = null;
+			//获取环境属性
 			Properties env = getEnvProperties(properties);
 			if (env == null) {
 				initCtx = new InitialContext();
@@ -49,15 +50,18 @@ public class JndiDataSourceFactory implements DataSourceFactory {
 	private static Properties getEnvProperties(Properties allProps) {
 		final String PREFIX = ENV_PREFIX;
 		Properties contextProperties = null;
+		//遍历所有的配置
 		for (Entry<Object, Object> entry : allProps.entrySet()) {
+			//获取配置的键
 			String key = (String) entry.getKey();
+			//获取配置的值
 			String value = (String) entry.getValue();
-			// 和其他数据源配置相似, 它也可以通过名为 “env.” 的前缀直接向初始上下文发送属性。 比如:
-			// env.encoding=UTF8
+			//如果键是以"env."开头的
 			if (key.startsWith(PREFIX)) {
 				if (contextProperties == null) {
 					contextProperties = new Properties();
 				}
+				//截取前缀后再放入
 				contextProperties.put(key.substring(PREFIX.length()), value);
 			}
 		}
