@@ -13,13 +13,13 @@ import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 
-//映射的语句(select|insert|update|delete)
+//crud片段映射(select|insert|update|delete)
 public final class MappedStatement {
 
-	private String resource;
+	private String resource;                      //XML文件源
 	private Configuration configuration;          //配置信息
 	private String id;                            //标签id属性值
-	private Integer fetchSize;
+	private Integer fetchSize;                    //加载数量
 	private Integer timeout;                      //超时时间
 	private StatementType statementType;          //语句类型
 	private ResultSetType resultSetType;          //结果集合类型
@@ -35,10 +35,10 @@ public final class MappedStatement {
 	private String[] keyProperties;               //主键字段名集合
 	private String[] keyColumns;                  //主键列名集合
 	private boolean hasNestedResultMaps;         //是否有嵌套的结果映射
-	private String databaseId;
-	private Log statementLog;
-	private LanguageDriver lang;
-	private String[] resultSets;
+	private String databaseId;                    //数据库ID
+	private Log statementLog;                     //日志
+	private LanguageDriver lang;                  //语言驱动
+	private String[] resultSets;                  //结果集合
 
 	MappedStatement() {}
 

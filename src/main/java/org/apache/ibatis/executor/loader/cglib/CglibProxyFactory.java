@@ -25,9 +25,7 @@ import org.apache.ibatis.reflection.property.PropertyCopier;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.apache.ibatis.session.Configuration;
 
-/**
- * Cglib延迟加载代理工厂
- */
+//Cglib延迟加载代理工厂
 public class CglibProxyFactory implements ProxyFactory {
 
 	private static final Log log = LogFactory.getLog(CglibProxyFactory.class);
@@ -36,7 +34,7 @@ public class CglibProxyFactory implements ProxyFactory {
 
 	public CglibProxyFactory() {
 		try {
-			// 先检查是否有Cglib
+			//先检查是否有Cglib
 			Resources.classForName("net.sf.cglib.proxy.Enhancer");
 		} catch (Throwable e) {
 			throw new IllegalStateException(
@@ -68,7 +66,6 @@ public class CglibProxyFactory implements ProxyFactory {
 		enhancer.setSuperclass(type);
 		try {
 			type.getDeclaredMethod(WRITE_REPLACE_METHOD);
-			// ObjectOutputStream will call writeReplace of objects returned by writeReplace
 			log.debug(WRITE_REPLACE_METHOD + " method was found on bean " + type + ", make sure it returns this");
 		} catch (NoSuchMethodException e) {
 			enhancer.setInterfaces(new Class[] { WriteReplaceInterface.class });

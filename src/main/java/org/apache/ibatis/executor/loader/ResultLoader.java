@@ -19,9 +19,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionFactory;
 
-/**
- * 结果延迟加载器
- */
+//结果延迟加载器
 public class ResultLoader {
 
 	protected final Configuration configuration;

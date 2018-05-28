@@ -25,4 +25,5 @@ class JavassistSerialStateHolder extends AbstractSerialStateHolder {
 		return new JavassistProxyFactory().createDeserializationProxy(target, unloadedProperties, objectFactory,
 				constructorArgTypes, constructorArgs);
 	}
+	
 }

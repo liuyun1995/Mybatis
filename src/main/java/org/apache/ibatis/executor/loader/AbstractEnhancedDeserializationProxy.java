@@ -65,17 +65,12 @@ public abstract class AbstractEnhancedDeserializationProxy {
 									reloadingProperty = false;
 								}
 							} else {
-								/*
-								 * I'm not sure if this case can really happen or is just in tests - we have an
-								 * unread property but no loadPair to load it.
-								 */
 								throw new ExecutorException(
 										"An attempt has been made to read a not loaded lazy property '" + property
 												+ "' of a disconnected object");
 							}
 						}
 					}
-
 					return enhanced;
 				}
 			}

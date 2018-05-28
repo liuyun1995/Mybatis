@@ -70,6 +70,7 @@ public class SimpleStatementHandler extends BaseStatementHandler {
 		return resultSetHandler.<E>handleResultSets(statement);
 	}
 
+	//初始化语句
 	@Override
 	protected Statement instantiateStatement(Connection connection) throws SQLException {
 		//调用Connection.createStatement
@@ -81,8 +82,6 @@ public class SimpleStatementHandler extends BaseStatementHandler {
 		}
 	}
 
-	public void parameterize(Statement statement) throws SQLException {
-		//N/A
-	}
+	public void parameterize(Statement statement) throws SQLException {}
 
 }

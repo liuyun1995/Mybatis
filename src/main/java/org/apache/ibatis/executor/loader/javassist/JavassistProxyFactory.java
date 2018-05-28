@@ -24,9 +24,7 @@ import org.apache.ibatis.reflection.property.PropertyCopier;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.apache.ibatis.session.Configuration;
 
-/**
- * Javassist延迟加载代理工厂
- */
+//Javassist延迟加载代理工厂
 public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.ProxyFactory {
 
 	private static final Log log = LogFactory.getLog(JavassistProxyFactory.class);
@@ -35,7 +33,7 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
 
 	public JavassistProxyFactory() {
 		try {
-			// 先检查是否有javassist
+			//先检查是否有javassist
 			Resources.classForName("javassist.util.proxy.ProxyFactory");
 		} catch (Throwable e) {
 			throw new IllegalStateException(
@@ -62,7 +60,6 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
 
 	static Object crateProxy(Class<?> type, MethodHandler callback, List<Class<?>> constructorArgTypes,
 			List<Object> constructorArgs) {
-
 		// 核心就是用javassist的ProxyFactory,没啥可说的，下面逻辑都是cglib的翻版
 		ProxyFactory enhancer = new ProxyFactory();
 		enhancer.setSuperclass(type);

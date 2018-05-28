@@ -11,8 +11,7 @@ class CglibSerialStateHolder extends AbstractSerialStateHolder {
 
 	private static final long serialVersionUID = 8940388717901644661L;
 
-	public CglibSerialStateHolder() {
-	}
+	public CglibSerialStateHolder() {}
 
 	public CglibSerialStateHolder(final Object userBean, final Map<String, ResultLoaderMap.LoadPair> unloadedProperties,
 			final ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
@@ -25,4 +24,5 @@ class CglibSerialStateHolder extends AbstractSerialStateHolder {
 		return new CglibProxyFactory().createDeserializationProxy(target, unloadedProperties, objectFactory,
 				constructorArgTypes, constructorArgs);
 	}
+	
 }

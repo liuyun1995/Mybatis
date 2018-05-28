@@ -3,7 +3,7 @@ package org.apache.ibatis.executor.parameter;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-//参数处理器
+//参数处理接口
 public interface ParameterHandler {
 
 	//获取参数
