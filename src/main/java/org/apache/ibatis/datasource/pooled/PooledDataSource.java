@@ -433,17 +433,20 @@ public class PooledDataSource implements DataSource {
 						}
 					}
 				}
-				//如果没有空闲连接
 				if (conn != null) {
-					// 如果已经拿到connection，则返回
+					//若连接是有效的
 					if (conn.isValid()) {
+						//回滚之前的事务
 						if (!conn.getRealConnection().getAutoCommit()) {
 							conn.getRealConnection().rollback();
 						}
+						//设置连接类型代码
 						conn.setConnectionTypeCode(assembleConnectionTypeCode(dataSource.getUrl(), username, password));
-						// 记录checkout时间
+						//设置检出时间
 						conn.setCheckoutTimestamp(System.currentTimeMillis());
+						//设置最近使用时间
 						conn.setLastUsedTimestamp(System.currentTimeMillis());
+						//将该连接添加到活跃列表
 						state.activeConnections.add(conn);
 						state.requestCount++;
 						state.accumulatedRequestTime += System.currentTimeMillis() - t;
@@ -452,12 +455,14 @@ public class PooledDataSource implements DataSource {
 							log.debug("A bad connection (" + conn.getRealHashCode()
 									+ ") was returned from the pool, getting another connection.");
 						}
-						// 如果没拿到，统计信息：坏连接+1
+						//坏的连接数加1
 						state.badConnectionCount++;
+						//本地坏的连接加1
 						localBadConnectionCount++;
+						//将池化连接置空
 						conn = null;
+						//若坏连接数超过一定值, 则抛出异常
 						if (localBadConnectionCount > (poolMaximumIdleConnections + 3)) {
-							// 如果好几次都拿不到，就放弃了，抛出异常
 							if (log.isDebugEnabled()) {
 								log.debug("PooledDataSource: Could not get a good connection to the database.");
 							}
@@ -467,8 +472,8 @@ public class PooledDataSource implements DataSource {
 					}
 				}
 			}
-
 		}
+		//跳出循坏后, 若连接为空则抛出异常
 		if (conn == null) {
 			if (log.isDebugEnabled()) {
 				log.debug(
@@ -477,6 +482,7 @@ public class PooledDataSource implements DataSource {
 			throw new SQLException(
 					"PooledDataSource: Unknown severe error condition.  The connection pool returned a null connection.");
 		}
+		//返回连接
 		return conn;
 	}
 
