@@ -30,27 +30,31 @@ public class PooledDataSource implements DataSource {
 	protected int poolTimeToWait = 20000;                    //连接池等待时间
 	protected String poolPingQuery = "NO PING QUERY SET";    //侦测查询字符串
 	protected boolean poolPingEnabled = false;              //是否开启侦测查询
-	protected int poolPingConnectionsNotUsedFor = 0;
-	private int expectedConnectionTypeCode;
+	protected int poolPingConnectionsNotUsedFor = 0;         //无用的侦测
+	private int expectedConnectionTypeCode;                  //期望的连接类型
 
 	//----------------------------------------------构造器----------------------------------------------
 	
+	//构造器1
 	public PooledDataSource() {
 		dataSource = new UnpooledDataSource();
 	}
 
+	//构造器2
 	public PooledDataSource(String driver, String url, String username, String password) {
 		dataSource = new UnpooledDataSource(driver, url, username, password);
 		expectedConnectionTypeCode = assembleConnectionTypeCode(dataSource.getUrl(), dataSource.getUsername(),
 				dataSource.getPassword());
 	}
 
+	//构造器3
 	public PooledDataSource(String driver, String url, Properties driverProperties) {
 		dataSource = new UnpooledDataSource(driver, url, driverProperties);
 		expectedConnectionTypeCode = assembleConnectionTypeCode(dataSource.getUrl(), dataSource.getUsername(),
 				dataSource.getPassword());
 	}
 
+	//构造器4
 	public PooledDataSource(ClassLoader driverClassLoader, String driver, String url, String username,
 			String password) {
 		dataSource = new UnpooledDataSource(driverClassLoader, driver, url, username, password);
@@ -58,6 +62,7 @@ public class PooledDataSource implements DataSource {
 				dataSource.getPassword());
 	}
 
+	//构造器5
 	public PooledDataSource(ClassLoader driverClassLoader, String driver, String url, Properties driverProperties) {
 		dataSource = new UnpooledDataSource(driverClassLoader, driver, url, driverProperties);
 		expectedConnectionTypeCode = assembleConnectionTypeCode(dataSource.getUrl(), dataSource.getUsername(),
@@ -295,6 +300,7 @@ public class PooledDataSource implements DataSource {
 		return state;
 	}
 
+	//组合连接类型代码
 	private int assembleConnectionTypeCode(String url, String username, String password) {
 		return ("" + url + username + password).hashCode();
 	}
@@ -356,13 +362,12 @@ public class PooledDataSource implements DataSource {
 		}
 	}
 
-	//弹出一个连接
+	//获取一个连接
 	private PooledConnection popConnection(String username, String password) throws SQLException {
 		boolean countedWait = false;
 		PooledConnection conn = null;
 		long t = System.currentTimeMillis();
 		int localBadConnectionCount = 0;
-		
 		while (conn == null) {
 			//以连接池状态作为锁
 			synchronized (state) {
@@ -383,7 +388,7 @@ public class PooledDataSource implements DataSource {
 							log.debug("Created connection " + conn.getRealHashCode() + ".");
 						}
 					} else {
-						//否则就取活跃列表的第一个连接
+						//否则就复用活跃列表的连接
 						PooledConnection oldestActiveConnection = state.activeConnections.get(0);
 						//获取检出时间
 						long longestCheckoutTime = oldestActiveConnection.getCheckoutTime();
@@ -397,27 +402,30 @@ public class PooledDataSource implements DataSource {
 							if (!oldestActiveConnection.getRealConnection().getAutoCommit()) {
 								oldestActiveConnection.getRealConnection().rollback();
 							}
-							//删掉最老的连接，然后再new一个新连接
+							//复用真正连接, 新建池化连接
 							conn = new PooledConnection(oldestActiveConnection.getRealConnection(), this);
+							//使旧的池化连接无效
 							oldestActiveConnection.invalidate();
 							if (log.isDebugEnabled()) {
 								log.debug("Claimed overdue connection " + conn.getRealHashCode() + ".");
 							}
 						} else {
-							// 如果checkout时间不够长，等待吧
-							// Must wait
+							//若检出时间小于最大检出时间, 则进行等待
 							try {
+								//若没人在等待
 								if (!countedWait) {
-									// 统计信息：等待+1
+									//等待次数加1
 									state.hadToWaitCount++;
 									countedWait = true;
 								}
 								if (log.isDebugEnabled()) {
 									log.debug("Waiting as long as " + poolTimeToWait + " milliseconds for connection.");
 								}
+								//获取当前时间
 								long wt = System.currentTimeMillis();
-								//睡一会儿吧
+								//将当前线程阻塞在state条件上
 								state.wait(poolTimeToWait);
+								//线程醒来统计总等待时间
 								state.accumulatedWaitTime += System.currentTimeMillis() - wt;
 							} catch (InterruptedException e) {
 								break;
@@ -425,6 +433,7 @@ public class PooledDataSource implements DataSource {
 						}
 					}
 				}
+				//如果没有空闲连接
 				if (conn != null) {
 					// 如果已经拿到connection，则返回
 					if (conn.isValid()) {

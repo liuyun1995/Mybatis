@@ -90,7 +90,7 @@ class PooledConnection implements InvocationHandler {
 		this.lastUsedTimestamp = lastUsedTimestamp;
 	}
 
-	//获取当前时间到最后使用的时间间隔
+	//获取最后使用的时间间隔
 	public long getTimeElapsedSinceLastUse() {
 		return System.currentTimeMillis() - lastUsedTimestamp;
 	}
@@ -118,16 +118,17 @@ class PooledConnection implements InvocationHandler {
 	//调用方法
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		String methodName = method.getName();
+		//若是close方法, 则将连接放回连接池, 并返回null
 		if (CLOSE.hashCode() == methodName.hashCode() && CLOSE.equals(methodName)) {
 			dataSource.pushConnection(this);
 			return null;
 		} else {
 			try {
+				//若不是Object上的方法, 则要检查连接是否有效
 				if (!Object.class.equals(method.getDeclaringClass())) {
-					// 除了toString()方法，其他方法调用之前要检查connection是否还是合法的,不合法要抛出SQLException
 					checkConnection();
 				}
-				// 其他的方法，则交给真正的connection去调用
+				//最后调用Connection上的方法
 				return method.invoke(realConnection, args);
 			} catch (Throwable t) {
 				throw ExceptionUtil.unwrapThrowable(t);
@@ -146,7 +147,6 @@ class PooledConnection implements InvocationHandler {
 	public int hashCode() {
 		return hashCode;
 	}
-	
 	
 	@Override
 	public boolean equals(Object obj) {
