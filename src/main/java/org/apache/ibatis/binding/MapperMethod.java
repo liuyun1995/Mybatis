@@ -75,7 +75,7 @@ public class MapperMethod {
 		//如果返回值是void
 		if (method.returnsVoid()) {
 			result = null;
-		//如果返回值是Integer或int	
+		//如果返回值是Integer或int
 		} else if (Integer.class.equals(method.getReturnType()) || Integer.TYPE.equals(method.getReturnType())) {
 			result = Integer.valueOf(rowCount);
 		//如果返回值是Long或long
