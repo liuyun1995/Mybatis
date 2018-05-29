@@ -44,11 +44,13 @@ public class DefaultParameterHandler implements ParameterHandler {
 		//获取参数映射集合
 		List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
 		if (parameterMappings != null) {
+			//遍历参数映射集合
 			for (int i = 0; i < parameterMappings.size(); i++) {
 				ParameterMapping parameterMapping = parameterMappings.get(i);
-				//如果不是OUT, 才设进去
+				//若参数模式不为out
 				if (parameterMapping.getMode() != ParameterMode.OUT) {
 					Object value;
+					//获取属性名
 					String propertyName = parameterMapping.getProperty();
 					if (boundSql.hasAdditionalParameter(propertyName)) {
 						//若有额外的参数, 设为额外的参数
