@@ -78,13 +78,15 @@ public class Configuration {
 	//运行环境
 	protected Environment environment;
 
-	//----------以下都是<settings>节点----------
+	//-----------------------------------------以上都是<settings>节点------------------------------------------
+	
 	//是否安全的行界
 	protected boolean safeRowBoundsEnabled = false;
 	//是否安全的结果处理
 	protected boolean safeResultHandlerEnabled = true;
 	//是否将下划线转成驼峰
 	protected boolean mapUnderscoreToCamelCase = false;
+	//侵略性懒加载
 	protected boolean aggressiveLazyLoading = true;
 	//是否允许返回多结果集
 	protected boolean multipleResultSetsEnabled = true;
@@ -94,15 +96,17 @@ public class Configuration {
 	protected boolean useColumnLabel = true;
 	//是否开启缓存
 	protected boolean cacheEnabled = true;
+	//是否默认调用setter方法
 	protected boolean callSettersOnNulls = false;
-
 	//日志前缀
 	protected String logPrefix;
 	//日志实现类
 	protected Class<? extends Log> logImpl;
 	//本地缓存范围
 	protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
+	//默认jdbc类型
 	protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
+	//懒加载触发方法集合
 	protected Set<String> lazyLoadTriggerMethods = new HashSet<String>(Arrays.asList(new String[] { "equals", "clone", "hashCode", "toString" }));
 	//默认超时时间
 	protected Integer defaultStatementTimeout;
@@ -110,7 +114,8 @@ public class Configuration {
 	protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
 	//自动映射行为
 	protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
-	//----------以上都是<settings>节点----------
+	
+	//-----------------------------------------以上都是<settings>节点------------------------------------------
 
 	//变量属性
 	protected Properties variables = new Properties();
@@ -118,17 +123,16 @@ public class Configuration {
 	protected ObjectFactory objectFactory = new DefaultObjectFactory();
 	//对象包装器工厂
 	protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
-	//mapper注册器
+	//Mapper注册器
 	protected MapperRegistry mapperRegistry = new MapperRegistry(this);
 
 	//是否开启懒加载
 	protected boolean lazyLoadingEnabled = false;
-	//代理工厂
+	//代理对象工厂
 	protected ProxyFactory proxyFactory = new JavassistProxyFactory();
-
 	//数据库ID
 	protected String databaseId;
-	//配置工厂
+	//配置信息工厂
 	protected Class<?> configurationFactory;
 
 	//拦截链
@@ -140,39 +144,40 @@ public class Configuration {
 	//语言驱动注册器
 	protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
 
-	//语句映射
+	//语句片段集合
 	protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection");
-	//缓存映射
+	//缓存集合
 	protected final Map<String, Cache> caches = new StrictMap<Cache>("Caches collection");
-	//结果映射
+	//结果映射集合
 	protected final Map<String, ResultMap> resultMaps = new StrictMap<ResultMap>("Result Maps collection");
-	//参数映射
+	//参数映射集合
 	protected final Map<String, ParameterMap> parameterMaps = new StrictMap<ParameterMap>("Parameter Maps collection");
-	//主键生成器映射
+	//主键生成器集合
 	protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<KeyGenerator>("Key Generators collection");
 
-	//已加载的xml资源路径
+	//缓存关系集合
+	protected final Map<String, String> cacheRefMap = new HashMap<String, String>();
+	//已加载资源集合
 	protected final Set<String> loadedResources = new HashSet<String>();
-	//SQL语句片映射
+	//语句片集合
 	protected final Map<String, XNode> sqlFragments = new StrictMap<XNode>("XML fragments parsed from previous mappers");
 
-	//语句集合
+	//待处理语句集合
 	protected final Collection<XMLStatementBuilder> incompleteStatements = new LinkedList<XMLStatementBuilder>();
-	//缓存关系集合
+	//待处理缓存关系集合
 	protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<CacheRefResolver>();
-	//结果映射集合
+	//待处理结果映射集合
 	protected final Collection<ResultMapResolver> incompleteResultMaps = new LinkedList<ResultMapResolver>();
-	//方法集合
+	//待处理方法集合
 	protected final Collection<MethodResolver> incompleteMethods = new LinkedList<MethodResolver>();
 
-	//缓存关系映射
-	protected final Map<String, String> cacheRefMap = new HashMap<String, String>();
-
+	//构造器1
 	public Configuration(Environment environment) {
 		this();
 		this.environment = environment;
 	}
 
+	//构造器2
 	public Configuration() {
 		//注册事务管理器类型别名
 		typeAliasRegistry.registerAlias("JDBC", JdbcTransactionFactory.class);
@@ -213,6 +218,8 @@ public class Configuration {
 		languageRegistry.setDefaultDriverClass(XMLLanguageDriver.class);
 		languageRegistry.register(RawLanguageDriver.class);
 	}
+	
+	//----------------------------------------------getter和setter--------------------------------------------
 
 	public String getLogPrefix() {
 		return logPrefix;
@@ -459,6 +466,8 @@ public class Configuration {
 	public LanguageDriver getDefaultScriptingLanuageInstance() {
 		return languageRegistry.getDefaultDriver();
 	}
+	
+	//------------------------------------------------------------------------------------------------------
 
 	//创建元对象
 	public MetaObject newMetaObject(Object object) {
@@ -470,44 +479,47 @@ public class Configuration {
 			BoundSql boundSql) {
 		//创建参数处理器
 		ParameterHandler parameterHandler = mappedStatement.getLang().createParameterHandler(mappedStatement, parameterObject, boundSql);
-		//先经过拦截器插件处理
+		//调用拦截器插件进行处理
 		parameterHandler = (ParameterHandler) interceptorChain.pluginAll(parameterHandler);
+		//返回参数处理器
 		return parameterHandler;
 	}
 
 	//创建结果集处理器
 	public ResultSetHandler newResultSetHandler(Executor executor, MappedStatement mappedStatement, RowBounds rowBounds,
 			ParameterHandler parameterHandler, ResultHandler resultHandler, BoundSql boundSql) {
-		//创建DefaultResultSetHandler(稍老一点的版本3.1是创建NestedResultSetHandler或者FastResultSetHandler)
+		//创建结果集处理器
 		ResultSetHandler resultSetHandler = new DefaultResultSetHandler(executor, mappedStatement, parameterHandler,
 				resultHandler, boundSql, rowBounds);
-		//插件在这里插入
+		//调用拦截器插件进行处理
 		resultSetHandler = (ResultSetHandler) interceptorChain.pluginAll(resultSetHandler);
+		//返回结果集处理器
 		return resultSetHandler;
 	}
 
-	//创建语句处理器
+	//返回语句处理器
 	public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement,
 			Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
-		//创建路由选择语句处理器
+		//创建语句处理器
 		StatementHandler statementHandler = new RoutingStatementHandler(executor, mappedStatement, parameterObject, rowBounds, resultHandler, boundSql);
-		//先经过拦截器插件处理再返回
+		//调用拦截器插件进行处理
 		statementHandler = (StatementHandler) interceptorChain.pluginAll(statementHandler);
+		//返回语句处理器
 		return statementHandler;
 	}
 
-	//生成执行器
+	//返回执行器
 	public Executor newExecutor(Transaction transaction) {
 		return newExecutor(transaction, defaultExecutorType);
 	}
 
-	//生成执行器
+	//返回执行器
 	public Executor newExecutor(Transaction transaction, ExecutorType executorType) {
-		//如果执行器类型为空的话就使用默认的执行器类型
+		//若执行器类型为空则使用默认执行器类型
 		executorType = executorType == null ? defaultExecutorType : executorType;
 		executorType = executorType == null ? ExecutorType.SIMPLE : executorType;
 		Executor executor;
-		//根据执行器类型生成不同的执行器
+		//根据执行器类型生成对应的执行器
 		if (ExecutorType.BATCH == executorType) {
 			executor = new BatchExecutor(this, transaction);
 		} else if (ExecutorType.REUSE == executorType) {
@@ -515,36 +527,39 @@ public class Configuration {
 		} else {
 			executor = new SimpleExecutor(this, transaction);
 		}
-		//如果要求缓存则返回CachingExecutor
+		//若开启缓存则使用缓存执行器
 		if (cacheEnabled) {
 			executor = new CachingExecutor(executor);
 		}
-		//此处调用插件,通过插件可以改变Executor行为
+		//调用拦截器插件进行处理
 		executor = (Executor) interceptorChain.pluginAll(executor);
+		//返回执行器
 		return executor;
 	}
 
-	//添加KeyGenerator
+	//------------------------------------------------------------------------------------------------
+	
+	//添加主键生成器映射
 	public void addKeyGenerator(String id, KeyGenerator keyGenerator) {
 		keyGenerators.put(id, keyGenerator);
 	}
 
-	//获取KeyGenerator名称集合
+	//获取主键名称集合
 	public Collection<String> getKeyGeneratorNames() {
 		return keyGenerators.keySet();
 	}
 
-	//获取KeyGenerator集合
+	//获取主键生成器集合
 	public Collection<KeyGenerator> getKeyGenerators() {
 		return keyGenerators.values();
 	}
 
-	//根据id获取KeyGenerator
+	//根据主键获取主键生成器
 	public KeyGenerator getKeyGenerator(String id) {
 		return keyGenerators.get(id);
 	}
 
-	//是否含有指定id的KeyGenerator
+	//指定主键是否有对应主键生成器
 	public boolean hasKeyGenerator(String id) {
 		return keyGenerators.containsKey(id);
 	}
@@ -642,44 +657,55 @@ public class Configuration {
 		buildAllStatements();
 		return mappedStatements.values();
 	}
+	
+	//---------------------------------------------------------------------------------------------------
 
+	//获取待处理语句集合
 	public Collection<XMLStatementBuilder> getIncompleteStatements() {
 		return incompleteStatements;
 	}
 
+	//添加待处理语句
 	public void addIncompleteStatement(XMLStatementBuilder incompleteStatement) {
 		incompleteStatements.add(incompleteStatement);
 	}
 
+	//获取待处理缓存关系集合
 	public Collection<CacheRefResolver> getIncompleteCacheRefs() {
 		return incompleteCacheRefs;
 	}
 
+	//添加待处理缓存关系
 	public void addIncompleteCacheRef(CacheRefResolver incompleteCacheRef) {
 		incompleteCacheRefs.add(incompleteCacheRef);
 	}
 
+	//获取待处理结果映射集合
 	public Collection<ResultMapResolver> getIncompleteResultMaps() {
 		return incompleteResultMaps;
 	}
 
+	//添加待处理结果映射
 	public void addIncompleteResultMap(ResultMapResolver resultMapResolver) {
 		incompleteResultMaps.add(resultMapResolver);
 	}
 
+	//添加待处理方法
 	public void addIncompleteMethod(MethodResolver builder) {
 		incompleteMethods.add(builder);
 	}
 
+	//获取待处理方法集合
 	public Collection<MethodResolver> getIncompleteMethods() {
 		return incompleteMethods;
 	}
 
-	//由DefaultSqlSession.selectList调用过来
+	//获取MappedStatement
 	public MappedStatement getMappedStatement(String id) {
 		return this.getMappedStatement(id, true);
 	}
 
+	//获取MappedStatement
 	public MappedStatement getMappedStatement(String id, boolean validateIncompleteStatements) {
 		//先构建所有语句，再返回语句
 		if (validateIncompleteStatements) {
@@ -691,11 +717,6 @@ public class Configuration {
 	//获取sql片段映射
 	public Map<String, XNode> getSqlFragments() {
 		return sqlFragments;
-	}
-
-	//添加拦截器
-	public void addInterceptor(Interceptor interceptor) {
-		interceptorChain.addInterceptor(interceptor);
 	}
 
 	//注册mapper(指定包名和父类型)
@@ -713,7 +734,7 @@ public class Configuration {
 		mapperRegistry.addMapper(type);
 	}
 
-	//根据类型和sqlSession获取mapper
+	//获取mapper
 	public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
 		return mapperRegistry.getMapper(type, sqlSession);
 	}
@@ -723,15 +744,22 @@ public class Configuration {
 		return mapperRegistry.hasMapper(type);
 	}
 
+	//是否有对应的语句
 	public boolean hasStatement(String statementName) {
 		return hasStatement(statementName, true);
 	}
 
+	//是否有对应的语句
 	public boolean hasStatement(String statementName, boolean validateIncompleteStatements) {
 		if (validateIncompleteStatements) {
 			buildAllStatements();
 		}
 		return mappedStatements.containsKey(statementName);
+	}
+	
+	//添加拦截器
+	public void addInterceptor(Interceptor interceptor) {
+		interceptorChain.addInterceptor(interceptor);
 	}
 
 	//添加缓存关系
@@ -763,13 +791,13 @@ public class Configuration {
 		}
 	}
 	
-	//选取Namespace
+	//获取名称空间
 	protected String extractNamespace(String statementId) {
 		int lastPeriod = statementId.lastIndexOf('.');
 		return lastPeriod > 0 ? statementId.substring(0, lastPeriod) : null;
 	}
 	
-	
+	//全局检查嵌套结果映射
 	protected void checkGloballyForDiscriminatedNestedResultMaps(ResultMap rm) {
 		if (rm.hasNestedResultMaps()) {
 			for (Map.Entry<String, ResultMap> entry : resultMaps.entrySet()) {
@@ -788,7 +816,7 @@ public class Configuration {
 		}
 	}
 	
-	
+	//本地检查嵌套结果映射
 	protected void checkLocallyForDiscriminatedNestedResultMaps(ResultMap rm) {
 		if (!rm.hasNestedResultMaps() && rm.getDiscriminator() != null) {
 			for (Map.Entry<String, String> entry : rm.getDiscriminator().getDiscriminatorMap().entrySet()) {
@@ -804,7 +832,7 @@ public class Configuration {
 		}
 	}
 
-	//静态内部类,严格的Map,不允许多次覆盖key所对应的value
+	//严谨的Map
 	protected static class StrictMap<V> extends HashMap<String, V> {
 
 		private static final long serialVersionUID = -4950446264854982944L;
