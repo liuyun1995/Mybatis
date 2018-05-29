@@ -8,12 +8,13 @@ import org.apache.ibatis.session.Configuration;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-//XML include转换器
+//<include>转换器
 public class XMLIncludeTransformer {
 
 	private final Configuration configuration;              //配置信息
 	private final MapperBuilderAssistant builderAssistant;  //构建助手
 
+	//构造器
 	public XMLIncludeTransformer(Configuration configuration, MapperBuilderAssistant builderAssistant) {
 		this.configuration = configuration;
 		this.builderAssistant = builderAssistant;
