@@ -43,10 +43,11 @@ public class MetaObject {
 		}
 	}
 
+	//获取元对象
 	public static MetaObject forObject(Object object, ObjectFactory objectFactory,
 			ObjectWrapperFactory objectWrapperFactory) {
+		//若传入的对象为空
 		if (object == null) {
-			// 处理一下null,将null包装起来
 			return SystemMetaObject.NULL_META_OBJECT;
 		} else {
 			return new MetaObject(object, objectFactory, objectWrapperFactory);

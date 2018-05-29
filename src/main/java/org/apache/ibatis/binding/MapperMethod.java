@@ -113,17 +113,24 @@ public class MapperMethod {
 	private <E> Object executeForMany(SqlSession sqlSession, Object[] args) {
 		List<E> result;
 		Object param = method.convertArgsToSqlCommandParam(args);
-		//代入RowBounds
+		//如果方法有行范围(分页)
 		if (method.hasRowBounds()) {
+			//获取方法的行范围
 			RowBounds rowBounds = method.extractRowBounds(args);
+			//调用sqlSession进行查询
 			result = sqlSession.<E>selectList(command.getName(), param, rowBounds);
 		} else {
+			//调用sqlSession进行查询
 			result = sqlSession.<E>selectList(command.getName(), param);
 		}
+		//如果方法返回类型不是List
 		if (!method.getReturnType().isAssignableFrom(result.getClass())) {
+			//若返回类型是数组
 			if (method.getReturnType().isArray()) {
+				//将结果转为数组
 				return convertToArray(result);
 			} else {
+				//将结果转成声明的集合
 				return convertToDeclaredCollection(sqlSession.getConfiguration(), result);
 			}
 		}
@@ -131,12 +138,15 @@ public class MapperMethod {
 	}
 
 	private <E> Object convertToDeclaredCollection(Configuration config, List<E> list) {
+		//生成返回类型的对象
 		Object collection = config.getObjectFactory().create(method.getReturnType());
+		//新建一个元对象
 		MetaObject metaObject = config.newMetaObject(collection);
 		metaObject.addAll(list);
 		return collection;
 	}
 
+	//集合转数组
 	@SuppressWarnings("unchecked")
 	private <E> E[] convertToArray(List<E> list) {
 		E[] array = (E[]) Array.newInstance(method.getReturnType().getComponentType(), list.size());
@@ -224,6 +234,7 @@ public class MapperMethod {
 		private final SortedMap<Integer, String> params;
 		private final boolean hasNamedParameters;
 
+		//构造器
 		public MethodSignature(Configuration configuration, Method method) {
 			this.returnType = method.getReturnType();
 			this.returnsVoid = void.class.equals(this.returnType);
@@ -263,38 +274,47 @@ public class MapperMethod {
 			}
 		}
 
+		//是否有RowBounds
 		public boolean hasRowBounds() {
 			return rowBoundsIndex != null;
 		}
 
+		//额外的RowBounds
 		public RowBounds extractRowBounds(Object[] args) {
 			return hasRowBounds() ? (RowBounds) args[rowBoundsIndex] : null;
 		}
 
+		//是否有结果处理器
 		public boolean hasResultHandler() {
 			return resultHandlerIndex != null;
 		}
 
+		//额外的结果处理器
 		public ResultHandler extractResultHandler(Object[] args) {
 			return hasResultHandler() ? (ResultHandler) args[resultHandlerIndex] : null;
 		}
 
+		//获取mapkey
 		public String getMapKey() {
 			return mapKey;
 		}
 
+		//获取返回类型
 		public Class<?> getReturnType() {
 			return returnType;
 		}
 
+		//是否返回多个值
 		public boolean returnsMany() {
 			return returnsMany;
 		}
 
+		//是否返回map
 		public boolean returnsMap() {
 			return returnsMap;
 		}
 
+		//是否返回void
 		public boolean returnsVoid() {
 			return returnsVoid;
 		}

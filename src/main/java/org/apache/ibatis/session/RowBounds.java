@@ -1,6 +1,6 @@
 package org.apache.ibatis.session;
 
-//分页用, 记录限制
+//行范围(分页用)
 public class RowBounds {
 
 	public static final int NO_ROW_OFFSET = 0;
