@@ -117,10 +117,8 @@ public class MapperMethod {
 		if (method.hasRowBounds()) {
 			//获取方法的行范围
 			RowBounds rowBounds = method.extractRowBounds(args);
-			//调用sqlSession进行查询
 			result = sqlSession.<E>selectList(command.getName(), param, rowBounds);
 		} else {
-			//调用sqlSession进行查询
 			result = sqlSession.<E>selectList(command.getName(), param);
 		}
 		//如果方法返回类型不是List
