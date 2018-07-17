@@ -27,14 +27,14 @@ public final class MappedStatement {
 	private Cache cache;                          //缓存
 	private ParameterMap parameterMap;            //参数映射
 	private List<ResultMap> resultMaps;           //结果映射集合
-	private boolean flushCacheRequired;          //是否在需要时刷新缓存
-	private boolean useCache;                    //是否使用缓存
-	private boolean resultOrdered;               //是否对结果排序
+	private boolean flushCacheRequired;           //是否在需要时刷新缓存
+	private boolean useCache;                     //是否使用缓存
+	private boolean resultOrdered;                //是否对结果排序
 	private SqlCommandType sqlCommandType;        //sql命令类型
 	private KeyGenerator keyGenerator;            //主键生成器
 	private String[] keyProperties;               //主键字段名集合
 	private String[] keyColumns;                  //主键列名集合
-	private boolean hasNestedResultMaps;         //是否有嵌套的结果映射
+	private boolean hasNestedResultMaps;          //是否有嵌套的结果映射
 	private String databaseId;                    //数据库ID
 	private Log statementLog;                     //日志
 	private LanguageDriver lang;                  //语言驱动

@@ -3,6 +3,7 @@ package org.apache.ibatis.builder.annotation;
 import java.lang.reflect.Method;
 
 public class MethodResolver {
+
 	private final MapperAnnotationBuilder annotationBuilder;
 	private Method method;
 

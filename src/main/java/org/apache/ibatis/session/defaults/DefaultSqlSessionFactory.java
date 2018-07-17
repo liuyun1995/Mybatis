@@ -20,6 +20,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
 	private final Configuration configuration;
 
+	//构造器
 	public DefaultSqlSessionFactory(Configuration configuration) {
 		this.configuration = configuration;
 	}
@@ -29,52 +30,59 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 		return openSessionFromDataSource(configuration.getDefaultExecutorType(), null, false);
 	}
 
+	//获取会话(是否自动提交)
 	public SqlSession openSession(boolean autoCommit) {
 		return openSessionFromDataSource(configuration.getDefaultExecutorType(), null, autoCommit);
 	}
 
+	//获取会话(执行类型)
 	public SqlSession openSession(ExecutorType execType) {
 		return openSessionFromDataSource(execType, null, false);
 	}
 
+	//获取会话(事务隔离级别)
 	public SqlSession openSession(TransactionIsolationLevel level) {
 		return openSessionFromDataSource(configuration.getDefaultExecutorType(), level, false);
 	}
 
+	//获取会话(执行类型，事务隔离级别)
 	public SqlSession openSession(ExecutorType execType, TransactionIsolationLevel level) {
 		return openSessionFromDataSource(execType, level, false);
 	}
 
+	//获取会话(执行类型，是否自动提交)
 	public SqlSession openSession(ExecutorType execType, boolean autoCommit) {
 		return openSessionFromDataSource(execType, null, autoCommit);
 	}
-	
+
+	//获取会话(数据库连接)
 	public SqlSession openSession(Connection connection) {
 		return openSessionFromConnection(configuration.getDefaultExecutorType(), connection);
 	}
 
+	//获取会话(执行类型，数据库连接)
 	public SqlSession openSession(ExecutorType execType, Connection connection) {
 		return openSessionFromConnection(execType, connection);
 	}
 
+	//获取配置信息
 	public Configuration getConfiguration() {
 		return configuration;
 	}
 
 	//从数据源中获取会话
-	private SqlSession openSessionFromDataSource(ExecutorType execType, TransactionIsolationLevel level,
-			boolean autoCommit) {
+	private SqlSession openSessionFromDataSource(ExecutorType execType, TransactionIsolationLevel level, boolean autoCommit) {
 		Transaction tx = null;
 		try {
 			//获取运行环境
 			final Environment environment = configuration.getEnvironment();
 			//获取事务工厂
 			final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
-			//通过工厂生成事务
+			//获取事务
 			tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);
-			//生成一个执行器
+			//获取执行器
 			final Executor executor = configuration.newExecutor(tx, execType);
-			//返回DefaultSqlSession
+			//返回默认会话
 			return new DefaultSqlSession(configuration, executor, autoCommit);
 		} catch (Exception e) {
 			closeTransaction(tx);
@@ -89,14 +97,20 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 		try {
 			boolean autoCommit;
 			try {
+				//设置自动提交
 				autoCommit = connection.getAutoCommit();
 			} catch (SQLException e) {
 				autoCommit = true;
 			}
+			//获取运行环境
 			final Environment environment = configuration.getEnvironment();
+			//获取事务工厂
 			final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
+			//获取事务
 			final Transaction tx = transactionFactory.newTransaction(connection);
+			//获取执行器
 			final Executor executor = configuration.newExecutor(tx, execType);
+			//返回默认会话
 			return new DefaultSqlSession(configuration, executor, autoCommit);
 		} catch (Exception e) {
 			throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
@@ -105,9 +119,9 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 		}
 	}
 
-	//从环境信息中获取事务工厂
+	//获取事务工厂
 	private TransactionFactory getTransactionFactoryFromEnvironment(Environment environment) {
-		// 如果没有配置事务工厂，则返回托管事务工厂
+		//如果没有配置事务工厂，则返回托管事务工厂
 		if (environment == null || environment.getTransactionFactory() == null) {
 			return new ManagedTransactionFactory();
 		}

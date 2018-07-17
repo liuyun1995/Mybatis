@@ -30,34 +30,41 @@ import org.apache.ibatis.type.JdbcType;
 //config文件解析器
 public class XMLConfigBuilder extends BaseBuilder {
 
-	private boolean parsed;     //是否已解析
+	private boolean parsed;      //是否已解析
 	private XPathParser parser;  //XPath解析器
 	private String environment;  //环境信息
-	
+
+	//构造器(字符流)
 	public XMLConfigBuilder(Reader reader) {
 		this(reader, null, null);
 	}
 
+	//构造器(字符流，环境信息)
 	public XMLConfigBuilder(Reader reader, String environment) {
 		this(reader, environment, null);
 	}
-	
+
+	//构造器(字符流，环境信息，属性信息)
 	public XMLConfigBuilder(Reader reader, String environment, Properties props) {
 		this(new XPathParser(reader, true, props, new XMLMapperEntityResolver()), environment, props);
 	}
-	
+
+	//构造器(字节流)
 	public XMLConfigBuilder(InputStream inputStream) {
 		this(inputStream, null, null);
 	}
 
+	//构造器(字节流，环境信息)
 	public XMLConfigBuilder(InputStream inputStream, String environment) {
 		this(inputStream, environment, null);
 	}
 
+	//构造器(字节流，环境信息，属性信息)
 	public XMLConfigBuilder(InputStream inputStream, String environment, Properties props) {
 		this(new XPathParser(inputStream, true, props, new XMLMapperEntityResolver()), environment, props);
 	}
-	
+
+	//核心构造器
 	private XMLConfigBuilder(XPathParser parser, String environment, Properties props) {
 		super(new Configuration());
 		ErrorContext.instance().resource("SQL Mapper Configuration");
@@ -206,7 +213,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 	}
 
 	//6.解析<settings>节点
-	private void settingsElement(XNode context) throws Exception {
+	private void settingsElement(XNode context) {
 		if (context != null) {
 			//获取结点下的所有属性
 			Properties props = context.getChildrenAsProperties();
@@ -347,7 +354,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 	}
 
 	//9.解析<typeHandlers>节点
-	private void typeHandlerElement(XNode parent) throws Exception {
+	private void typeHandlerElement(XNode parent) {
 		if (parent != null) {
 			for (XNode child : parent.getChildren()) {
 				//如果是<package>标签
@@ -440,10 +447,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 			throw new BuilderException("No environment specified.");
 		} else if (id == null) {
 			throw new BuilderException("Environment requires an id attribute.");
-		} else if (environment.equals(id)) {
-			return true;
-		}
-		return false;
+		} else return environment.equals(id);
 	}
 
 }

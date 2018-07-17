@@ -11,7 +11,7 @@ import org.apache.ibatis.session.ResultHandler;
 //默认Map结果处理器
 public class DefaultMapResultHandler<K, V> implements ResultHandler {
 
-	// 内部实现是存了一个Map
+	//内部实现是存了一个Map
 	private final Map<K, V> mappedResults;
 	private final String mapKey;
 	private final ObjectFactory objectFactory;

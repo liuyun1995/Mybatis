@@ -96,4 +96,5 @@ public class SelectKeyGenerator implements KeyGenerator {
 					+ metaParam.getOriginalObject().getClass().getName() + ".");
 		}
 	}
+
 }

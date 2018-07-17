@@ -20,4 +20,5 @@ public enum TransactionIsolationLevel {
 	public int getLevel() {
 		return level;
 	}
+
 }
